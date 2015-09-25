@@ -1,0 +1,72 @@
+== Example step definition
+
+
+The following code snipped shows a step definition with an initialize part. This is a step
+which implements logic.
+
+.example step implementation
+[source,js]
+------------------------------------
+/* jslint node: true, esnext: true */
+"use strict";
+
+exports.stepImplementations = {                 <1>
+  "exampleStep": {                              <2>
+    "description": "Does what ever it should",
+    "endpoints": {
+      "in_1": {                                 <3>
+        "direction": "in",
+        "mandatory" : true,
+        "uti": "public.data",                   <4>
+        "contentInfo": {                        <5>
+          "required" : ["fileName"]
+          "properties": {
+            "fileName": {
+              "type" : "string"
+              },
+            "startTime" : {
+              "type" : "number"
+            }
+          }
+      },
+      "out_1": {                                <6>
+        "direction": "out(active)",
+        "uti": "public.data", 
+        "contentInfo": {                        <7>
+          "required" : ["fileName"]
+          "properties": {
+            "fileStatus": {
+              "type" : "string"
+              },
+            "numberOfFiles" : {
+              "type" : "number"
+            }
+          }
+        }
+      }
+    },
+    "initialize": function (manager, step) {   <8>
+      // any usefull code which will implement this step
+    }
+  }
+};
+------------------------------------
+
+<1> This hash contains the step implementations. One or more are possible
+<2> The name of this step. This is the name under the step will be registered
+<3> One endpoint definition
+<4> The data type this endpoint will consume or emit.
+<5> The parameter this endpoint expects when it will be called
+<6> The name of the second endpoint in this step
+<7> The json schema for the data this step will add to the content info
+<8> The implementation of this step
+
+
+Step schematic view
+-------------------
+
+The following pictures show the schematic of a step.
+
+
+.schema of a step definition
+image::../images/Step_schema.png[Overview]

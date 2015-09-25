@@ -1,0 +1,10 @@
+== Step
+=== Implementing a step
+
+:leveloffset: 2
+include::./example_step_definition.adoc[Step Schema]
+:leveloffset: -2
+
+=== Schema of step definition
+:leveloffset: 1
+include::./schema/schema_step.adoc[Step Schema Config Element]
