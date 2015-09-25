@@ -9,8 +9,6 @@ const STATUS = require('./status');
 class StepEventGenerator extends baseStep {
 	constructor(config) {
 		super(config);
-
-
 	}
 
 	/**
