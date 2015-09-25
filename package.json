@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:Kronos-Integration/kronos-step.git"
+    "url": "git+https://github.com/Kronos-Integration/kronos-step.git"
   },
   "bugs": {
     "url": "https://github.com/Kronos-Integration/kronos-step/issues"
