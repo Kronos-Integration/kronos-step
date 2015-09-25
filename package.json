@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/darlenya/kronos-step.git"
+    "url": "git+https://github.com:Kronos-Integration/kronos-step.git"
   },
   "bugs": {
-    "url": "https://github.com/darlenya/kronos-step/issues"
+    "url": "https://github.com/Kronos-Integration/kronos-step/issues"
   },
-  "homepage": "https://github.com/darlenya/kronos-step#readme",
+  "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "engines": {
     "iojs": "2.0.0"
   },
