@@ -1,4 +1,7 @@
-== Step
+== Abstract Step
+The step is the base for all the Kronos-steps. It is currently under havy development and not stable.
+So this doc is also not ready.
+
 === Implementing a step
 
 :leveloffset: 2
