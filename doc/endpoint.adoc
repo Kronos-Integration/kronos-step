@@ -1,0 +1,67 @@
+=== Endpoint
+An endpoint is the docking interface for the step. Steps will be connected via there endpoints.
+A connection between two steps is called a channel. The channel is only a logical synonym for
+the connection between two steps.
+
+==== Endpoint properties
+An endpoint has the following properties. All properties are
+default set to 'false'.
+
+in::
+	True or false. Defines the direction of this endpoint. ''In'' means the endpoint
+	transports data into the step.
+
+out::
+	True or false. ''Out'' means the endpoint transfers data out of the Step.
+	Bidirectional endpoints may have both (''in'' and ''out'') set to true.
+
+active::
+	True or false. An active endpoint will activly emit data or pull data.
+
+passive::
+	True or false. An passive endpoint could receive or deliver data on request.
+
+name::
+	The name of this endpoint.
+
+step::
+	This property contains the step this endpoint is attached to. The endpoint will
+	calls the steps '_receive()' method for incoming requests.
++
+[source,js]
+----
+step._receive(endpointName, message);
+----
+
+==== Endpoint methods
+
+constructor::
+	To create an endpoint call the constructor with a config object which contains the
+	endpoint properties.
++
+.Example endpoint creation
+[source,js]
+----
+const Endpoint = require('kronos-step').endpoint;
+
+const myEndpoint = new Endpoint({"in": true, "passive": true});
+----
+
+push::
++
+[source,js]
+----
+myEndpoint.push(myMessage);
+----
+The push method could be used to push out new messages. For ''active'' ''out'' endpoints.
+
+connect::
+	Connects an other endpoint to this endpoint. To connect two endpoints with each other the
+	endpoint configuration must match. An ''in'' endpoint could only be connected with an ''out''
+	endpoint, and a ''passive'' one could only be connected with an ''active' one.
+
+isConnected::
+	Returns true if the endpoint is already connected with an other endpoint.
+
+connectedEndpoint::
+	The connected endpoint if there is one.

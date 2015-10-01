@@ -2,12 +2,6 @@
 The step is the base for all the Kronos-steps. It is currently under havy development and not stable.
 So this doc is also not ready.
 
-=== Implementing a step
+include::./endpoint.adoc[]
 
-:leveloffset: 2
-include::./example_step_definition.adoc[Step Schema]
-:leveloffset: -2
-
-=== Schema of step definition
-:leveloffset: 1
-include::./schema/schema_step.adoc[Step Schema Config Element]
+include::./message.adoc[]
