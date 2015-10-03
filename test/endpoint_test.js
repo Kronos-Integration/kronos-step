@@ -14,7 +14,7 @@ const messageFactory = require('../lib/message');
 describe("Endpoints", function () {
 
 
-	it('Connect two endpoint with each other: in with out', function (done) {
+	it('Connect two endpoints with each other: in with out', function (done) {
 		let dummyStep1 = {
 			"name": "dumyStepName_1"
 		};
@@ -54,7 +54,7 @@ describe("Endpoints", function () {
 		epOut.push(msg);
 	});
 
-	it('Connect two endpoint with each other: out with in', function (done) {
+	it('Connect two endpoints with each other: out with in', function (done) {
 		let dummyStep1 = {
 			"name": "dumyStepName_1"
 		};
@@ -94,7 +94,7 @@ describe("Endpoints", function () {
 		epOut.push(msg);
 	});
 
-	it('Error: Connect two endpoint with each other: out with out', function (done) {
+	it('Error: Connect two endpoints with each other: out with out', function (done) {
 		let dummyStep1 = {
 			"name": "dumyStepName_1"
 		};
@@ -124,7 +124,7 @@ describe("Endpoints", function () {
 		done();
 	});
 
-	it('Error: Connect two endpoint with each other: in with in', function (done) {
+	it('Error: Connect two endpoints with each other: in with in', function (done) {
 		let dummyStep1 = {
 			"name": "dumyStepName_1"
 		};
@@ -154,7 +154,7 @@ describe("Endpoints", function () {
 		done();
 	});
 
-	it('Error: Connect two endpoint with each other: in:active with out:active', function (done) {
+	it('Error: Connect two endpoints with each other: in:active with out:active', function (done) {
 		let dummyStep1 = {
 			"name": "dumyStepName_1"
 		};
@@ -184,7 +184,7 @@ describe("Endpoints", function () {
 		done();
 	});
 
-	it('Error: Connect two endpoint with each other: in:passive with out:passive', function (done) {
+	it('Error: Connect two endpoints with each other: in:passive with out:passive', function (done) {
 		let dummyStep1 = {
 			"name": "dumyStepName_1"
 		};
@@ -210,6 +210,90 @@ describe("Endpoints", function () {
 		expect(function () {
 			epOut.connect(epIn);
 		}).to.throw("Could not conect the endpoint 'epOut' with the endpoint 'epIn'");
+
+		done();
+	});
+
+
+	it('Error: Connect two endpoints with each other: One of them is already connected', function (done) {
+		let dummyStep1 = {
+			"name": "dumyStepName_1"
+		};
+		let dummyStep2 = {
+			"name": "dumyStepName_2"
+		};
+
+		const epIn = new Endpoint({
+			"name": "epIn",
+			"in": true,
+			"passive": true
+		});
+		epIn.step = dummyStep1;
+
+		const epOut = new Endpoint({
+			"name": "epOut",
+			"out": true,
+			"active": true
+		});
+		epOut.step = dummyStep2;
+
+		const epEvil = new Endpoint({
+			"name": "epEvil",
+			"in": true,
+			"passive": true
+		});
+		epEvil.step = dummyStep1;
+
+
+		// set the second endpoint as already connected
+		epOut.connect(epEvil);
+
+		// connect the endpoints
+		expect(function () {
+			epOut.connect(epIn);
+		}).to.throw("Could not conect the endpoint, the endpoint 'epOut' is already connected with 'epEvil'");
+
+		done();
+	});
+
+	it('Error: Connect two endpoints with each other: One of them is already connected (other way around)', function (
+		done) {
+		let dummyStep1 = {
+			"name": "dumyStepName_1"
+		};
+		let dummyStep2 = {
+			"name": "dumyStepName_2"
+		};
+
+		const epIn = new Endpoint({
+			"name": "epIn",
+			"in": true,
+			"passive": true
+		});
+		epIn.step = dummyStep1;
+
+		const epOut = new Endpoint({
+			"name": "epOut",
+			"out": true,
+			"active": true
+		});
+		epOut.step = dummyStep2;
+
+		const epEvil = new Endpoint({
+			"name": "epEvil",
+			"out": true,
+			"active": true
+		});
+		epEvil.step = dummyStep1;
+
+
+		// set the second endpoint as already connected
+		epIn.connect(epEvil);
+
+		// connect the endpoints
+		expect(function () {
+			epOut.connect(epIn);
+		}).to.throw("Could not conect the endpoint, the endpoint 'epIn' is already connected with 'epEvil'");
 
 		done();
 	});
