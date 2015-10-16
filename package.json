@@ -16,9 +16,6 @@
     "url": "https://github.com/Kronos-Integration/kronos-step/issues"
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
-  "engines": {
-    "iojs": "2.0.0"
-  },
   "release": {
     "debug": false
   },
