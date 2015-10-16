@@ -20,10 +20,6 @@ describe("Message", function () {
 		assert.deepEqual(msg, {
 			"header": {},
 			"hops": [],
-			"messageType": {
-				"name": 'default',
-				"description": 'The default message for normal work'
-			},
 			"payload": {}
 		});
 
@@ -40,10 +36,6 @@ describe("Message", function () {
 				"my": "name"
 			},
 			"hops": [],
-			"messageType": {
-				"name": 'default',
-				"description": 'The default message for normal work'
-			},
 			"payload": {}
 		});
 
@@ -62,10 +54,6 @@ describe("Message", function () {
 				"my": "name"
 			},
 			"hops": [],
-			"messageType": {
-				"name": 'default',
-				"description": 'The default message for normal work'
-			},
 			"payload": {}
 		});
 

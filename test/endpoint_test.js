@@ -1,15 +1,217 @@
-/*global describe, it*/
+/* global describe, it, xit */
 /* jslint node: true, esnext: true */
+
 "use strict";
 
+const fs = require('fs');
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect;
 const should = chai.should();
 
-const Endpoint = require('../lib/endpoint');
-const messageFactory = require('../lib/message');
+const endpointImpl = require('../lib/endpoint');
 
+const manager = {};
+
+describe('endpoint definition', function () {
+	const metaEndpoint = endpointImpl.createEndpoint('special', {
+		"direction": "inout(active,passive)",
+		"description": "special name",
+		"in": true,
+		"out": true,
+		"active": true,
+		"passive": true,
+		"uti": "UTI of the special"
+	});
+
+	describe('description', function () {
+		it('given description present', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				description: "aDescription"
+			});
+			assert.equal(endpoint.description, 'aDescription');
+		});
+		it('without description', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {});
+			assert.isUndefined(endpoint.description);
+		});
+	});
+
+	describe('name', function () {
+		it('given name present', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {});
+			assert.equal(endpoint.name, 'e1');
+		});
+		it('toString() is name', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {});
+			assert.equal(endpoint.toString(), 'e1');
+		});
+	});
+
+	describe('contentInfo', function () {
+		it('name present', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', metaEndpoint);
+			assert.equal(endpoint.description, 'special name');
+		});
+	});
+
+	describe('UTI', function () {
+		it('given UTI present', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"uti": "public.database"
+			});
+			assert.equal(endpoint.uti, 'public.database');
+		});
+	});
+
+	describe('mandatority', function () {
+		it('given mandatority present', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"mandatory": false
+			});
+			assert.isFalse(endpoint.mandatory);
+		});
+	});
+
+	describe('with target', function () {
+		describe('as object', function () {
+			it('target present', function () {
+				const endpoint = endpointImpl.createEndpoint('e1', {
+					target: "myTarget"
+				});
+				assert.equal(endpoint.target, 'myTarget');
+			});
+		});
+
+		describe('from connect', function () {
+			it('target present', function () {
+				const endpoint = endpointImpl.createEndpoint('e1', {
+					target: "step:steps/s2_1/in"
+				});
+				assert.equal(endpoint.target, 'step:steps/s2_1/in');
+			});
+		});
+
+		describe('as direct string', function () {
+			it('target present', function () {
+				const endpoint = endpointImpl.createEndpoint('e1', "myTarget");
+				assert.equal(endpoint.target, 'myTarget');
+			});
+		});
+	});
+
+	describe('should have correct direction', function () {
+		const name1 = 'in';
+		it(`for ${name1}`, function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"in": true
+			});
+			//assert.equal(endpoint.direction, name1);
+			assert.isTrue(endpoint.in, "in");
+			assert.isFalse(endpoint.active, "!active");
+			assert.isFalse(endpoint.out, "!out");
+		});
+
+		const name2 = "in(active)";
+		it(`for ${name2}`, function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"in": true,
+				"active": true
+			});
+			//assert.equal(endpoint.direction, name2);
+			assert.isTrue(endpoint.active, "active");
+			assert.isFalse(endpoint.passive, "!passive");
+			assert.isTrue(endpoint.in, "in");
+			assert.isFalse(endpoint.out, "!out");
+		});
+
+		const name3 = "in(passive)";
+		it(`for ${name3}`, function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"in": true,
+				"passive": true
+			});
+			//assert.equal(endpoint.direction, name3);
+
+			assert.isFalse(endpoint.active, "!active");
+			assert.isTrue(endpoint.passive, "passive");
+			assert.isTrue(endpoint.in, "in");
+			assert.isFalse(endpoint.out, "!out");
+		});
+
+		const name4 = "in(active,passive)";
+		it(`for ${name4}`, function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"in": true,
+				"active": true,
+				"passive": true
+			});
+			//assert.equal(endpoint.direction, name4);
+			assert.isTrue(endpoint.in, "in");
+			assert.isTrue(endpoint.active);
+			assert.isTrue(endpoint.passive);
+			assert.isFalse(endpoint.out, "!out");
+		});
+
+		const name5 = "out";
+		it(`for ${name5}`, function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"out": true,
+			});
+			//assert.equal(endpoint.direction, name5);
+			assert.isTrue(endpoint.out, "out when out");
+
+			assert.isFalse(endpoint.active);
+			assert.isFalse(endpoint.passive);
+		});
+
+		const name6 = "in(active),out(passive)";
+		it(`for ${name6}`, function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"in": true,
+				"out": true,
+				"active": true,
+				"passive": true
+			});
+			//assert.equal(endpoint.direction, name6);
+			assert.isTrue(endpoint.out, "out when inout");
+			assert.isTrue(endpoint.in, "in when inout");
+
+			assert.isTrue(endpoint.active);
+			assert.isTrue(endpoint.passive);
+		});
+
+		it('also with meta object', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				target: 'special:/tmp/a',
+				"out": true,
+				"in": false
+			}, metaEndpoint);
+
+			//assert.equal(endpoint.direction, 'out');
+			assert.isTrue(endpoint.out, "out when out");
+			assert.isFalse(endpoint.in, "!in");
+		});
+	});
+
+	describe('json', function () {
+		it('some attrs', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				"out": true,
+				"in": true,
+				description: "desc",
+				target: "sx/out"
+			});
+			assert.deepEqual(endpoint.toJSON(), {
+				"description": "desc",
+				"out": true,
+				"in": true,
+				"target": "sx/out"
+			});
+		});
+	});
+
+});
 
 describe("Endpoints", function () {
 
@@ -22,15 +224,13 @@ describe("Endpoints", function () {
 			"name": "dumyStepName_2"
 		};
 
-		const epIn = new Endpoint({
-			"name": "epIn",
+		const epIn = endpointImpl.createEndpoint("epIn", {
 			"in": true,
 			"passive": true
 		});
 		epIn.step = dummyStep1;
 
-		const epOut = new Endpoint({
-			"name": "epOut",
+		const epOut = endpointImpl.createEndpoint("epOut", {
 			"out": true,
 			"active": true
 		});
@@ -39,19 +239,19 @@ describe("Endpoints", function () {
 		// connect the endpoints
 		epIn.connect(epOut);
 
-		const msg = messageFactory({
+		const msg = {
 			"name": "test1"
-		});
-
-		// the receive method called by the endpoint
-		dummyStep1._receive = function (endpointName, message) {
-			// The receiving endpoint is the in endpoint
-			assert.equal(endpointName, 'epIn');
-			assert.equal(message.header.name, 'test1');
-			done();
 		};
 
-		epOut.push(msg);
+		epIn.setPassiveGenerator(function* () {
+			while (true) {
+				const message = yield;
+				assert.equal(message, msg);
+				done();
+			}
+		});
+
+		epOut.send(msg);
 	});
 
 	it('Connect two endpoints with each other: out with in', function (done) {
@@ -62,15 +262,13 @@ describe("Endpoints", function () {
 			"name": "dumyStepName_2"
 		};
 
-		const epIn = new Endpoint({
-			"name": "epIn",
+		const epIn = endpointImpl.createEndpoint("epIn", {
 			"in": true,
 			"passive": true
 		});
 		epIn.step = dummyStep1;
 
-		const epOut = new Endpoint({
-			"name": "epOut",
+		const epOut = endpointImpl.createEndpoint("epOut", {
 			"out": true,
 			"active": true
 		});
@@ -78,20 +276,21 @@ describe("Endpoints", function () {
 
 		// connect the endpoints
 		epOut.connect(epIn);
+		epIn.connect(epOut); // The same endpooints my be conneced as often as you want
 
-		const msg = messageFactory({
+		const msg = {
 			"name": "test1"
-		});
-
-		// the receive method called by the endpoint
-		dummyStep1._receive = function (endpointName, message) {
-			// The receiving endpoint is the in endpoint
-			assert.equal(endpointName, 'epIn');
-			assert.equal(message.header.name, 'test1');
-			done();
 		};
 
-		epOut.push(msg);
+		epIn.setPassiveGenerator(function* () {
+			while (true) {
+				const message = yield;
+				assert.equal(message, msg);
+				done();
+			}
+		});
+
+		epOut.send(msg);
 	});
 
 	it('Error: Connect two endpoints with each other: out with out', function (done) {
@@ -102,15 +301,13 @@ describe("Endpoints", function () {
 			"name": "dumyStepName_2"
 		};
 
-		const epIn = new Endpoint({
-			"name": "epIn",
+		const epIn = endpointImpl.createEndpoint("epIn", {
 			"out": true,
 			"passive": true
 		});
 		epIn.step = dummyStep1;
 
-		const epOut = new Endpoint({
-			"name": "epOut",
+		const epOut = endpointImpl.createEndpoint("epOut", {
 			"out": true,
 			"active": true
 		});
@@ -119,7 +316,7 @@ describe("Endpoints", function () {
 		// connect the endpoints
 		expect(function () {
 			epOut.connect(epIn);
-		}).to.throw("Could not conect the endpoint 'epOut' with the endpoint 'epIn'");
+		}).to.throw("Could not connect the endpoint 'epOut' with the endpoint 'epIn'");
 
 		done();
 	});
@@ -132,15 +329,13 @@ describe("Endpoints", function () {
 			"name": "dumyStepName_2"
 		};
 
-		const epIn = new Endpoint({
-			"name": "epIn",
+		const epIn = endpointImpl.createEndpoint("epIn", {
 			"in": true,
 			"passive": true
 		});
 		epIn.step = dummyStep1;
 
-		const epOut = new Endpoint({
-			"name": "epOut",
+		const epOut = endpointImpl.createEndpoint("epOut", {
 			"in": true,
 			"active": true
 		});
@@ -149,7 +344,7 @@ describe("Endpoints", function () {
 		// connect the endpoints
 		expect(function () {
 			epOut.connect(epIn);
-		}).to.throw("Could not conect the endpoint 'epOut' with the endpoint 'epIn'");
+		}).to.throw("Could not connect the endpoint 'epOut' with the endpoint 'epIn'");
 
 		done();
 	});
@@ -162,15 +357,13 @@ describe("Endpoints", function () {
 			"name": "dumyStepName_2"
 		};
 
-		const epIn = new Endpoint({
-			"name": "epIn",
+		const epIn = endpointImpl.createEndpoint("epIn", {
 			"in": true,
 			"active": true
 		});
 		epIn.step = dummyStep1;
 
-		const epOut = new Endpoint({
-			"name": "epOut",
+		const epOut = endpointImpl.createEndpoint("epOut", {
 			"out": true,
 			"active": true
 		});
@@ -179,7 +372,7 @@ describe("Endpoints", function () {
 		// connect the endpoints
 		expect(function () {
 			epOut.connect(epIn);
-		}).to.throw("Could not conect the endpoint 'epOut' with the endpoint 'epIn'");
+		}).to.throw("Could not connect the endpoint 'epOut' with the endpoint 'epIn'");
 
 		done();
 	});
@@ -192,15 +385,13 @@ describe("Endpoints", function () {
 			"name": "dumyStepName_2"
 		};
 
-		const epIn = new Endpoint({
-			"name": "epIn",
+		const epIn = endpointImpl.createEndpoint("epIn", {
 			"in": true,
 			"passive": true
 		});
 		epIn.step = dummyStep1;
 
-		const epOut = new Endpoint({
-			"name": "epOut",
+		const epOut = endpointImpl.createEndpoint("epOut", {
 			"out": true,
 			"passive": true
 		});
@@ -209,7 +400,7 @@ describe("Endpoints", function () {
 		// connect the endpoints
 		expect(function () {
 			epOut.connect(epIn);
-		}).to.throw("Could not conect the endpoint 'epOut' with the endpoint 'epIn'");
+		}).to.throw("Could not connect the endpoint 'epOut' with the endpoint 'epIn'");
 
 		done();
 	});
@@ -223,22 +414,19 @@ describe("Endpoints", function () {
 			"name": "dumyStepName_2"
 		};
 
-		const epIn = new Endpoint({
-			"name": "epIn",
+		const epIn = endpointImpl.createEndpoint("epIn", {
 			"in": true,
 			"passive": true
 		});
 		epIn.step = dummyStep1;
 
-		const epOut = new Endpoint({
-			"name": "epOut",
+		const epOut = endpointImpl.createEndpoint("epOut", {
 			"out": true,
 			"active": true
 		});
 		epOut.step = dummyStep2;
 
-		const epEvil = new Endpoint({
-			"name": "epEvil",
+		const epEvil = endpointImpl.createEndpoint("epEvil", {
 			"in": true,
 			"passive": true
 		});
@@ -251,7 +439,7 @@ describe("Endpoints", function () {
 		// connect the endpoints
 		expect(function () {
 			epOut.connect(epIn);
-		}).to.throw("Could not conect the endpoint, the endpoint 'epOut' is already connected with 'epEvil'");
+		}).to.throw("Could not connect the endpoint, the endpoint 'epOut' is already connected with 'epEvil'");
 
 		done();
 	});
@@ -265,22 +453,19 @@ describe("Endpoints", function () {
 			"name": "dumyStepName_2"
 		};
 
-		const epIn = new Endpoint({
-			"name": "epIn",
+		const epIn = endpointImpl.createEndpoint("epIn", {
 			"in": true,
 			"passive": true
 		});
 		epIn.step = dummyStep1;
 
-		const epOut = new Endpoint({
-			"name": "epOut",
+		const epOut = endpointImpl.createEndpoint("epOut", {
 			"out": true,
 			"active": true
 		});
 		epOut.step = dummyStep2;
 
-		const epEvil = new Endpoint({
-			"name": "epEvil",
+		const epEvil = endpointImpl.createEndpoint("epEvil", {
 			"out": true,
 			"active": true
 		});
@@ -293,7 +478,7 @@ describe("Endpoints", function () {
 		// connect the endpoints
 		expect(function () {
 			epOut.connect(epIn);
-		}).to.throw("Could not conect the endpoint, the endpoint 'epIn' is already connected with 'epEvil'");
+		}).to.throw("Could not connect the endpoint, the endpoint 'epIn' is already connected with 'epEvil'");
 
 		done();
 	});

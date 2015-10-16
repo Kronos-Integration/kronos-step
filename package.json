@@ -23,6 +23,8 @@
     "debug": false
   },
   "dependencies": {
+    "expression-expander": "3.0.0",
+    "scope-reporter": "2.1.0",
     "clone-deep": "^0.2.2",
     "merge-light": "0.0.1",
     "uuid-js": "^0.7.5"
@@ -37,5 +39,9 @@
     "name": "Torsten Link",
     "email": "torstenlink@gmx.de"
   },
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "engines": {
+    "node": ">=4.1.2"
+  }
+
 }
