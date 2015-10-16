@@ -35,6 +35,17 @@ describe('endpoint definition', function () {
 			const endpoint = endpointImpl.createEndpoint('e1', {});
 			assert.isUndefined(endpoint.description);
 		});
+
+		it('immutable description', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {
+				description: "aDescription"
+			});
+			try {
+				endpoint.description = "new description";
+			} catch (e) {}
+
+			assert.equal(endpoint.description, 'aDescription');
+		});
 	});
 
 	describe('name', function () {
@@ -46,9 +57,18 @@ describe('endpoint definition', function () {
 			const endpoint = endpointImpl.createEndpoint('e1', {});
 			assert.equal(endpoint.toString(), 'e1');
 		});
+
+		it('immutable name', function () {
+			const endpoint = endpointImpl.createEndpoint('e1', {});
+			try {
+				endpoint.name = "new name";
+			} catch (e) {}
+
+			assert.equal(endpoint.name, 'e1');
+		});
 	});
 
-	describe('contentInfo', function () {
+	describe('attributes from meta', function () {
 		it('name present', function () {
 			const endpoint = endpointImpl.createEndpoint('e1', metaEndpoint);
 			assert.equal(endpoint.description, 'special name');
@@ -86,9 +106,9 @@ describe('endpoint definition', function () {
 		describe('from connect', function () {
 			it('target present', function () {
 				const endpoint = endpointImpl.createEndpoint('e1', {
-					target: "step:steps/s2_1/in"
+					target: "s2_1/in"
 				});
-				assert.equal(endpoint.target, 'step:steps/s2_1/in');
+				assert.equal(endpoint.target, 's2_1/in');
 			});
 		});
 
@@ -106,7 +126,6 @@ describe('endpoint definition', function () {
 			const endpoint = endpointImpl.createEndpoint('e1', {
 				"in": true
 			});
-			//assert.equal(endpoint.direction, name1);
 			assert.isTrue(endpoint.in, "in");
 			assert.isFalse(endpoint.active, "!active");
 			assert.isFalse(endpoint.out, "!out");
@@ -118,7 +137,6 @@ describe('endpoint definition', function () {
 				"in": true,
 				"active": true
 			});
-			//assert.equal(endpoint.direction, name2);
 			assert.isTrue(endpoint.active, "active");
 			assert.isFalse(endpoint.passive, "!passive");
 			assert.isTrue(endpoint.in, "in");
@@ -131,8 +149,6 @@ describe('endpoint definition', function () {
 				"in": true,
 				"passive": true
 			});
-			//assert.equal(endpoint.direction, name3);
-
 			assert.isFalse(endpoint.active, "!active");
 			assert.isTrue(endpoint.passive, "passive");
 			assert.isTrue(endpoint.in, "in");
@@ -146,7 +162,6 @@ describe('endpoint definition', function () {
 				"active": true,
 				"passive": true
 			});
-			//assert.equal(endpoint.direction, name4);
 			assert.isTrue(endpoint.in, "in");
 			assert.isTrue(endpoint.active);
 			assert.isTrue(endpoint.passive);
@@ -158,7 +173,6 @@ describe('endpoint definition', function () {
 			const endpoint = endpointImpl.createEndpoint('e1', {
 				"out": true,
 			});
-			//assert.equal(endpoint.direction, name5);
 			assert.isTrue(endpoint.out, "out when out");
 
 			assert.isFalse(endpoint.active);
@@ -173,7 +187,6 @@ describe('endpoint definition', function () {
 				"active": true,
 				"passive": true
 			});
-			//assert.equal(endpoint.direction, name6);
 			assert.isTrue(endpoint.out, "out when inout");
 			assert.isTrue(endpoint.in, "in when inout");
 
@@ -188,7 +201,6 @@ describe('endpoint definition', function () {
 				"in": false
 			}, metaEndpoint);
 
-			//assert.equal(endpoint.direction, 'out');
 			assert.isTrue(endpoint.out, "out when out");
 			assert.isFalse(endpoint.in, "!in");
 		});
@@ -214,7 +226,6 @@ describe('endpoint definition', function () {
 });
 
 describe("Endpoints", function () {
-
 
 	it('Connect two endpoints with each other: in with out', function (done) {
 		let dummyStep1 = {
