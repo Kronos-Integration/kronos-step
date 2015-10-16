@@ -24,7 +24,10 @@ const sr = scopeReporter.createReporter(scopeDefinitions, function (reporter) {
 var receivedRequests = [];
 
 const manager = Object.create(new events.EventEmitter(), {});
-const demoPassThrough = new Steps(manager, sr, "myStep", {
+
+
+
+const aStep = new Steps(manager, sr, "myStep", {
   "type": "out-step",
   "endpoints": {
     "in": {
@@ -39,7 +42,7 @@ const demoPassThrough = new Steps(manager, sr, "myStep", {
 });
 
 manager.steps = {
-  "out-step": demoPassThrough
+  //  "out-step": demoPassThrough
 };
 
 
@@ -118,20 +121,6 @@ describe('steps', function () {
   describe('static', function () {
     describe('single step', function () {
 
-      const aStep = new Steps(manager, sr, "myStep", {
-        "type": "out-step",
-        "endpoints": {
-          "in": {
-            "in": true,
-            "passive": true
-          },
-          "out": {
-            "out": true,
-            "active": true
-          }
-        }
-      });
-
       checkStatic(aStep, function () {
         describe('type', function () {
           it('present', function () {
@@ -150,6 +139,7 @@ describe('steps', function () {
               type: "out-step",
               state: "stopped",
               endpoints: {
+                "log": {}, // TODO
                 "in": {
                   "in": true,
                   "passive": true
