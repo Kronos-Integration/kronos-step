@@ -6,6 +6,7 @@ const endpoint = require('./lib/endpoint');
 const message = require('./lib/message');
 
 module.exports.Step = Step;
+module.exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 
 module.exports.Endpoint = endpoint.Endpoint;
 module.exports.createEndpoint = endpoint.createEndpoint;
@@ -25,11 +26,11 @@ exports.registerWithManagerTest = function (manager) {
  * 2.) Initialize a new Step instance with the consiguration data
  * @param {Manager} manager kronos service manger
  * @param {ScopeReporter} scopeReporter
- * @param {String} name name of the steps
  * @param {Object} data step configuration data
+ * @param {String} name optional name of the steps
  * @return {Step} newly created step
  */
-exports.createStep = function (manager, scopeReporter, name, data) {
+exports.createStep = function (manager, scopeReporter, data, name) {
 
 	const Impl = manager.steps[data.type];
 

@@ -69,7 +69,8 @@ manager.steps = {
   "out-step": OutStep
 };
 
-const aStep = index.createStep(manager, sr, "myStep", {
+const aStep = index.createStep(manager, sr, {
+  name: "myStep",
   type: "out-step"
 });
 
@@ -113,9 +114,9 @@ describe('steps', function () {
 
     describe('livecycle', function () {
       describe('single step', function () {
-        const aStep = index.createStep(manager, sr, "myname", {
+        const aStep = index.createStep(manager, sr, {
           type: "out-step"
-        });
+        }, "myname");
 
         const inEp = endpointImplementation.createEndpoint("in", {
           "in": true,
