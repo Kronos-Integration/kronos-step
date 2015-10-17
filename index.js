@@ -31,8 +31,7 @@ exports.registerWithManagerTest = function (manager) {
  */
 exports.createStep = function (manager, scopeReporter, name, data) {
 
-	// TODO what is the registration interface ?
-	const Impl = manager.stepImplementations[data.type];
+	const Impl = manager.steps[data.type];
 
 	if (!name) {
 		name = data.name;

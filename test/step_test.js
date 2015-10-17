@@ -65,7 +65,7 @@ OutStep.configuration = {
   }
 };
 
-manager.stepImplementations = {
+manager.steps = {
   "out-step": OutStep
 };
 
@@ -133,7 +133,6 @@ describe('steps', function () {
         aStep.endpoints.out.connect(inEp);
 
         checkLivecycle(aStep, function (step, state) {
-
           if (state === 'running') {
             console.log("CHECK");
             //assert.isAbove(request.stream, 2);
@@ -268,6 +267,21 @@ describe('steps', function () {
       }, done);
 
       assert.equal(aStep.state, 'starting');
+
+      /*
+            aStep.remove().then(function (step) {
+              try {
+                assert.equal(aStep, step);
+                assert.equal(aStep.state, 'removed');
+                if (additionalAsserts) {
+                  additionalAsserts(aStep, 'removed');
+                }
+                done();
+              } catch (e) {
+                done(e);
+              }
+            }, done);
+      */
     });
   }
 });
