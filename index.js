@@ -31,7 +31,6 @@ exports.registerWithManagerTest = function (manager) {
  * @return {Step} newly created step
  */
 exports.createStep = function (manager, scopeReporter, data, name) {
-
 	const Impl = manager.steps[data.type];
 
 	if (!name) {
@@ -41,6 +40,7 @@ exports.createStep = function (manager, scopeReporter, data, name) {
 	if (Impl) {
 		return new Impl(manager, scopeReporter, name, data);
 	} else {
+		console.log(`not found: ${data.type}`);
 		scopeReporter.error('Step implementation not found', 'step', name, data.type);
 	}
 };
