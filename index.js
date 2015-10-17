@@ -18,6 +18,28 @@ exports.registerWithManagerTest = function (manager) {
 	manager.registerStep(require('./lib/steps/stepPassThrough'));
 };
 
-exports.createStep = function (manager, sr, clazz, name, data) {
-	return new clazz(manager, sr, name, data);
+/*
+ * Creates a step from its configuration data
+ * @param {Manager} manager kronos service manger
+ * @param {ScopeReporter} scopeReporter
+ * @param {String} name name of the steps
+ * @param {Object} data step configuration data
+ * @return {Step} nely created step
+ */
+exports.createStep = function (manager, scopeReporter, name, data) {
+
+	// TODO what is the registration interface ?
+	const impl = manager.stepImplementations[data.type];
+
+	console.log(`${data.type} -> ${impl}`);
+
+	if (!name) {
+		name = data.name;
+	}
+
+	if (impl) {
+		return new impl(manager, scopeReporter, name, data);
+	} else {
+		scopeReporter.error('Step implementation not found', 'step', name, data.type);
+	}
 }

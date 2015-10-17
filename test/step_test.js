@@ -3,8 +3,7 @@
 
 "use strict";
 
-const fs = require('fs'),
-  chai = require('chai'),
+const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
   should = chai.should(),
@@ -13,6 +12,7 @@ const fs = require('fs'),
 
   endpointImplementation = require('../lib/endpoint'),
   Step = require('../lib/step'),
+  index = require('../index'),
   scopeDefinitions = require('../lib/scopeDefinitions');
 
 var scopeReports = [];
@@ -65,19 +65,18 @@ OutStep.configuration = {
   }
 };
 
-const aStep = new OutStep(manager, sr, "myStep", {
-  "type": "out-step"
-});
-
-manager.steps = {
-  //  "out-step": demoPassThrough
+manager.stepImplementations = {
+  "out-step": OutStep
 };
+
+const aStep = index.createStep(manager, sr, "myStep", {
+  type: "out-step"
+});
 
 
 describe('steps', function () {
   describe('static', function () {
     describe('single step', function () {
-
       checkStatic(aStep, function () {
         describe('type', function () {
           it('present', function () {
@@ -114,15 +113,14 @@ describe('steps', function () {
 
     describe('livecycle', function () {
       describe('single step', function () {
-        const aStep = new OutStep(manager, sr, "myname", {
-          type: "in-step",
-        }, "myStep");
+        const aStep = index.createStep(manager, sr, "myname", {
+          type: "out-step"
+        });
 
         const inEp = endpointImplementation.createEndpoint("in", {
           "in": true,
           "passive": true
         });
-
 
         let request;
 
