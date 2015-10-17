@@ -32,15 +32,15 @@ exports.registerWithManagerTest = function (manager) {
 exports.createStep = function (manager, scopeReporter, name, data) {
 
 	// TODO what is the registration interface ?
-	const impl = manager.stepImplementations[data.type];
+	const Impl = manager.stepImplementations[data.type];
 
 	if (!name) {
 		name = data.name;
 	}
 
-	if (impl) {
-		return new impl(manager, scopeReporter, name, data);
+	if (Impl) {
+		return new Impl(manager, scopeReporter, name, data);
 	} else {
 		scopeReporter.error('Step implementation not found', 'step', name, data.type);
 	}
-}
+};
