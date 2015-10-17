@@ -11,13 +11,13 @@ module.exports.Endpoint = endpoint.Endpoint;
 module.exports.createEndpoint = endpoint.createEndpoint;
 module.exports.message = message;
 
-exports.registerWithManager = function (manager) {
-	// Nothing to do. The Step itself does not do anything usefull. It is just the base class for other steps
-};
-
 // registers some steps usefull for debugging
 exports.registerWithManagerTest = function (manager) {
 	manager.registerStep(require('./lib/steps/stepConsoleLogger'));
 	manager.registerStep(require('./lib/steps/StepEventGenerator'));
 	manager.registerStep(require('./lib/steps/stepPassThrough'));
 };
+
+exports.createStep = function (manager, sr, clazz, name, data) {
+	return new clazz(manager, sr, name, data);
+}
