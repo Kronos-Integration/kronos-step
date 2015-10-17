@@ -19,19 +19,20 @@ exports.registerWithManagerTest = function (manager) {
 };
 
 /*
- * Creates a step from its configuration data
+ * Creates a step from its configuration data.
+ * 1.) Consultes the manager (stepImplementations) to retrieve the Step
+ *     implementation class from the Step type
+ * 2.) Initialize a new Step instance with the consiguration data
  * @param {Manager} manager kronos service manger
  * @param {ScopeReporter} scopeReporter
  * @param {String} name name of the steps
  * @param {Object} data step configuration data
- * @return {Step} nely created step
+ * @return {Step} newly created step
  */
 exports.createStep = function (manager, scopeReporter, name, data) {
 
 	// TODO what is the registration interface ?
 	const impl = manager.stepImplementations[data.type];
-
-	console.log(`${data.type} -> ${impl}`);
 
 	if (!name) {
 		name = data.name;
