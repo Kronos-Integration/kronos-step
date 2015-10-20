@@ -1,5 +1,6 @@
 {
   "name": "kronos-step",
+  "version": "0.0.0",
   "description": "Base step implementation",
   "main": "index.js",
   "scripts": {

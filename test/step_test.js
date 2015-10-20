@@ -25,8 +25,20 @@ var receivedRequests = [];
 
 const manager = Object.create(new events.EventEmitter(), {});
 
-class OutStep extends Step {
-  _initialize() {
+const outStep = {
+  "extends": Step,
+  "name": "out-step",
+  "endpoints": {
+    "in": {
+      "in": true,
+      "passive": true
+    },
+    "out": {
+      "out": true,
+      "active": true
+    }
+  },
+  _initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
     let sequence = 0;
     let interval;
 
@@ -39,7 +51,7 @@ class OutStep extends Step {
       setInterval(() => {
         sequence = sequence + 1;
         //console.log(`SEND: ${sequence}`);
-        this.endpoints.out.send({
+        endpoints.out.send({
           info: {
             name: "request" + sequence
           },
@@ -51,22 +63,8 @@ class OutStep extends Step {
   }
 };
 
-OutStep.configuration = {
-  "name": "out-step",
-  "endpoints": {
-    "in": {
-      "in": true,
-      "passive": true
-    },
-    "out": {
-      "out": true,
-      "active": true
-    }
-  }
-};
-
 manager.steps = {
-  "out-step": OutStep
+  "out-step": index.prepareStepForRegistration(manager, sr, outStep)
 };
 
 const aStep = index.createStep(manager, sr, {

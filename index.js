@@ -12,6 +12,17 @@ module.exports.Endpoint = endpoint.Endpoint;
 module.exports.createEndpoint = endpoint.createEndpoint;
 module.exports.message = message;
 
+
+exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl) {
+	const base = stepImpl.extends;
+
+	//Object.create(stepImpl);
+
+	const step = base._create.call(stepImpl, manager, scopeReporter, stepImpl.name, {});
+
+	return step;
+}
+
 /*
  * Creates a step from its configuration data.
  * 1.) Consultes the manager (stepImplementations) to retrieve the Step
@@ -31,7 +42,7 @@ exports.createStep = function (manager, scopeReporter, data, name) {
 	}
 
 	if (Impl) {
-		return Imp._create(manager, scopeReporter, name, data);
+		return Impl._create(manager, scopeReporter, name, data);
 	} else {
 		scopeReporter.error('Step implementation not found', 'step', name, data.type);
 	}
