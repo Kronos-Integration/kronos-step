@@ -28,6 +28,7 @@ const manager = Object.create(new events.EventEmitter(), {});
 const outStep = {
   "extends": Step,
   "name": "out-step",
+  "description": "test step only",
   "endpoints": {
     "in": {
       "in": true,

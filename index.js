@@ -16,8 +16,6 @@ module.exports.message = message;
 exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl) {
 	const base = stepImpl.extends;
 
-	//Object.create(stepImpl);
-
 	const step = base._create.call(stepImpl, manager, scopeReporter, stepImpl.name, {});
 
 	return step;
