@@ -12,6 +12,7 @@ const chai = require('chai'),
 
   endpointImplementation = require('../lib/endpoint'),
   Step = require('../lib/step'),
+  testStep = require('kronos-test-step'),
   index = require('../index'),
   scopeDefinitions = require('../lib/scopeDefinitions');
 
@@ -51,7 +52,7 @@ const outStep = {
     this._start = function () {
       setInterval(() => {
         sequence = sequence + 1;
-        //console.log(`SEND: ${sequence}`);
+        console.log(`SEND: ${sequence}`);
         endpoints.out.send({
           info: {
             name: "request" + sequence
@@ -77,7 +78,7 @@ const aStep = index.createStep(manager, sr, {
 describe('steps', function () {
   describe('static', function () {
     describe('single step', function () {
-      checkStatic(aStep, function () {
+      testStep.checkStepStatic(manager, aStep, function () {
         describe('type', function () {
           it('present', function () {
             assert.equal(aStep.type, 'out-step');
@@ -127,12 +128,12 @@ describe('steps', function () {
         inEp.setPassiveGenerator(function* () {
           while (true) {
             request = yield;
-            console.log(`REQUEST: ${request.info.name}`);
+            console.log(`RECEIVE REQUEST: ${request.info.name}`);
           }
         });
         aStep.endpoints.out.connect(inEp);
 
-        checkLivecycle(aStep, function (step, state) {
+        testStep.checkStepLivecycle(manager, aStep, function (step, state) {
           if (state === 'running') {
             console.log("CHECK");
             //assert.isAbove(request.stream, 2);
@@ -141,147 +142,4 @@ describe('steps', function () {
       });
     });
   });
-
-  function checkStatic(aStep, additionalAsserts) {
-    describe('manager', function () {
-      it('present', function () {
-        assert.equal(aStep.manager, manager);
-      });
-    });
-
-    describe('state', function () {
-      it('stopped', function () {
-        assert.equal(aStep.state, 'stopped');
-      });
-    });
-
-    if (additionalAsserts) {
-      additionalAsserts();
-    }
-  }
-
-  function checkLivecycle(aStep, additionalAsserts) {
-    it('can be stopped in stopped state', function (done) {
-      aStep.stop().then(
-        function (step) {
-          try {
-            assert.equal(aStep, step);
-            assert.equal(aStep.state, 'stopped');
-            done();
-          } catch (e) {
-            done(e);
-          }
-        }, done);
-    });
-
-    it('can be started', function (done) {
-      aStep.start().then(function (step) {
-        try {
-          assert.equal(aStep, step);
-          assert.equal(aStep.state, 'running');
-          if (additionalAsserts) {
-            additionalAsserts(aStep, 'running');
-          }
-          setTimeout(done, 50); // wait for some requests to pass through
-        } catch (e) {
-          done(e);
-        }
-      }, done);
-      assert.equal(aStep.state, 'starting');
-    });
-
-    it('can be started again', function (done) {
-      aStep.start().then(function (step) {
-        try {
-          assert.equal(aStep, step);
-          assert.equal(aStep.state, 'running');
-          if (additionalAsserts) {
-            additionalAsserts(aStep, 'running');
-          }
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, done);
-      assert.equal(aStep.state, 'running');
-    });
-
-    it('and then stopped', function (done) {
-      aStep.stop().then(function (step) {
-        try {
-          assert.equal(aStep, step);
-          assert.equal(aStep.state, 'stopped');
-          if (additionalAsserts) {
-            additionalAsserts(aStep, 'stopped');
-          }
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, done);
-      assert.equal(aStep.state, 'stopping');
-    });
-
-    it('and then stopped again', function (done) {
-      aStep.stop().then(function (step) {
-        try {
-          assert.equal(aStep, step);
-          assert.equal(aStep.state, 'stopped');
-          if (additionalAsserts) {
-            additionalAsserts(aStep, 'stopped');
-          }
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, done);
-      assert.equal(aStep.state, 'stopped');
-    });
-
-
-    it('can be started while starting', function (done) {
-      aStep.start().then(function (step) {
-        try {
-          assert.equal(aStep, step);
-          assert.equal(aStep.state, 'running');
-          if (additionalAsserts) {
-            additionalAsserts(aStep, 'running');
-          }
-          //done();
-        } catch (e) {
-          done(e);
-        }
-      }, done);
-
-      aStep.start().then(function (step) {
-        try {
-          assert.equal(aStep, step);
-          assert.equal(aStep.state, 'running');
-          if (additionalAsserts) {
-            additionalAsserts(aStep, 'running');
-          }
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, done);
-
-      assert.equal(aStep.state, 'starting');
-
-      /*
-            aStep.remove().then(function (step) {
-              try {
-                assert.equal(aStep, step);
-                assert.equal(aStep.state, 'removed');
-                if (additionalAsserts) {
-                  additionalAsserts(aStep, 'removed');
-                }
-                done();
-              } catch (e) {
-                done(e);
-              }
-            }, done);
-      */
-    });
-  }
 });

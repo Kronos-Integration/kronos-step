@@ -13,10 +13,14 @@ module.exports.createEndpoint = endpoint.createEndpoint;
 module.exports.message = message;
 
 
+exports.registerWithManager = function (manager) {
+	manager.registerStepImplementation(Step);
+};
+
 exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl) {
 	const base = stepImpl.extends;
 
-	const step = base._create.call(stepImpl, manager, scopeReporter, stepImpl.name, {});
+	const step = base.create.call(stepImpl, manager, scopeReporter, stepImpl.name, {});
 
 	return step;
 }
@@ -40,7 +44,7 @@ exports.createStep = function (manager, scopeReporter, data, name) {
 	}
 
 	if (Impl) {
-		return Impl._create(manager, scopeReporter, name, data);
+		return Impl.create(manager, scopeReporter, name, data);
 	} else {
 		scopeReporter.error('Step implementation not found', 'step', name, data.type);
 	}
