@@ -28,7 +28,7 @@
     "uuid-js": "^0.7.5"
   },
   "devDependencies": {
-    "chai": "3.2.0",
+    "chai": "3.4.0",
     "istanbul-harmony": "0.3.16",
     "mocha": "^2.3.0",
     "semantic-release": "^6.0.1",
