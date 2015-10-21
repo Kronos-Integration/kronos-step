@@ -22,10 +22,7 @@
   },
   "dependencies": {
     "expression-expander": "3.0.0",
-    "scope-reporter": "2.1.0",
-    "clone-deep": "^0.2.2",
-    "merge-light": "0.0.1",
-    "uuid-js": "^0.7.5"
+    "scope-reporter": "2.1.0"
   },
   "devDependencies": {
     "chai": "3.4.0",
@@ -43,6 +40,6 @@
   }],
   "license": "BSD-2-Clause",
   "engines": {
-    "node": ">=4.1.2"
+    "node": ">=4.2.1"
   }
 }
