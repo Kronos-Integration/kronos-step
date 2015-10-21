@@ -3,5 +3,3 @@ The step is the base for all the Kronos-steps. It is currently under havy develo
 So this doc is also not ready.
 
 include::./endpoint.adoc[]
-
-include::./message.adoc[]
