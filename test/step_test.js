@@ -24,10 +24,21 @@ const sr = scopeReporter.createReporter(scopeDefinitions, function (reporter) {
 
 var receivedRequests = [];
 
-const manager = Object.create(new events.EventEmitter(), {});
+var stepImplementations = {};
+const manager = Object.create(new events.EventEmitter(), {
+  steps: {
+    value: stepImplementations
+  }
+});
+
+manager.registerStepImplementation = function (si) {
+  si = index.prepareStepForRegistration(manager, sr, si);
+  stepImplementations[si.name] = si;
+};
+
+
 
 const outStep = {
-  "extends": Step,
   "name": "out-step",
   "description": "test step only",
   "endpoints": {
@@ -65,9 +76,20 @@ const outStep = {
   }
 };
 
-manager.steps = {
-  "out-step": index.prepareStepForRegistration(manager, sr, outStep)
+const stepWithoutInitialize = {
+  "extends": "out-step",
+  "name": "step-without-initialize",
+  "description": "test step only",
+  "endpoints": {
+    "in": {
+      "in": true,
+      "passive": true
+    }
+  }
 };
+
+manager.registerStepImplementation(outStep);
+manager.registerStepImplementation(stepWithoutInitialize);
 
 const aStep = index.createStep(manager, sr, {
   name: "myStep",
@@ -77,7 +99,7 @@ const aStep = index.createStep(manager, sr, {
 
 describe('steps', function () {
   describe('static', function () {
-    describe('single step', function () {
+    describe('single step with initialize', function () {
       testStep.checkStepStatic(manager, aStep, function () {
         describe('type', function () {
           it('present', function () {
@@ -94,9 +116,7 @@ describe('steps', function () {
           it('toJSON()', function () {
             assert.deepEqual(aStep.toJSON(), {
               type: "out-step",
-              state: "stopped",
               endpoints: {
-                "log": {}, // TODO
                 "in": {
                   "in": true,
                   "passive": true
@@ -111,34 +131,68 @@ describe('steps', function () {
         });
       });
     });
+    describe('single step without initialize', function () {
 
-    describe('livecycle', function () {
-      describe('single step', function () {
-        const aStep = index.createStep(manager, sr, {
-          type: "out-step"
-        }, "myname");
+      let aStep = index.createStep(manager, sr, {
+        name: "myStep",
+        type: "step-without-initialize"
+      });
 
-        const inEp = endpointImplementation.createEndpoint("in", {
-          "in": true,
-          "passive": true
+      testStep.checkStepStatic(manager, aStep, function () {
+        describe('type', function () {
+          it('present', function () {
+            assert.equal(aStep.type, 'step-without-initialize');
+          });
         });
-
-        let request;
-
-        inEp.setPassiveGenerator(function* () {
-          while (true) {
-            request = yield;
-            console.log(`RECEIVE REQUEST: ${request.info.name}`);
-          }
+        describe('name', function () {
+          it('given name present', function () {
+            assert.equal(aStep.name, 'myStep');
+          });
+          it('toString() is name', function () {
+            assert.equal(aStep.toString(), 'myStep');
+          });
+          it('toJSON()', function () {
+            assert.deepEqual(aStep.toJSON(), {
+              type: "step-without-initialize",
+              endpoints: {
+                "in": {
+                  "in": true,
+                  "passive": true
+                }
+              }
+            });
+          });
         });
-        aStep.endpoints.out.connect(inEp);
+      });
+    });
+  });
 
-        testStep.checkStepLivecycle(manager, aStep, function (step, state) {
-          if (state === 'running') {
-            console.log("CHECK");
-            //assert.isAbove(request.stream, 2);
-          }
-        });
+  describe('livecycle', function () {
+    describe('single step', function () {
+      const aStep = index.createStep(manager, sr, {
+        type: "out-step"
+      }, "myname");
+
+      const inEp = endpointImplementation.createEndpoint("in", {
+        "in": true,
+        "passive": true
+      });
+
+      let request;
+
+      inEp.setPassiveGenerator(function* () {
+        while (true) {
+          request = yield;
+          console.log(`RECEIVE REQUEST: ${request.info.name}`);
+        }
+      });
+      aStep.endpoints.out.connect(inEp);
+
+      testStep.checkStepLivecycle(manager, aStep, function (step, state) {
+        if (state === 'running') {
+          console.log("CHECK");
+          //assert.isAbove(request.stream, 2);
+        }
       });
     });
   });

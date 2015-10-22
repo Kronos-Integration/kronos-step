@@ -3,23 +3,35 @@
 
 const Step = require('./lib/step');
 const endpoint = require('./lib/endpoint');
-const message = require('./lib/message');
 
 module.exports.Step = Step;
 module.exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 
 module.exports.Endpoint = endpoint.Endpoint;
 module.exports.createEndpoint = endpoint.createEndpoint;
-module.exports.message = message;
 
 
 exports.registerWithManager = function (manager) {
 	manager.registerStepImplementation(Step);
 };
 
+/**
+ * Prepares a step for registration
+ * @param {Object} manager
+ * @param {ScopeReporter} scopeReporter
+ * @param {Object} stepImpl
+ * @return {Step} step ready for registration
+ */
 exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl) {
-	const base = stepImpl.extends;
 
+	// set default base class
+	if (stepImpl.extends) {
+		stepImpl.extends = manager.steps[stepImpl.extends];
+	} else {
+		stepImpl.extends = Step;
+	}
+
+	const base = stepImpl.extends;
 	const step = base.create.call(stepImpl, manager, scopeReporter, stepImpl.name, {});
 
 	return step;
