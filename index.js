@@ -35,7 +35,7 @@ exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl)
 	const step = base.create.call(stepImpl, manager, scopeReporter, stepImpl.name, {});
 
 	return step;
-}
+};
 
 /*
  * Creates a step from its configuration data.
@@ -49,6 +49,14 @@ exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl)
  * @return {Step} newly created step
  */
 exports.createStep = function (manager, scopeReporter, data, name) {
+
+	// The data type is mandatory
+	if (!data.type) {
+		scopeReporter.error(`The step ${name} has not type defined`, 'step', name);
+		return;
+	}
+
+
 	const Impl = manager.steps[data.type];
 
 	if (!name) {
