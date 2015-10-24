@@ -34,6 +34,7 @@ exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl)
 	const base = stepImpl.extends;
 	const step = base.create.call(stepImpl, manager, scopeReporter, stepImpl, stepImpl.name);
 
+
 	// TODO remove replace with Object.getPrototypeOf()
 	step.prototype = base;
 

@@ -53,23 +53,27 @@ const outStep = {
     let sequence = 0;
     let interval;
 
-    this._stop = function () {
-      clearInterval(interval);
-      return Promise.resolve(this);
+    props._stop = {
+      value: function () {
+        clearInterval(interval);
+        return Promise.resolve(this);
+      }
     };
 
-    this._start = function () {
-      setInterval(() => {
-        sequence = sequence + 1;
-        console.log(`SEND: ${sequence}`);
-        endpoints.out.send({
-          info: {
-            name: "request" + sequence
-          },
-          stream: sequence
-        });
-      }, 5);
-      return Promise.resolve(this);
+    props._start = {
+      value: function () {
+        setInterval(() => {
+          sequence = sequence + 1;
+          console.log(`SEND: ${sequence}`);
+          endpoints.out.send({
+            info: {
+              name: "request" + sequence
+            },
+            stream: sequence
+          });
+        }, 5);
+        return Promise.resolve(this);
+      }
     };
   }
 };
@@ -97,6 +101,28 @@ const aStep = index.createStep(manager, sr, {
 
 
 describe('steps', function () {
+  describe('registration and inheritance', function () {
+    const aStep = manager.steps['out-step'];
+    describe('attributes', function () {
+      it('present', function () {
+        assert.deepEqual(aStep.toJSON(), {
+          type: "out-step",
+          "description": "test step only",
+          endpoints: {
+            "in": {
+              "in": true,
+              "passive": true
+            },
+            "out": {
+              "active": true,
+              "out": true
+            }
+          }
+        });
+      });
+    });
+  });
+
   describe('static', function () {
     describe('single step with initialize', function () {
       testStep.checkStepStatic(manager, aStep, function () {
