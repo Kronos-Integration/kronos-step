@@ -32,11 +32,9 @@ const manager = Object.create(new events.EventEmitter(), {
 });
 
 manager.registerStepImplementation = function (si) {
-  si = index.prepareStepForRegistration(manager, sr, si);
-  stepImplementations[si.name] = si;
+  const psi = index.prepareStepForRegistration(manager, sr, si);
+  stepImplementations[psi.name] = psi;
 };
-
-
 
 const outStep = {
   "name": "out-step",
@@ -79,7 +77,7 @@ const outStep = {
 const stepWithoutInitialize = {
   "extends": "out-step",
   "name": "step-without-initialize",
-  "description": "test step only",
+  "description": "test step without initialize only",
   "endpoints": {
     "in": {
       "in": true,
@@ -93,7 +91,8 @@ manager.registerStepImplementation(stepWithoutInitialize);
 
 const aStep = index.createStep(manager, sr, {
   name: "myStep",
-  type: "out-step"
+  type: "out-step",
+  description: "my out-step description"
 });
 
 
@@ -113,9 +112,18 @@ describe('steps', function () {
           it('toString() is name', function () {
             assert.equal(aStep.toString(), 'myStep');
           });
+        });
+        describe('description', function () {
+          it('present', function () {
+            assert.equal(aStep.description, 'my out-step description');
+          });
+        });
+
+        describe('json', function () {
           it('toJSON()', function () {
             assert.deepEqual(aStep.toJSON(), {
               type: "out-step",
+              "description": "my out-step description",
               endpoints: {
                 "in": {
                   "in": true,
@@ -151,10 +159,13 @@ describe('steps', function () {
           it('toString() is name', function () {
             assert.equal(aStep.toString(), 'myStep');
           });
+        });
+        describe('json', function () {
           it('toJSON()', function () {
             assert.deepEqual(aStep.toJSON(), {
-              type: "step-without-initialize",
-              endpoints: {
+              "type": "step-without-initialize",
+              "description": "test step without initialize only",
+              "endpoints": {
                 "in": {
                   "in": true,
                   "passive": true

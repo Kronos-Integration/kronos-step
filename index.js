@@ -32,7 +32,12 @@ exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl)
 	}
 
 	const base = stepImpl.extends;
-	const step = base.create.call(stepImpl, manager, scopeReporter, stepImpl.name, {});
+	const step = base.create.call(stepImpl, manager, scopeReporter, stepImpl, stepImpl.name);
+
+	// TODO remove replace with Object.getPrototypeOf()
+	step.prototype = base;
+
+	console.log(`prepare: ${step} ${Object.getPrototypeOf(this)} ${base}`);
 
 	return step;
 };
@@ -56,7 +61,6 @@ exports.createStep = function (manager, scopeReporter, data, name) {
 		return;
 	}
 
-
 	const Impl = manager.steps[data.type];
 
 	if (!name) {
@@ -64,7 +68,7 @@ exports.createStep = function (manager, scopeReporter, data, name) {
 	}
 
 	if (Impl) {
-		return Impl.create(manager, scopeReporter, name, data);
+		return Impl.create(manager, scopeReporter, data, name);
 	} else {
 		scopeReporter.error('Step implementation not found', 'step', name, data.type);
 	}
