@@ -92,7 +92,15 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 
 
 	// set default base class
-	const parent = baseStep.extends ? manager.steps[baseStep.extends] : Step;
+	let parent;
+	if (baseStep.extends) {
+		parent = manager.steps[baseStep.extends];
+		if (!parent) {
+			throw new Error(`The base step '${baseStep.extends}' is not registered. Error in step '${name}'`);
+		}
+	} else {
+		parent = Step;
+	}
 
 	scopeReporter.enterScope('step', name);
 
