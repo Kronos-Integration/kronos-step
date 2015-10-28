@@ -1,5 +1,8 @@
-== Abstract Step
-The step is the base for all the Kronos-steps. It is currently under havy development and not stable.
-So this doc is also not ready.
+
+include::./step.adoc[]
+
+include::./step-interface.adoc[]
 
 include::./endpoint.adoc[]
+
+include::./endpoint-interface.adoc[]

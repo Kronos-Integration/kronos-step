@@ -2,15 +2,17 @@
 Describes the step interface. Each step need to implement the methods of this step interface.
 
 
-=== name
+=== Step properties
+
+name::
 Returns the name of the step. For the 'raw' step as it will be registered at the kronos-manager the name will
 be the same as the type.
 
-=== type
+type::
 The type of this step. The type is just a name to register the step at the the kronos-manager. In a flow this is the
 name to reference the step.
 
-=== putEndpoint
+putEndpoint::
 Adds an endpoint to the step. The endpoint will be registered at the step
 under the name of the endpoint.
 
@@ -19,7 +21,7 @@ under the name of the endpoint.
 myStep.putEndpoint(myEndpoint);
 ----
 
-=== endpoints
+endpoints::
 Returns an object with all the endpoints of this step.
 
 [source,js]
@@ -29,20 +31,21 @@ Returns an object with all the endpoints of this step.
 }
 ----
 
+=== Step methods
 
-=== start
+start::
 Starts the step. If a step is started it is able to retrieve requests over its endpoints.
 The start method will return a Promise with the step itself after it is fullfiled.
 
-=== stop
+stop::
 Stops a step. When a step will be stopped it should disable the inbound endpoints first. So no new request
 could come in.
 
-=== isRunning
+isRunning::
 Returns a true value if the step is running. This means it is not stopped.
 
 
-=== create
+create::
 This function creates a new instance of this step. This method is used if a flow needs step instances.
 
 [source,js]
@@ -58,6 +61,7 @@ This function creates a new instance of this step. This method is used if a flow
 create(manager, scopeReporter, stepConfiguration, name)
 ----
 
+toString::
 
-toString
-toJSON
+
+toJSON::
