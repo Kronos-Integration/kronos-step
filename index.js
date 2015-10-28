@@ -82,23 +82,9 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 	}
 
 	// set default base class
-	/* if (baseStep.extends) {
-		baseStep.extends = manager.steps[baseStep.extends];
-	} else {
-		baseStep.extends = Step;
-	}*/
-
 	const parent = baseStep.extends ? manager.steps[baseStep.extends] : Step;
 
 	scopeReporter.enterScope('step', name);
-
-	//console.log(`${parent} ${this}`);
-	// create the endpoints from what we know
-
-	// TODO find bettwer way to decide if parent or target itself can be used
-	// const endpoints =
-	// 	baseStep._createEndpoints ? baseStep._createEndpoints(scopeReporter, baseStep) :
-	// 	parent._createEndpoints.call(baseStep, scopeReporter, baseStep);
 
 	let endpoints;
 	if (baseStep._createEndpoints) {
@@ -110,20 +96,12 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 
 
 	// prepare object properties
-	// const props =
-	// 	baseStep._prepareProperties ? baseStep._prepareProperties(manager, scopeReporter, name, baseStep, endpoints) :
-	// 	parent._prepareProperties.call(baseStep, manager, scopeReporter, name, baseStep, endpoints);
-
 	let props;
 	if (baseStep._prepareProperties) {
 		props = baseStep._prepareProperties(manager, scopeReporter, name, data, endpoints);
 	} else {
 		props = parent._prepareProperties.call(baseStep, manager, scopeReporter, name, data, endpoints);
 	}
-
-
-	// baseStep._initialize ? baseStep._initialize(manager, scopeReporter, name, baseStep, endpoints, props) :
-	// 	parent._initialize.call(baseStep, manager, scopeReporter, name, baseStep, endpoints, props);
 
 	if (baseStep._initialize) {
 		baseStep._initialize(manager, scopeReporter, name, data, endpoints, props);
@@ -133,8 +111,6 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 
 	Object.keys(baseStep).forEach((p) => {
 		if (baseStep.hasOwnProperty(p) && !props[p]) {
-			console.log(`${name} copy ${p}`);
-
 			props[p] = {
 				value: baseStep[p]
 			};
@@ -145,19 +121,9 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 
 	newStep._createPredefinedEndpoints(scopeReporter, baseStep);
 
-	/*	newStep.create = function (manager, scopeReporter, data, name) {
-			data.extends = this.type;
-			return _create(manager, scopeReporter, data, name);
-		};*/
-
-	// @TODO markus: warum dieser Aufruf??
-	//parent._createEndpoints.call(baseStep, scopeReporter, baseStep);
 
 	scopeReporter.leaveScope('step');
 
-	// TODO remove replace with Object.getPrototypeOf()
-	//newStep.prototype = base;
 
-	console.log(`_create: ${name} ${parent} ${JSON.stringify(newStep)}`);
 	return newStep;
 }
