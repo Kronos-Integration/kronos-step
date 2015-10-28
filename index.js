@@ -23,24 +23,7 @@ exports.registerWithManager = function (manager) {
  * @return {Step} step ready for registration
  */
 exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl) {
-
-	// set default base class
-	if (stepImpl.extends) {
-		stepImpl.extends = manager.steps[stepImpl.extends];
-	} else {
-		stepImpl.extends = Step;
-	}
-
-	const base = stepImpl.extends;
-	const step = base.create.call(stepImpl, manager, scopeReporter, stepImpl, stepImpl.name);
-
-
-	// TODO remove replace with Object.getPrototypeOf()
-	step.prototype = base;
-
-	console.log(`prepare: ${step} ${Object.getPrototypeOf(this)} ${base}`);
-
-	return step;
+	return _create(manager, scopeReporter, stepImpl, stepImpl.name);
 };
 
 /*
@@ -74,3 +57,81 @@ exports.createStep = function (manager, scopeReporter, data, name) {
 		scopeReporter.error('Step implementation not found', 'step', name, data.type);
 	}
 };
+
+
+/**
+ * Step factory.
+ * @param {Step} parent Step
+ * @param {Manager} manager
+ * @param {Object} scopeReporter This reporter is used to report parsing errors
+ * @param {Object} stepConfiguration The default step configuration
+ * @param {String} name of the step
+ * @api protected
+ */
+function _create(manager, scopeReporter, template, name) {
+
+	if (!manager) {
+		throw new Error("No 'kronos' service manager given");
+	}
+	if (!scopeReporter) {
+		throw new Error("No 'scopeReporter' given");
+	}
+	if (!name) {
+		throw new Error("No 'name' given");
+	}
+
+	// set default base class
+	if (template.extends) {
+		template.extends = manager.steps[template.extends];
+	} else {
+		template.extends = Step;
+	}
+
+	const parent = template.extends;
+
+	scopeReporter.enterScope('step', name);
+
+	//console.log(`${parent} ${this}`);
+	// create the endpoints from what we know
+
+	// TODO find bettwer way to decide if parent or target itself can be used
+	const endpoints =
+		template._createEndpoints ? template._createEndpoints(scopeReporter, template) :
+		parent._createEndpoints.call(template, scopeReporter, template);
+
+	// prepare object properties
+	const props =
+		template._prepareProperties ? template._prepareProperties(manager, scopeReporter, name, template, endpoints) :
+		parent._prepareProperties.call(template, manager, scopeReporter, name, template, endpoints);
+
+	template._initialize ? template._initialize(manager, scopeReporter, name, template, endpoints, props) :
+		parent._initialize.call(template, manager, scopeReporter, name, template, endpoints, props);
+
+	Object.keys(template).forEach((p) => {
+		if (template.hasOwnProperty(p) && !props[p]) {
+			console.log(`${name} copy ${p}`);
+
+			props[p] = {
+				value: template[p]
+			};
+		}
+	});
+
+	let newStep = Object.create(parent, props);
+
+	newStep._createPredefinedEndpoints(scopeReporter, template);
+
+	newStep.create = function (manager, scopeReporter, data, name) {
+		return _create(manager, scopeReporter, data, name);
+	};
+
+	parent._createEndpoints.call(template, scopeReporter, template);
+
+	scopeReporter.leaveScope('step');
+
+	// TODO remove replace with Object.getPrototypeOf()
+	//newStep.prototype = base;
+
+	console.log(`_create: ${name} ${parent} ${JSON.stringify(newStep)}`);
+	return newStep;
+}
