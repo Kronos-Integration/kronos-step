@@ -116,9 +116,9 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 
 	let props;
 	if (baseStep._prepareProperties) {
-		props = baseStep._prepareProperties(manager, scopeReporter, name, baseStep, endpoints);
+		props = baseStep._prepareProperties(manager, scopeReporter, name, data, endpoints);
 	} else {
-		props = parent._prepareProperties.call(baseStep, manager, scopeReporter, name, baseStep, endpoints);
+		props = parent._prepareProperties.call(baseStep, manager, scopeReporter, name, data, endpoints);
 	}
 
 
@@ -126,9 +126,9 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 	// 	parent._initialize.call(baseStep, manager, scopeReporter, name, baseStep, endpoints, props);
 
 	if (baseStep._initialize) {
-		baseStep._initialize(manager, scopeReporter, name, baseStep, endpoints, props);
+		baseStep._initialize(manager, scopeReporter, name, data, endpoints, props);
 	} else {
-		parent._initialize.call(baseStep, manager, scopeReporter, name, baseStep, endpoints, props);
+		parent._initialize.call(baseStep, manager, scopeReporter, name, data, endpoints, props);
 	}
 
 	Object.keys(baseStep).forEach((p) => {
