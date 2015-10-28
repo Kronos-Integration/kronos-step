@@ -12,7 +12,7 @@ module.exports.createEndpoint = endpoint.createEndpoint;
 
 
 exports.registerWithManager = function (manager) {
-	manager.registerStepImplementation(Step);
+	manager.registerStepImplementation(prepareStepForRegistration(manager, undefined, Step));
 };
 
 /**
@@ -22,9 +22,11 @@ exports.registerWithManager = function (manager) {
  * @param {Object} stepImpl
  * @return {Step} step ready for registration
  */
-exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl) {
+function prepareStepForRegistration(manager, scopeReporter, stepImpl) {
 	return _create(manager, scopeReporter, stepImpl, {}, stepImpl.name);
-};
+}
+
+exports.prepareStepForRegistration = prepareStepForRegistration;
 
 /*
  * Creates a step from its configuration data.
@@ -38,6 +40,11 @@ exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl)
  * @return {Step} newly created step
  */
 exports.createStep = function (manager, scopeReporter, data, name) {
+
+	if (!scopeReporter) {
+		// get default scopereporter
+		scopeReporter = manager.scopeReporter;
+	}
 
 	// The data type is mandatory
 	if (!data.type) {
@@ -71,15 +78,18 @@ exports.createStep = function (manager, scopeReporter, data, name) {
  */
 function _create(manager, scopeReporter, baseStep, data, name) {
 
+	if (!scopeReporter) {
+		// get default scopereporter
+		scopeReporter = manager.scopeReporter;
+	}
+
 	if (!manager) {
 		throw new Error("No 'kronos' service manager given");
-	}
-	if (!scopeReporter) {
-		throw new Error("No 'scopeReporter' given");
 	}
 	if (!name) {
 		throw new Error("No 'name' given");
 	}
+
 
 	// set default base class
 	const parent = baseStep.extends ? manager.steps[baseStep.extends] : Step;
@@ -122,9 +132,11 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 	newStep._createPredefinedEndpoints(scopeReporter, baseStep);
 
 
-	newStep.getInstance = function (manager, scopeReporter, stepDefinition) {
-		return _create(manager, scopeReporter, newStep, stepDefinition, stepDefinition.name)
-	};
+	if (!newStep.getInstance) {
+		newStep.getInstance = function (manager, scopeReporter, stepDefinition) {
+			return _create(manager, scopeReporter, this, stepDefinition, stepDefinition.name);
+		};
+	}
 
 	scopeReporter.leaveScope('step');
 

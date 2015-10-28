@@ -38,14 +38,14 @@ This function creates a new instance of this step. This method is used if a flow
 [source,js]
 ----
 /**
- * Step factory.
+ * Returns a new step instance with the given configuration
  * @param {Manager} manager
- * @param {Object} scopeReporter This reporter is used to report parsing errors
+ * @param {Object} scopeReporter (optional) This reporter is used to report parsing errors.
+ *                               If not given the scopereporter from the manager will be taken
  * @param {Object} stepConfiguration The default step configuration
- * @param {String} name of the step
  * @api protected
  */
-create(manager, scopeReporter, stepConfiguration, name)
+getInstance(manager, scopeReporter, stepConfiguration)
 ----
 
 toString::

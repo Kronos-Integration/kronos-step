@@ -26,8 +26,7 @@ const manager = Object.create(new events.EventEmitter(), {
 });
 
 manager.registerStepImplementation = function (si) {
-  const psi = index.prepareStepForRegistration(manager, sr, si);
-  stepImplementations[psi.name] = psi;
+  stepImplementations[si.name] = si;
 };
 
 const outStep = {
@@ -66,8 +65,8 @@ const stepWithoutInitialize = {
   property3: "property3"
 };
 
-manager.registerStepImplementation(outStep);
-manager.registerStepImplementation(stepWithoutInitialize);
+manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, outStep));
+manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, stepWithoutInitialize));
 
 describe('registration and inheritance', function () {
   describe('out-step', function () {
