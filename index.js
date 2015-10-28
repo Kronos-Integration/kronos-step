@@ -95,17 +95,40 @@ function _create(manager, scopeReporter, template, name) {
 	// create the endpoints from what we know
 
 	// TODO find bettwer way to decide if parent or target itself can be used
-	const endpoints =
-		template._createEndpoints ? template._createEndpoints(scopeReporter, template) :
-		parent._createEndpoints.call(template, scopeReporter, template);
+	// const endpoints =
+	// 	template._createEndpoints ? template._createEndpoints(scopeReporter, template) :
+	// 	parent._createEndpoints.call(template, scopeReporter, template);
+
+	let endpoints;
+	if (template._createEndpoints) {
+		endpoints = template._createEndpoints(scopeReporter, template);
+	} else {
+		endpoints = parent._createEndpoints.call(template, scopeReporter, template);
+	}
+
+
 
 	// prepare object properties
-	const props =
-		template._prepareProperties ? template._prepareProperties(manager, scopeReporter, name, template, endpoints) :
-		parent._prepareProperties.call(template, manager, scopeReporter, name, template, endpoints);
+	// const props =
+	// 	template._prepareProperties ? template._prepareProperties(manager, scopeReporter, name, template, endpoints) :
+	// 	parent._prepareProperties.call(template, manager, scopeReporter, name, template, endpoints);
 
-	template._initialize ? template._initialize(manager, scopeReporter, name, template, endpoints, props) :
+	let props;
+	if (template._prepareProperties) {
+		props = template._prepareProperties(manager, scopeReporter, name, template, endpoints);
+	} else {
+		props = parent._prepareProperties.call(template, manager, scopeReporter, name, template, endpoints);
+	}
+
+
+	// template._initialize ? template._initialize(manager, scopeReporter, name, template, endpoints, props) :
+	// 	parent._initialize.call(template, manager, scopeReporter, name, template, endpoints, props);
+
+	if (template._initialize) {
+		template._initialize(manager, scopeReporter, name, template, endpoints, props);
+	} else {
 		parent._initialize.call(template, manager, scopeReporter, name, template, endpoints, props);
+	}
 
 	Object.keys(template).forEach((p) => {
 		if (template.hasOwnProperty(p) && !props[p]) {
@@ -125,6 +148,7 @@ function _create(manager, scopeReporter, template, name) {
 		return _create(manager, scopeReporter, data, name);
 	};
 
+	// @TODO markus: warum dieser Aufruf??
 	parent._createEndpoints.call(template, scopeReporter, template);
 
 	scopeReporter.leaveScope('step');
