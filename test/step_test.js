@@ -170,7 +170,6 @@ describe('steps', function () {
           it('toJSON()', function () {
             assert.deepEqual(aStep.toJSON(), {
               "type": "step-without-initialize",
-              "description": "test step without initialize only",
               "endpoints": {
                 "in": {
                   "in": true,
