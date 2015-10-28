@@ -23,7 +23,7 @@ exports.registerWithManager = function (manager) {
  * @return {Step} step ready for registration
  */
 exports.prepareStepForRegistration = function (manager, scopeReporter, stepImpl) {
-	return _create(manager, scopeReporter, stepImpl, stepImpl.name);
+	return _create(manager, scopeReporter, stepImpl, {}, stepImpl.name);
 };
 
 /*
@@ -45,14 +45,15 @@ exports.createStep = function (manager, scopeReporter, data, name) {
 		return;
 	}
 
-	const Impl = manager.steps[data.type];
+	const baseStep = manager.steps[data.type];
 
 	if (!name) {
 		name = data.name;
 	}
 
-	if (Impl) {
-		return Impl.create(manager, scopeReporter, data, name);
+	if (baseStep) {
+		return _create(manager, scopeReporter, baseStep, data, name);
+		//return Impl.create(manager, scopeReporter, data, name);
 	} else {
 		scopeReporter.error('Step implementation not found', 'step', name, data.type);
 	}
@@ -68,7 +69,7 @@ exports.createStep = function (manager, scopeReporter, data, name) {
  * @param {String} name of the step
  * @api protected
  */
-function _create(manager, scopeReporter, template, name) {
+function _create(manager, scopeReporter, baseStep, data, name) {
 
 	if (!manager) {
 		throw new Error("No 'kronos' service manager given");
@@ -81,13 +82,13 @@ function _create(manager, scopeReporter, template, name) {
 	}
 
 	// set default base class
-	if (template.extends) {
-		template.extends = manager.steps[template.extends];
+	/* if (baseStep.extends) {
+		baseStep.extends = manager.steps[baseStep.extends];
 	} else {
-		template.extends = Step;
-	}
+		baseStep.extends = Step;
+	}*/
 
-	const parent = template.extends;
+	const parent = baseStep.extends ? manager.steps[baseStep.extends] : Step;
 
 	scopeReporter.enterScope('step', name);
 
@@ -96,60 +97,61 @@ function _create(manager, scopeReporter, template, name) {
 
 	// TODO find bettwer way to decide if parent or target itself can be used
 	// const endpoints =
-	// 	template._createEndpoints ? template._createEndpoints(scopeReporter, template) :
-	// 	parent._createEndpoints.call(template, scopeReporter, template);
+	// 	baseStep._createEndpoints ? baseStep._createEndpoints(scopeReporter, baseStep) :
+	// 	parent._createEndpoints.call(baseStep, scopeReporter, baseStep);
 
 	let endpoints;
-	if (template._createEndpoints) {
-		endpoints = template._createEndpoints(scopeReporter, template);
+	if (baseStep._createEndpoints) {
+		endpoints = baseStep._createEndpoints(scopeReporter, baseStep, data);
 	} else {
-		endpoints = parent._createEndpoints.call(template, scopeReporter, template);
+		endpoints = parent._createEndpoints.call(baseStep, scopeReporter, baseStep, data);
 	}
 
 
 
 	// prepare object properties
 	// const props =
-	// 	template._prepareProperties ? template._prepareProperties(manager, scopeReporter, name, template, endpoints) :
-	// 	parent._prepareProperties.call(template, manager, scopeReporter, name, template, endpoints);
+	// 	baseStep._prepareProperties ? baseStep._prepareProperties(manager, scopeReporter, name, baseStep, endpoints) :
+	// 	parent._prepareProperties.call(baseStep, manager, scopeReporter, name, baseStep, endpoints);
 
 	let props;
-	if (template._prepareProperties) {
-		props = template._prepareProperties(manager, scopeReporter, name, template, endpoints);
+	if (baseStep._prepareProperties) {
+		props = baseStep._prepareProperties(manager, scopeReporter, name, baseStep, endpoints);
 	} else {
-		props = parent._prepareProperties.call(template, manager, scopeReporter, name, template, endpoints);
+		props = parent._prepareProperties.call(baseStep, manager, scopeReporter, name, baseStep, endpoints);
 	}
 
 
-	// template._initialize ? template._initialize(manager, scopeReporter, name, template, endpoints, props) :
-	// 	parent._initialize.call(template, manager, scopeReporter, name, template, endpoints, props);
+	// baseStep._initialize ? baseStep._initialize(manager, scopeReporter, name, baseStep, endpoints, props) :
+	// 	parent._initialize.call(baseStep, manager, scopeReporter, name, baseStep, endpoints, props);
 
-	if (template._initialize) {
-		template._initialize(manager, scopeReporter, name, template, endpoints, props);
+	if (baseStep._initialize) {
+		baseStep._initialize(manager, scopeReporter, name, baseStep, endpoints, props);
 	} else {
-		parent._initialize.call(template, manager, scopeReporter, name, template, endpoints, props);
+		parent._initialize.call(baseStep, manager, scopeReporter, name, baseStep, endpoints, props);
 	}
 
-	Object.keys(template).forEach((p) => {
-		if (template.hasOwnProperty(p) && !props[p]) {
+	Object.keys(baseStep).forEach((p) => {
+		if (baseStep.hasOwnProperty(p) && !props[p]) {
 			console.log(`${name} copy ${p}`);
 
 			props[p] = {
-				value: template[p]
+				value: baseStep[p]
 			};
 		}
 	});
 
 	let newStep = Object.create(parent, props);
 
-	newStep._createPredefinedEndpoints(scopeReporter, template);
+	newStep._createPredefinedEndpoints(scopeReporter, baseStep);
 
-	newStep.create = function (manager, scopeReporter, data, name) {
-		return _create(manager, scopeReporter, data, name);
-	};
+	/*	newStep.create = function (manager, scopeReporter, data, name) {
+			data.extends = this.type;
+			return _create(manager, scopeReporter, data, name);
+		};*/
 
 	// @TODO markus: warum dieser Aufruf??
-	parent._createEndpoints.call(template, scopeReporter, template);
+	//parent._createEndpoints.call(baseStep, scopeReporter, baseStep);
 
 	scopeReporter.leaveScope('step');
 
