@@ -8,19 +8,6 @@ name::
 Returns the name of the step. For the 'raw' step as it will be registered at the kronos-manager the name will
 be the same as the type.
 
-type::
-The type of this step. The type is just a name to register the step at the the kronos-manager. In a flow this is the
-name to reference the step.
-
-putEndpoint::
-Adds an endpoint to the step. The endpoint will be registered at the step
-under the name of the endpoint.
-
-[source,js]
-----
-myStep.putEndpoint(myEndpoint);
-----
-
 endpoints::
 Returns an object with all the endpoints of this step.
 
@@ -45,7 +32,7 @@ isRunning::
 Returns a true value if the step is running. This means it is not stopped.
 
 
-create::
+getInstance::
 This function creates a new instance of this step. This method is used if a flow needs step instances.
 
 [source,js]

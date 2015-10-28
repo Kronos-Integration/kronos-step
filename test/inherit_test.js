@@ -101,13 +101,17 @@ describe('registration and inheritance', function () {
     });
 
     describe('createStep', function () {
-      const aStep = index.createStep(manager, sr, {
-        name: "myStep",
-        type: "out-step"
-      });
-      assert.deepEqual(aStep.toJSON(), {
-        "type": "out-step",
-        "endpoints": {}
+      it('compare', function () {
+        const aStep = index.createStep(manager, sr, {
+          name: "myStep",
+          type: "out-step"
+        });
+
+        assert.deepEqual(aStep.toJSON(), {
+          "type": "out-step",
+          "endpoints": {}
+        });
+
       });
     });
   });
