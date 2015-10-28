@@ -122,6 +122,10 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 	newStep._createPredefinedEndpoints(scopeReporter, baseStep);
 
 
+	newStep.getInstance = function (manager, scopeReporter, stepDefinition) {
+		return _create(manager, scopeReporter, newStep, stepDefinition, stepDefinition.name)
+	};
+
 	scopeReporter.leaveScope('step');
 
 
