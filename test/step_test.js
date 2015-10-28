@@ -63,7 +63,7 @@ const outStep = {
       value: function () {
         setInterval(() => {
           sequence = sequence + 1;
-          console.log(`SEND: ${sequence}`);
+          //console.log(`SEND: ${sequence}`);
           endpoints.out.send({
             info: {
               name: "request" + sequence
@@ -140,8 +140,6 @@ describe('steps', function () {
                 }
               }
             });
-
-
           });
         });
       });
@@ -200,15 +198,15 @@ describe('steps', function () {
       inEp.setPassiveGenerator(function* () {
         while (true) {
           request = yield;
-          console.log(`RECEIVE REQUEST: ${request.info.name}`);
+          //console.log(`RECEIVE REQUEST: ${request.info.name}`);
         }
       });
       aStep.endpoints.out.connect(inEp);
 
       testStep.checkStepLivecycle(manager, aStep, function (step, state) {
-        if (state === 'running') {
-          console.log("CHECK");
-          //assert.isAbove(request.stream, 2);
+        if (state === 'running' && request) {
+          //console.log(`CHECK: ${request.info.name}`);
+          assert.match(request.info.name, /request\d+/);
         }
       });
     });
