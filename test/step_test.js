@@ -101,28 +101,6 @@ const aStep = index.createStep(manager, sr, {
 
 
 describe('steps', function () {
-  describe('registration and inheritance', function () {
-    const aStep = manager.steps['out-step'];
-    describe('attributes', function () {
-      it('present', function () {
-        assert.deepEqual(aStep.toJSON(), {
-          type: "out-step",
-          "description": "test step only",
-          endpoints: {
-            "in": {
-              "in": true,
-              "passive": true
-            },
-            "out": {
-              "active": true,
-              "out": true
-            }
-          }
-        });
-      });
-    });
-  });
-
   describe('static', function () {
     describe('single step with initialize', function () {
       testStep.checkStepStatic(manager, aStep, function () {
@@ -148,9 +126,9 @@ describe('steps', function () {
         describe('json', function () {
           it('toJSON()', function () {
             assert.deepEqual(aStep.toJSON(), {
-              type: "out-step",
+              "type": "out-step",
               "description": "my out-step description",
-              endpoints: {
+              "endpoints": {
                 "in": {
                   "in": true,
                   "passive": true
