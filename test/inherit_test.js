@@ -109,7 +109,16 @@ describe('registration and inheritance', function () {
 
         assert.deepEqual(aStep.toJSON(), {
           "type": "out-step",
-          "endpoints": {}
+          "endpoints": {
+            "in": {
+              "in": true,
+              "passive": true
+            },
+            "out": {
+              "active": true,
+              "out": true
+            }
+          }
         });
 
       });
