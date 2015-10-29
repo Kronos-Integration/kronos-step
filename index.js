@@ -7,7 +7,6 @@ const endpoint = require('./lib/endpoint');
 module.exports.Step = Step;
 module.exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 
-module.exports.Endpoint = endpoint.Endpoint;
 module.exports.createEndpoint = endpoint.createEndpoint;
 
 
