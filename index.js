@@ -139,12 +139,13 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 
 	newStep._createPredefinedEndpoints(scopeReporter, baseStep);
 
-	// Finalize the object
-	newStep.finalize(manager, scopeReporter, data);
 
 	if (!newStep.getInstance) {
 		newStep.getInstance = function (manager, scopeReporter, stepDefinition) {
-			return _create(manager, scopeReporter, this, stepDefinition, stepDefinition.name);
+			const newInstance = _create(manager, scopeReporter, this, stepDefinition, stepDefinition.name);
+			// Finalize the object
+			newInstance.finalize(manager, scopeReporter, stepDefinition);
+			return newInstance;
 		};
 	}
 
