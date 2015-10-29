@@ -45,7 +45,7 @@ const outStep = {
 
   property2: "property2",
 
-  _initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+  initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
     props.property1 = {
       value: "property1"
     };
