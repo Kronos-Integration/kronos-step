@@ -49,6 +49,11 @@ const outStep = {
     props.property1 = {
       value: "property1"
     };
+  },
+
+  finalize(manager, scopeReporter, stepDefinition) {
+    Object.getPrototypeOf(this).finalize(manager, scopeReporter, stepDefinition);
+    this.finalizeHasBeenCalled1 = true;
   }
 };
 
@@ -62,9 +67,15 @@ const stepWithoutInitialize = {
       "passive": true
     }
   },
-  property3: "property3"
+  property3: "property3",
+
+  finalize(manager, scopeReporter, stepDefinition) {
+    Object.getPrototypeOf(this).finalize(manager, scopeReporter, stepDefinition);
+    this.finalizeHasBeenCalled2 = true;
+  }
 };
 
+//manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, Step));
 manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, outStep));
 manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, stepWithoutInitialize));
 
@@ -126,6 +137,7 @@ describe('registration and inheritance', function () {
 
   describe('step-without-initialize', function () {
     const aStep = manager.steps['step-without-initialize'];
+
     describe('user defined attributes', function () {
       it('property1', function () {
         assert.equal(aStep.property1, 'property1');
@@ -150,6 +162,19 @@ describe('registration and inheritance', function () {
             }
           }
         });
+      });
+    });
+
+    describe('get instance', function () {
+      const instance = aStep.getInstance(manager, sr, {
+        name: "inst1"
+      });
+      it('out-step finalized', function () {
+        assert.equal(aStep.finalizeHasBeenCalled1, true);
+      });
+
+      xit('step-without-initialize finalized', function () {
+        assert.equal(aStep.finalizeHasBeenCalled2, true);
       });
     });
   });
