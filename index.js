@@ -71,7 +71,8 @@ exports.createStep = function (manager, scopeReporter, data, name) {
  * @param {Step} parent Step
  * @param {Manager} manager
  * @param {Object} scopeReporter This reporter is used to report parsing errors
- * @param {Object} stepConfiguration The default step configuration
+ * @param {Step} baseStep The base step
+ * @param {Object} data configuration of the new step
  * @param {String} name of the step
  * @api protected
  */
