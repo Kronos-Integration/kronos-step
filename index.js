@@ -135,7 +135,13 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 		}
 	});
 
+	// TODO das muss ganz weg. bject create muss überarbeitet werden
+	props.finalize = {
+		value: baseStep.finalize
+	};
+
 	let newStep = Object.create(parent, props);
+
 
 	newStep._createPredefinedEndpoints(scopeReporter, baseStep);
 
