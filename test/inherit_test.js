@@ -173,7 +173,7 @@ describe('registration and inheritance', function () {
         assert.equal(aStep.finalizeHasBeenCalled1, true);
       });
 
-      xit('step-without-initialize finalized', function () {
+      it('step-without-initialize finalized', function () {
         assert.equal(aStep.finalizeHasBeenCalled2, true);
       });
     });

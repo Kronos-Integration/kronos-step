@@ -111,8 +111,6 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 		endpoints = parent._createEndpoints.call(baseStep, scopeReporter, baseStep, data);
 	}
 
-
-
 	// prepare object properties
 	let props;
 	if (baseStep._prepareProperties) {
@@ -140,11 +138,9 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 		value: baseStep.finalize
 	};
 
-	let newStep = Object.create(parent, props);
-
+	const newStep = Object.create(parent, props);
 
 	newStep._createPredefinedEndpoints(scopeReporter, baseStep);
-
 
 	if (!newStep.getInstance) {
 		newStep.getInstance = function (manager, scopeReporter, stepDefinition) {
@@ -156,7 +152,6 @@ function _create(manager, scopeReporter, baseStep, data, name) {
 	}
 
 	scopeReporter.leaveScope('step');
-
 
 	return newStep;
 }
