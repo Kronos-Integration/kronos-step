@@ -166,7 +166,7 @@ describe('registration and inheritance', function () {
     });
 
     describe('get instance', function () {
-      const instance = aStep.getInstance(manager, sr, {
+      const instance = aStep.createInstance(manager, sr, {
         name: "inst1"
       });
       it('out-step finalized', function () {

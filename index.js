@@ -1,17 +1,16 @@
 /* jslint node: true, esnext: true */
 "use strict";
 
-const Step = require('./lib/step'),
-	endpoint = require('./lib/endpoint'),
-	support = require('./lib/support');
+const step = require('./lib/step'),
+	endpoint = require('./lib/endpoint');
 
-exports.Step = Step;
+exports.Step = step.base;
 exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 
 exports.createEndpoint = endpoint.createEndpoint;
 
 exports.registerWithManager = function (manager) {
-	manager.registerStepImplementation(prepareStepForRegistration(manager, undefined, Step));
+	manager.registerStepImplementation(step.prepare(manager, undefined, step.base));
 };
 
 /**
@@ -21,11 +20,7 @@ exports.registerWithManager = function (manager) {
  * @param {Object} stepImpl
  * @return {Step} step ready for registration
  */
-function prepareStepForRegistration(manager, scopeReporter, stepImpl) {
-	return support.create(manager, scopeReporter, stepImpl, {}, stepImpl.name);
-}
-
-exports.prepareStepForRegistration = prepareStepForRegistration;
+exports.prepareStepForRegistration = step.prepare;
 
 /*
  * Creates a step from its configuration data.
@@ -53,13 +48,12 @@ exports.createStep = function (manager, scopeReporter, data, name) {
 
 	const baseStep = manager.steps[data.type];
 
-	if (!name) {
-		name = data.name;
-	}
-
 	if (baseStep) {
-		return support.create(manager, scopeReporter, baseStep, data, name);
+		return baseStep.createInstance(manager, scopeReporter, data, name);
 	} else {
+		if (name === undefined) {
+			name = data.name;
+		}
 		scopeReporter.error('Step implementation not found', 'step', name, data.type);
 	}
 };
