@@ -52,7 +52,7 @@ const outStep = {
   },
 
   finalize(manager, scopeReporter, stepDefinition) {
-    Object.getPrototypeOf(this).finalize(manager, scopeReporter, stepDefinition);
+    Object.getPrototypeOf(this).finalize.call(this, manager, scopeReporter, stepDefinition);
     this.finalizeHasBeenCalled1 = true;
   }
 };
@@ -75,7 +75,6 @@ const stepWithoutInitialize = {
   }
 };
 
-//manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, Step));
 manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, outStep));
 manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, stepWithoutInitialize));
 

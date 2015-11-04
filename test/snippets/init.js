@@ -36,10 +36,12 @@ const outStep = {
   },
 
   finalize(manager, scopeReporter, stepDefinition) {
-    Object.getPrototypeOf(this).finalize(manager, scopeReporter, stepDefinition);
+    Object.getPrototypeOf(this).finalize.call(this, manager, scopeReporter, stepDefinition);
     this.finalizeHasBeenCalled1 = true;
   }
 };
 
 //index.registerWithManager(manager);
-index.prepareStepForRegistration(manager, sr, outStep);
+const s = index.prepareStepForRegistration(manager, sr, outStep);
+
+console.log(`${JSON.stringify(s)} ${s.property1} ${s.property2}`);
