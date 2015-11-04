@@ -2,7 +2,7 @@
 Describes the step interface. Each step need to implement the methods of this step interface.
 
 
-=== Step properties
+=== Step Attributes
 
 name::
 Returns the name of the step. For the 'raw' step as it will be registered at the kronos-manager the name will
@@ -18,7 +18,7 @@ Returns an object with all the endpoints of this step.
 }
 ----
 
-=== Step methods
+=== Step Methods
 
 start::
 Starts the step. If a step is started it is able to retrieve requests over its endpoints.
@@ -30,6 +30,26 @@ could come in.
 
 isRunning::
 Returns a true value if the step is running. This means it is not stopped.
+
+
+toString::
+
+
+toJSON::
+	Returns the JSON representation of the step
+
+
+== Step Factory Interface
+This interface is used to create new steps. The object registered at the manager must implement
+the step factory interface.
+
+=== Step Factory Attributes
+
+name::
+Returns the name of the step factory. This name is used to register the step factory at the manager.
+
+
+=== Step Factory Methods
 
 
 getInstance::
@@ -47,8 +67,3 @@ This function creates a new instance of this step. This method is used if a flow
  */
 getInstance(manager, scopeReporter, stepConfiguration)
 ----
-
-toString::
-
-
-toJSON::
