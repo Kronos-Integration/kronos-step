@@ -11,7 +11,7 @@ const chai = require('chai'),
   events = require('events'),
 
   endpointImplementation = require('../lib/endpoint'),
-  Step = require('../lib/step'),
+  BaseStep = require('../index').Step,
   testStep = require('kronos-test-step'),
   index = require('../index'),
   scopeDefinitions = require('../lib/scopeDefinitions');
@@ -91,14 +91,23 @@ const stepWithoutInitialize = {
 
 
 
-manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, outStep));
-manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, stepWithoutInitialize));
-
-const aStep = index.createStep(manager, sr, {
+const A_Step = {
   name: "myStep",
   type: "out-step",
   description: "my out-step description"
+};
+
+const OutStepFactory = Object.assign({}, BaseStep, outStep);
+const StepWithoutInitializeFactory = Object.assign({}, BaseStep, stepWithoutInitialize);
+
+const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
+const aStep = A_StepFactory.createInstance(manager, sr, {
+  "name": "myStep2",
+  "description": "my out-step description"
 });
+
+manager.registerStepImplementation(outStep);
+manager.registerStepImplementation(stepWithoutInitialize);
 
 
 describe('steps', function () {
@@ -107,15 +116,16 @@ describe('steps', function () {
       testStep.checkStepStatic(manager, aStep, function () {
         describe('type', function () {
           it('present', function () {
-            assert.equal(aStep.type, 'out-step');
+            // name will become the type
+            assert.equal(aStep.type, 'myStep');
           });
         });
         describe('name', function () {
           it('given name present', function () {
-            assert.equal(aStep.name, 'myStep');
+            assert.equal(aStep.name, 'myStep2');
           });
           it('toString() is name', function () {
-            assert.equal(aStep.toString(), 'myStep');
+            assert.equal(aStep.toString(), 'myStep2');
           });
         });
         describe('description', function () {
@@ -127,7 +137,7 @@ describe('steps', function () {
         describe('json', function () {
           it('toJSON()', function () {
             assert.deepEqual(aStep.toJSON(), {
-              "type": "out-step",
+              "type": "myStep",
               "description": "my out-step description",
               "endpoints": {
                 "in": {
@@ -146,29 +156,36 @@ describe('steps', function () {
     });
     describe('single step without initialize', function () {
 
-      let aStep = index.createStep(manager, sr, {
+      const A_Step = {
         name: "myStep",
         type: "step-without-initialize"
+      };
+
+      const A_StepFactory = Object.assign({}, BaseStep, A_Step);
+      const aStep = A_StepFactory.createInstance(manager, sr, {
+        "name": "myNewName"
       });
 
       testStep.checkStepStatic(manager, aStep, function () {
         describe('type', function () {
           it('present', function () {
-            assert.equal(aStep.type, 'step-without-initialize');
+            // The name will become the type
+            assert.equal(aStep.type, 'myStep');
           });
         });
         describe('name', function () {
           it('given name present', function () {
-            assert.equal(aStep.name, 'myStep');
+            assert.equal(aStep.name, 'myNewName');
           });
           it('toString() is name', function () {
-            assert.equal(aStep.toString(), 'myStep');
+            assert.equal(aStep.toString(), 'myNewName');
           });
         });
         describe('json', function () {
           it('toJSON()', function () {
             assert.deepEqual(aStep.toJSON(), {
-              "type": "step-without-initialize",
+              "type": "myStep",
+              "description": "This step is the base class for step implementations",
               "endpoints": {
                 "in": {
                   "in": true,
@@ -184,9 +201,14 @@ describe('steps', function () {
 
   describe('livecycle', function () {
     describe('single step', function () {
-      const aStep = index.createStep(manager, sr, {
-        type: "out-step"
-      }, "myname");
+
+      const A_Step = {
+        type: "out-step",
+        name: "myname"
+      };
+
+      const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
+      const aStep = A_StepFactory.createInstance(manager, sr, {});
 
       const inEp = endpointImplementation.createEndpoint("in", {
         "in": true,
