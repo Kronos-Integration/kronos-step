@@ -77,7 +77,7 @@ const StepWithoutInitializeDefinition = {
 
 
 const OutStepFactory = Object.assign({}, BaseStep, OutStepDefinition);
-const StepWithoutInitializeFactory = Object.assign({}, BaseStep, StepWithoutInitializeDefinition);
+const StepWithoutInitializeFactory = Object.assign({}, OutStepFactory, StepWithoutInitializeDefinition);
 
 manager.registerStepImplementation(OutStepFactory);
 manager.registerStepImplementation(StepWithoutInitializeFactory);
@@ -85,7 +85,9 @@ manager.registerStepImplementation(StepWithoutInitializeFactory);
 
 describe('registration and inheritance', function () {
   describe('out-step', function () {
-    const aStep = OutStepFactory.createInstance(manager, sr, {});
+    const aStep = OutStepFactory.createInstance(manager, sr, {
+      "description": "test step only"
+    });
 
 
 
@@ -126,6 +128,7 @@ describe('registration and inheritance', function () {
 
         assert.deepEqual(aStep.toJSON(), {
           "type": "out-step",
+          "description": "test step only",
           "endpoints": {
             "in": {
               "in": true,
@@ -143,8 +146,8 @@ describe('registration and inheritance', function () {
   });
 
   describe('step-without-initialize', function () {
-    const aStep = manager.steps['step-without-initialize'];
-    aStep.createInstance(manager, sr, {
+    const StepFactory = manager.steps['step-without-initialize'];
+    const aStep = StepFactory.createInstance(manager, sr, {
       "name": "myStep"
     });
 
@@ -176,11 +179,13 @@ describe('registration and inheritance', function () {
     });
 
     describe('get instance', function () {
-      const instance = aStep.createInstance(manager, sr, {
+      const instance = StepFactory.createInstance(manager, sr, {
         name: "inst1"
       });
       it('out-step finalized', function () {
-        assert.equal(aStep.finalizeHasBeenCalled1, true);
+        assert.equal(aStep.hasOwnProperty('finalizeHasBeenCalled1'), false);
+        // as we have overwritten the function it must not be called
+        //assert.equal(aStep.finalizeHasBeenCalled1, true);
       });
 
       it('step-without-initialize finalized', function () {
