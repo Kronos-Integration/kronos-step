@@ -11,7 +11,7 @@ const chai = require('chai'),
   events = require('events'),
 
   endpointImplementation = require('../lib/endpoint'),
-  Step = require('../lib/step'),
+  BaseStep = require('../index').Step,
   testStep = require('kronos-test-step'),
   index = require('../index'),
   scopeDefinitions = require('../lib/scopeDefinitions');
@@ -29,7 +29,7 @@ manager.registerStepImplementation = function (si) {
   stepImplementations[si.name] = si;
 };
 
-const outStep = {
+const OutStepDefinition = {
   "name": "out-step",
   "description": "test step only",
   "endpoints": {
@@ -52,12 +52,12 @@ const outStep = {
   },
 
   finalize(manager, scopeReporter, stepDefinition) {
-    Object.getPrototypeOf(this).finalize.call(this, manager, scopeReporter, stepDefinition);
+    //Object.getPrototypeOf(this).finalize.call(this, manager, scopeReporter, stepDefinition);
     this.finalizeHasBeenCalled1 = true;
   }
 };
 
-const stepWithoutInitialize = {
+const StepWithoutInitializeDefinition = {
   "extends": "out-step",
   "name": "step-without-initialize",
   "description": "test step without initialize only",
@@ -70,17 +70,25 @@ const stepWithoutInitialize = {
   property3: "property3",
 
   finalize(manager, scopeReporter, stepDefinition) {
-    Object.getPrototypeOf(this).finalize(manager, scopeReporter, stepDefinition);
+    //Object.getPrototypeOf(this).finalize(manager, scopeReporter, stepDefinition);
     this.finalizeHasBeenCalled2 = true;
   }
 };
 
-manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, outStep));
-manager.registerStepImplementation(index.prepareStepForRegistration(manager, sr, stepWithoutInitialize));
+
+const OutStepFactory = Object.assign({}, BaseStep, OutStepDefinition);
+const StepWithoutInitializeFactory = Object.assign({}, BaseStep, StepWithoutInitializeDefinition);
+
+manager.registerStepImplementation(OutStepFactory);
+manager.registerStepImplementation(StepWithoutInitializeFactory);
+
 
 describe('registration and inheritance', function () {
   describe('out-step', function () {
-    const aStep = manager.steps['out-step'];
+    const aStep = OutStepFactory.createInstance(manager, sr, {});
+
+
+
     describe('user defined attributes', function () {
       it('property1', function () {
         assert.equal(aStep.property1, 'property1');
@@ -111,9 +119,9 @@ describe('registration and inheritance', function () {
 
     describe('createStep', function () {
       it('compare', function () {
-        const aStep = index.createStep(manager, sr, {
-          name: "myStep",
-          type: "out-step"
+
+        const aStep = OutStepFactory.createInstance(manager, sr, {
+          "name": "myStep"
         });
 
         assert.deepEqual(aStep.toJSON(), {
@@ -136,6 +144,9 @@ describe('registration and inheritance', function () {
 
   describe('step-without-initialize', function () {
     const aStep = manager.steps['step-without-initialize'];
+    aStep.createInstance(manager, sr, {
+      "name": "myStep"
+    });
 
     describe('user defined attributes', function () {
       it('property1', function () {

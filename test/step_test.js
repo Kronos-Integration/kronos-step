@@ -161,9 +161,10 @@ describe('steps', function () {
         type: "step-without-initialize"
       };
 
-      const A_StepFactory = Object.assign({}, BaseStep, A_Step);
+      const A_StepFactory = Object.assign({}, BaseStep, stepWithoutInitialize, A_Step);
       const aStep = A_StepFactory.createInstance(manager, sr, {
-        "name": "myNewName"
+        "name": "myNewName",
+        "description": "This step is the base class for step implementations"
       });
 
       testStep.checkStepStatic(manager, aStep, function () {
