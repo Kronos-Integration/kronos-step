@@ -74,6 +74,11 @@ const outStep = {
         return Promise.resolve(this);
       }
     };
+
+    // TODO never reached ?
+    props.intializeDone = {
+      value: true
+    };
   }
 };
 
@@ -97,10 +102,12 @@ const A_Step = {
   description: "my out-step description"
 };
 
+// TODO should be default
 const OutStepFactory = Object.assign({}, BaseStep, outStep);
 const StepWithoutInitializeFactory = Object.assign({}, BaseStep, stepWithoutInitialize);
-
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
+// TODO end of default
+
 const aStep = A_StepFactory.createInstance(manager, sr, {
   "name": "myStep2",
   "description": "my out-step description"
@@ -208,6 +215,7 @@ describe('steps', function () {
         name: "myname"
       };
 
+      // TODO should be default
       const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
       const aStep = A_StepFactory.createInstance(manager, sr, {});
 
@@ -221,17 +229,22 @@ describe('steps', function () {
       inEp.setPassiveGenerator(function* () {
         while (true) {
           request = yield;
-          //console.log(`RECEIVE REQUEST: ${request.info.name}`);
+          console.log(`RECEIVE REQUEST: ${request.info.name}`);
         }
       });
       aStep.endpoints.out.connect(inEp);
 
       testStep.checkStepLivecycle(manager, aStep, function (step, state) {
+        console.log(`checkStepLivecycle: ${state}`);
+
+        assert.equal(step.initializeDone, true);
+
         if (state === 'running' && request) {
-          //console.log(`CHECK: ${request.info.name}`);
+          console.log(`CHECK: ${request.info.name}`);
           assert.match(request.info.name, /request\d+/);
         }
       });
+
     });
   });
 });
