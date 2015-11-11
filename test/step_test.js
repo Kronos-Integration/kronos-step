@@ -16,25 +16,10 @@ const chai = require('chai'),
   index = require('../index'),
   scopeDefinitions = require('../lib/scopeDefinitions');
 
-var scopeReports = [];
+// get a mock manager
+const manager = testStep.managerMock;
 
-const sr = scopeReporter.createReporter(scopeDefinitions, function (reporter) {
-  scopeReports.push(reporter.toJSON());
-});
-
-var receivedRequests = [];
-
-var stepImplementations = {};
-const manager = Object.create(new events.EventEmitter(), {
-  steps: {
-    value: stepImplementations
-  }
-});
-
-manager.registerStepImplementation = function (si) {
-  stepImplementations[si.name] = si;
-};
-
+// defines a new step which will inherit from the base step implementation
 const outStep = {
   "name": "out-step",
   "description": "test step only",
@@ -48,7 +33,7 @@ const outStep = {
       "active": true
     }
   },
-  _initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+  initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
     let sequence = 0;
     let interval;
 
@@ -76,12 +61,21 @@ const outStep = {
     };
 
     // TODO never reached ?
-    props.intializeDone = {
+    props.initializeDone = {
       value: true
     };
   }
 };
 
+// Create a factory which could be registered at the manager.
+// In this case the outStep will inherit from the base step
+const OutStepFactory = Object.assign({}, BaseStep, outStep);
+
+// register the step at the manager
+manager.registerStepImplementation(OutStepFactory);
+
+
+// also a step implementation which will inherit from the Base Step
 const stepWithoutInitialize = {
   "extends": "out-step",
   "name": "step-without-initialize",
@@ -93,28 +87,25 @@ const stepWithoutInitialize = {
     }
   }
 };
+const StepWithoutInitializeFactory = Object.assign({}, BaseStep, stepWithoutInitialize);
+// register the step at the manager
+manager.registerStepImplementation(StepWithoutInitializeFactory);
 
 
-
+// defines another step
 const A_Step = {
   name: "myStep",
   type: "out-step",
   description: "my out-step description"
 };
-
-// TODO should be default
-const OutStepFactory = Object.assign({}, BaseStep, outStep);
-const StepWithoutInitializeFactory = Object.assign({}, BaseStep, stepWithoutInitialize);
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
-// TODO end of default
 
-const aStep = A_StepFactory.createInstance(manager, sr, {
+
+const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
   "name": "myStep2",
   "description": "my out-step description"
 });
 
-manager.registerStepImplementation(outStep);
-manager.registerStepImplementation(stepWithoutInitialize);
 
 
 describe('steps', function () {
@@ -168,8 +159,8 @@ describe('steps', function () {
         type: "step-without-initialize"
       };
 
-      const A_StepFactory = Object.assign({}, BaseStep, stepWithoutInitialize, A_Step);
-      const aStep = A_StepFactory.createInstance(manager, sr, {
+      const A_StepFactory2 = Object.assign({}, BaseStep, stepWithoutInitialize, A_Step);
+      const aStep = A_StepFactory2.createInstance(manager, manager.scopeReporter, {
         "name": "myNewName",
         "description": "This step is the base class for step implementations"
       });
@@ -215,9 +206,8 @@ describe('steps', function () {
         name: "myname"
       };
 
-      // TODO should be default
-      const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
-      const aStep = A_StepFactory.createInstance(manager, sr, {});
+      const A_StepFactory3 = Object.assign({}, OutStepFactory, A_Step);
+      const aStep = A_StepFactory3.createInstance(manager, manager.scopeReporter, {});
 
       const inEp = endpointImplementation.createEndpoint("in", {
         "in": true,
