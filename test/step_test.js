@@ -198,7 +198,6 @@ describe('steps', function () {
 
   describe('livecycle', function () {
     describe('single step', function () {
-
       const A_Step = {
         type: "out-step",
         name: "myname"
@@ -229,7 +228,28 @@ describe('steps', function () {
           assert.match(request.info.name, /request\d+/);
         }
       });
+    });
 
+    describe('none startable step', function () {
+      const NoneStartableStep = Object.assign({}, BaseStep, {
+        type: "none-startable-step",
+        _start() {
+          return Promise.reject(new Error(`unable to start`));
+        }
+      });
+
+      const aStep = NoneStartableStep.createInstance(manager, manager.scopeReporter, {});
+
+      it('always fails to start', function (done) {
+        aStep.start().then(function (resolve) {
+            console.log(`${aStep.state}`);
+            done(new Error("should not be running"));
+          },
+          function (reject) {
+            assert.equal(aStep.state, 'failed');
+            done();
+          });
+      });
     });
   });
 });
