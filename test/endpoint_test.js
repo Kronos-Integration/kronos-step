@@ -56,7 +56,7 @@ describe('endpoint', function () {
 			});
 			it('toString() is name', function () {
 				const endpoint = endpointImpl.createEndpoint('e1', {});
-				assert.equal(endpoint.toString(), 'e1');
+				assert.equal(endpoint.toString(), 'e1:');
 			});
 
 			it('immutable name', function () {
@@ -326,7 +326,7 @@ describe('endpoint', function () {
 			// connect the endpoints
 			expect(function () {
 				epOut.connect(epIn);
-			}).to.throw("Could not connect the endpoint 'epOut' with the endpoint 'epIn'");
+			}).to.throw("Could not connect the endpoint 'epOut:out:active' with the endpoint 'epIn:out:passive'");
 
 			done();
 		});
@@ -354,7 +354,7 @@ describe('endpoint', function () {
 			// connect the endpoints
 			expect(function () {
 				epOut.connect(epIn);
-			}).to.throw("Could not connect the endpoint 'epOut' with the endpoint 'epIn'");
+			}).to.throw("Could not connect the endpoint 'epOut:in:active' with the endpoint 'epIn:in:passive'");
 
 			done();
 		});
@@ -382,7 +382,7 @@ describe('endpoint', function () {
 			// connect the endpoints
 			expect(function () {
 				epOut.connect(epIn);
-			}).to.throw("Could not connect the endpoint 'epOut' with the endpoint 'epIn'");
+			}).to.throw("Could not connect the endpoint 'epOut:out:active' with the endpoint 'epIn:in:active'");
 
 			done();
 		});
@@ -410,7 +410,7 @@ describe('endpoint', function () {
 			// connect the endpoints
 			expect(function () {
 				epOut.connect(epIn);
-			}).to.throw("Could not connect the endpoint 'epOut' with the endpoint 'epIn'");
+			}).to.throw("Could not connect the endpoint 'epOut:out:passive' with the endpoint 'epIn:in:passive'");
 
 			done();
 		});
@@ -449,7 +449,9 @@ describe('endpoint', function () {
 			// connect the endpoints
 			expect(function () {
 				epOut.connect(epIn);
-			}).to.throw("Could not connect the endpoint, the endpoint 'epOut' is already connected with 'epEvil'");
+			}).to.throw(
+				"Could not connect the endpoint, the endpoint 'epOut:out:active' is already connected with 'epEvil:in:passive'"
+			);
 
 			done();
 		});
@@ -488,7 +490,9 @@ describe('endpoint', function () {
 			// connect the endpoints
 			expect(function () {
 				epOut.connect(epIn);
-			}).to.throw("Could not connect the endpoint, the endpoint 'epIn' is already connected with 'epEvil'");
+			}).to.throw(
+				"Could not connect the endpoint, the endpoint 'epIn:in:passive' is already connected with 'epEvil:out:active'"
+			);
 
 			done();
 		});
