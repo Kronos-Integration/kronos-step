@@ -17,9 +17,6 @@
     "url": "https://github.com/Kronos-Integration/kronos-step/issues"
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
-  "release": {
-    "debug": false
-  },
   "dependencies": {
     "scope-reporter": "2.1.0"
   },
