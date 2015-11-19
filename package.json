@@ -21,7 +21,6 @@
     "debug": false
   },
   "dependencies": {
-    "expression-expander": "3.0.0",
     "scope-reporter": "2.1.0"
   },
   "devDependencies": {
