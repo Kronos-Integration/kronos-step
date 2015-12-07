@@ -23,8 +23,8 @@
   "devDependencies": {
     "chai": "3.4.1",
     "istanbul": "^0.4.0",
-    "kronos-test-step": "1.2.0",
-    "mocha": "2.3.3",
+    "kronos-test-step": "^1.5.0",
+    "mocha": "^2.3.4",
     "semantic-release": "6.0.3"
   },
   "contributors": [
