@@ -220,13 +220,14 @@ describe('steps', function () {
       });
       aStep.endpoints.out.connect(inEp);
 
-      testStep.checkStepLivecycle(manager, aStep, function (step, state) {
+      testStep.checkStepLivecycle(manager, aStep, function (step, state, livecycle, done) {
         assert.equal(step.initializeDone, true);
 
         if (state === 'running' && request) {
           //console.log(`CHECK: ${request.info.name}`);
           assert.match(request.info.name, /request\d+/);
         }
+        done();
       });
     });
 
