@@ -56,7 +56,13 @@ const outStep = {
             stream: sequence
           });
         }, 5);
-        return Promise.resolve(this);
+
+        return new Promise(
+          (resolve, reject) => {
+            setTimeout(() => resolve(this), 200)
+          });
+
+        //return Promise.resolve(this);
       }
     };
 
