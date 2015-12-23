@@ -9,7 +9,7 @@ const assert = chai.assert;
 const expect = chai.expect;
 const should = chai.should();
 
-const endpointImpl = require('../index');
+const endpointImpl = require('../lib/endpoint');
 
 const manager = {};
 
@@ -326,8 +326,7 @@ describe('endpoint', function () {
 			// connect the endpoints
 			expect(function () {
 				epOut.connect(epIn);
-			}).to.throw(
-				"Could not connect this out endpoint 'epOut:out:active' with an other OUT endpoint 'epIn:out:passive'");
+			}).to.throw("Could not connect the endpoint 'epOut:out:active' with the endpoint 'epIn:out:passive'");
 
 			done();
 		});
@@ -355,8 +354,7 @@ describe('endpoint', function () {
 			// connect the endpoints
 			expect(function () {
 				epOut.connect(epIn);
-			}).to.throw(
-				"Could not connect this IN endpoint 'epOut:in:active' with an other IN endpoint 'epIn:in:passive'");
+			}).to.throw("Could not connect the endpoint 'epOut:in:active' with the endpoint 'epIn:in:passive'");
 
 			done();
 		});
@@ -452,48 +450,52 @@ describe('endpoint', function () {
 			expect(function () {
 				epOut.connect(epIn);
 			}).to.throw(
-				"Could not connect to the endpoint, this endpoint 'epOut:out:active' is already connected with 'epEvil:in:passive'"
+				"Could not connect the endpoint, the endpoint 'epOut:out:active' is already connected with 'epEvil:in:passive'"
 			);
 
 			done();
 		});
 
-		it('OK: Connect two endpoints with each other: The IN endpoint of them is already connected (other way around)',
-			function (
-				done) {
-				let dummyStep1 = {
-					"name": "dumyStepName_1"
-				};
-				let dummyStep2 = {
-					"name": "dumyStepName_2"
-				};
+		it('Error: Connect two endpoints with each other: One of them is already connected (other way around)', function (
+			done) {
+			let dummyStep1 = {
+				"name": "dumyStepName_1"
+			};
+			let dummyStep2 = {
+				"name": "dumyStepName_2"
+			};
 
-				const epIn = endpointImpl.createEndpoint("epIn", {
-					"in": true,
-					"passive": true
-				});
-				epIn.step = dummyStep1;
-
-				const epOut = endpointImpl.createEndpoint("epOut", {
-					"out": true,
-					"active": true
-				});
-				epOut.step = dummyStep2;
-
-				const epEvil = endpointImpl.createEndpoint("epEvil", {
-					"out": true,
-					"active": true
-				});
-				epEvil.step = dummyStep1;
-
-
-				// set the second endpoint as already connected
-				epIn.connect(epEvil);
-
-				epOut.connect(epIn);
-
-				done();
+			const epIn = endpointImpl.createEndpoint("epIn", {
+				"in": true,
+				"passive": true
 			});
+			epIn.step = dummyStep1;
+
+			const epOut = endpointImpl.createEndpoint("epOut", {
+				"out": true,
+				"active": true
+			});
+			epOut.step = dummyStep2;
+
+			const epEvil = endpointImpl.createEndpoint("epEvil", {
+				"out": true,
+				"active": true
+			});
+			epEvil.step = dummyStep1;
+
+
+			// set the second endpoint as already connected
+			epIn.connect(epEvil);
+
+			// connect the endpoints
+			expect(function () {
+				epOut.connect(epIn);
+			}).to.throw(
+				"Could not connect the endpoint, the endpoint 'epIn:in:passive' is already connected with 'epEvil:out:active'"
+			);
+
+			done();
+		});
 	});
 
 	describe('send & receive', function () {
