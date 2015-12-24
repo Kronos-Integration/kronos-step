@@ -303,6 +303,66 @@ describe('endpoint', function () {
 			epOut.send(msg);
 		});
 
+		it('Connect two OUT endpoints with one IN endpoint', function (done) {
+			let dummyStep1 = {
+				"name": "dumyStepName_1"
+			};
+			let dummyStep2 = {
+				"name": "dumyStepName_2"
+			};
+			let dummyStep3 = {
+				"name": "dumyStepName_3"
+			};
+
+			const epIn = endpointImpl.createEndpoint("epIn", {
+				"in": true,
+				"passive": true
+			});
+			epIn.step = dummyStep1;
+
+			const epOut1 = endpointImpl.createEndpoint("epOut1", {
+				"out": true,
+				"active": true
+			});
+
+			const epOut2 = endpointImpl.createEndpoint("epOut2", {
+				"out": true,
+				"active": true
+			});
+			epOut1.step = dummyStep2;
+			epOut2.step = dummyStep3;
+
+			// connect the endpoints
+			epOut1.connect(epIn);
+			epIn.connect(epOut1); // The same endpooints my be conneced as often as you want
+
+			// connect a second OUT to the same IN
+			epOut2.connect(epIn);
+
+			const msg1 = {
+				"name": "test1"
+			};
+			const msg2 = {
+				"name": "test2"
+			};
+
+			epIn.setPassiveGenerator(function* () {
+				while (true) {
+					let message = yield;
+					assert.equal(message, msg1);
+
+					message = yield;
+					assert.equal(message, msg2);
+
+					done();
+				}
+			});
+
+			epOut1.send(msg1);
+			epOut2.send(msg2);
+		});
+
+
 		it('Error: Connect two endpoints with each other: out with out', function (done) {
 			let dummyStep1 = {
 				"name": "dumyStepName_1"

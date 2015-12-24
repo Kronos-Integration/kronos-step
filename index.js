@@ -8,7 +8,7 @@ const step = require('./lib/step'),
 exports.Step = step.BaseStep;
 exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 
-module.exports.createEndpoint = function (endpointName, endpointConfiguration, metaDefinition) {
+exports.createEndpoint = function (endpointName, endpointConfiguration, metaDefinition) {
 	if (endpointConfiguration.in) {
 		return endpointIn.createEndpointIn(endpointName, endpointConfiguration, metaDefinition);
 	} else {
