@@ -16,6 +16,7 @@ const chai = require('chai'),
   index = require('../index'),
   scopeDefinitions = require('../lib/scopeDefinitions');
 
+
 // get a mock manager
 const manager = testStep.managerMock;
 
@@ -59,7 +60,7 @@ const outStep = {
 
         return new Promise(
           (resolve, reject) => {
-            setTimeout(() => resolve(this), 200)
+            setTimeout(() => resolve(this), 200);
           });
 
         //return Promise.resolve(this);
