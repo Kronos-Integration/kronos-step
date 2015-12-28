@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
+    "loglevel-mixin": "^1.0.0",
     "scope-reporter": "2.3.0"
   },
   "devDependencies": {
