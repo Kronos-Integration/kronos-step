@@ -128,7 +128,7 @@ describe('logger', function () {
           '_step-name': 'myStep2',
           "_priority": 3,
           "line": 152,
-          "_file_name": '/Users/torstenlink/Documents/entwicklung/kronos/kronos-step/test/logger_test.js',
+          //      "_file_name": '/Users/torstenlink/Documents/entwicklung/kronos/kronos-step/test/logger_test.js',
           "_error_name": 'Error',
           "short_message": 'Gumbo'
         });
