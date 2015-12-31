@@ -238,7 +238,6 @@ describe('steps', function () {
       const NoneStartableStep = Object.assign({}, BaseStep, {
         type: "none-startable-step",
         _start() {
-          console.log(`start .....`);
           return Promise.reject(new Error(`unable to start`));
         }
       });
@@ -246,17 +245,23 @@ describe('steps', function () {
       const aStep = NoneStartableStep.createInstance(manager, manager.scopeReporter, {});
 
       it('always fails to start', function (done) {
-        aStep.start().then(resolve => {
-            console.log(`${aStep.state}`);
-            done(new Error("should not be running"));
-          },
-          reject => {
+        try {
+          aStep.start().then(resolve => {
+              console.log(`*** ${aStep.state}`);
+              done(new Error("should not be running"));
+            },
+            reject => {
+              assert.equal(aStep.state, 'failed');
+              done();
+            }).catch(e => {
+            console.log(`*** catch`);
+
             assert.equal(aStep.state, 'failed');
             done();
-          }).catch(e => {
-          assert.equal(aStep.state, 'failed');
-          done();
-        });
+          });
+        } catch (e) {
+          console.log(`error: ${e}`);
+        }
       });
     });
   });
