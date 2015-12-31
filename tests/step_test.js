@@ -247,15 +247,9 @@ describe('steps', function () {
       it('always fails to start', function (done) {
         try {
           aStep.start().then(resolve => {
-              console.log(`*** ${aStep.state}`);
-              done(new Error("should not be running"));
-            },
-            reject => {
-              assert.equal(aStep.state, 'failed');
-              done();
-            }).catch(e => {
-            console.log(`*** catch`);
-
+            console.log(`*** ${aStep.state}`);
+            done(new Error("should not be running"));
+          }).catch(e => {
             assert.equal(aStep.state, 'failed');
             done();
           });
