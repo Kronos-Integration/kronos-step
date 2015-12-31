@@ -8,17 +8,15 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should(),
   scopeReporter = require('scope-reporter'),
-  events = require('events'),
-
-  endpointImplementation = require('../index'),
-  BaseStep = require('../index').Step,
+  scopeDefinitions = require('../lib/scopeDefinitions'),
   testStep = require('kronos-test-step'),
   index = require('../index'),
-  scopeDefinitions = require('../lib/scopeDefinitions');
-
+  endpointImplementation = index,
+  BaseStep = index.Step;
 
 // get a mock manager
 const manager = testStep.managerMock;
+
 
 // defines a new step which will inherit from the base step implementation
 const outStep = {
@@ -95,6 +93,7 @@ const stepWithoutInitialize = {
   }
 };
 
+
 // register the step at the manager
 manager.registerStepImplementation(Object.assign({}, BaseStep, stepWithoutInitialize));
 
@@ -108,12 +107,15 @@ const A_Step = {
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
 
 
+
 const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
   "name": "myStep2",
   "description": "my out-step description"
 });
 
+
 describe('steps', function () {
+
   describe('static', function () {
     describe('single step with initialize', function () {
       testStep.checkStepStatic(manager, aStep, function () {
@@ -205,13 +207,7 @@ describe('steps', function () {
 
   describe('livecycle', function () {
     describe('single step', function () {
-      const A_Step = {
-        type: "out-step",
-        name: "myname"
-      };
-
-      const A_StepFactory3 = Object.assign({}, OutStepFactory, A_Step);
-      const aStep = A_StepFactory3.createInstance(manager, manager.scopeReporter, {});
+      const aStep = OutStepFactory.createInstance(manager, manager.scopeReporter, {});
 
       const inEp = endpointImplementation.createEndpoint("in", {
         "in": true,
@@ -249,14 +245,17 @@ describe('steps', function () {
       const aStep = NoneStartableStep.createInstance(manager, manager.scopeReporter, {});
 
       it('always fails to start', function (done) {
-        aStep.start().then(function (resolve) {
-            console.log(`${aStep.state}`);
+        try {
+          aStep.start().then(resolve => {
+            console.log(`*** ${aStep.state}`);
             done(new Error("should not be running"));
-          },
-          function (reject) {
+          }).catch(e => {
             assert.equal(aStep.state, 'failed');
             done();
           });
+        } catch (e) {
+          console.log(`error: ${e}`);
+        }
       });
     });
   });
