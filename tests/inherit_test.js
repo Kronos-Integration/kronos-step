@@ -9,8 +9,6 @@ const chai = require('chai'),
   should = chai.should(),
   scopeReporter = require('scope-reporter'),
   events = require('events'),
-
-  endpointImplementation = require('../index'),
   BaseStep = require('../index').Step,
   testStep = require('kronos-test-step'),
   index = require('../index'),
@@ -34,18 +32,16 @@ const OutStepDefinition = {
   "description": "test step only",
   "endpoints": {
     "in": {
-      "in": true,
-      "passive": true
+      "in": true
     },
     "out": {
-      "out": true,
-      "active": true
+      "out": true
     }
   },
 
   property2: "property2",
 
-  initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+  initialize(manager, scopeReporter, name, stepConfiguration, props) {
     props.property1 = {
       value: "property1"
     };
@@ -63,14 +59,12 @@ const StepWithoutInitializeDefinition = {
   "description": "test step without initialize only",
   "endpoints": {
     "in": {
-      "in": true,
-      "passive": true
+      "in": true
     }
   },
   property3: "property3",
 
-  finalize(manager, scopeReporter, stepDefinition) {
-    //Object.getPrototypeOf(this).finalize(manager, scopeReporter, stepDefinition);
+  finalize(scopeReporter, stepDefinition) {
     this.finalizeHasBeenCalled2 = true;
   }
 };
@@ -89,8 +83,6 @@ describe('registration and inheritance', function () {
       "description": "test step only"
     });
 
-
-
     describe('user defined attributes', function () {
       it('property1', function () {
         assert.equal(aStep.property1, 'property1');
@@ -107,11 +99,9 @@ describe('registration and inheritance', function () {
           "description": "test step only",
           "endpoints": {
             "in": {
-              "in": true,
-              "passive": true
+              "in": true
             },
             "out": {
-              "active": true,
               "out": true
             }
           }
@@ -131,11 +121,9 @@ describe('registration and inheritance', function () {
           "description": "test step only",
           "endpoints": {
             "in": {
-              "in": true,
-              "passive": true
+              "in": true
             },
             "out": {
-              "active": true,
               "out": true
             }
           }
@@ -167,11 +155,10 @@ describe('registration and inheritance', function () {
       it('present', function () {
         assert.deepEqual(aStep.toJSON(), {
           "type": "step-without-initialize",
-          "description": "test step without initialize only",
+          //"description": "test step without initialize only",
           "endpoints": {
             "in": {
-              "in": true,
-              "passive": true
+              "in": true
             }
           }
         });

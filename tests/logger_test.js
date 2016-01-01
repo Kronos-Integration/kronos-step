@@ -10,7 +10,7 @@ const chai = require('chai'),
   scopeReporter = require('scope-reporter'),
   events = require('events'),
 
-  endpointImplementation = require('../index'),
+  endpoint = require('../lib/endpoint'),
   BaseStep = require('../index').Step,
   testStep = require('kronos-test-step'),
   index = require('../index'),
@@ -26,15 +26,13 @@ const outStep = {
   "description": "test step only",
   "endpoints": {
     "in": {
-      "in": true,
-      "passive": true
+      "in": true
     },
     "out": {
-      "out": true,
-      "active": true
+      "out": true
     }
   },
-  initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+  initialize(manager, scopeReporter, name, stepConfiguration, props) {
     let sequence = 0;
     let interval;
 
@@ -49,8 +47,7 @@ const outStep = {
       value: function () {
         setInterval(() => {
           sequence = sequence + 1;
-          //console.log(`SEND: ${sequence}`);
-          endpoints.out.send({
+          this.endpoints.out.send({
             info: {
               name: "request" + sequence
             },
@@ -62,8 +59,6 @@ const outStep = {
           (resolve, reject) => {
             setTimeout(() => resolve(this), 200);
           });
-
-        //return Promise.resolve(this);
       }
     };
 
@@ -105,37 +100,30 @@ describe('logger', function () {
     });
 
     // consumes the log events
-    const inEp = endpointImplementation.createEndpoint("in", {
-      "in": true,
-      "passive": true
-    });
+    const inEp = new endpoint.ReceiveEndpoint("in");
 
     // the log request
     let request;
 
-    inEp.setPassiveGenerator(function* () {
-      while (true) {
-        request = yield;
+    inEp.receive = request => {
+      // set the timestamp to a constant
+      request.timestamp = 1451333332866;
+      request.line = 152;
 
-        // set the timestamp to a constant
-        request.timestamp = 1451333332866;
-        request.line = 152;
+      assert.deepEqual(request, {
+        "timestamp": 1451333332866,
+        "level": 'error',
+        '_step-type': 'myStep',
+        '_step-name': 'myStep2',
+        "line": 152,
+        //      "_file_name": '/Users/torstenlink/Documents/entwicklung/kronos/kronos-step/test/logger_test.js',
+        "_error_name": 'Error',
+        "short_message": 'Gumbo'
+      });
+      done();
+    };
 
-        assert.deepEqual(request, {
-          "timestamp": 1451333332866,
-          "level": 'error',
-          '_step-type': 'myStep',
-          '_step-name': 'myStep2',
-          "line": 152,
-          //      "_file_name": '/Users/torstenlink/Documents/entwicklung/kronos/kronos-step/test/logger_test.js',
-          "_error_name": 'Error',
-          "short_message": 'Gumbo'
-        });
-        done();
-      }
-    });
-
-    aStep.endpoints.log.connect(inEp);
+    aStep.endpoints.log.connected = inEp;
     aStep.error(new Error("Gumbo"));
   });
 
@@ -147,37 +135,25 @@ describe('logger', function () {
     });
 
     // consumes the log events
-    const inEp = endpointImplementation.createEndpoint("in", {
-      "in": true,
-      "passive": true
-    });
+    const inEp = new endpoint.ReceiveEndpoint("in");
 
-    // the log request
-    let request;
+    inEp.receive = request => {
+      // set the timestamp to a constant
+      request.timestamp = 1451333332866;
 
-    inEp.setPassiveGenerator(function* () {
-      while (true) {
-        request = yield;
+      assert.deepEqual(request, {
+        "timestamp": 1451333332866,
+        "level": 'error',
+        '_step-type': 'myStep',
+        '_step-name': 'myStep2',
+        "short_message": 'Gumbo'
+      });
+      done();
+    };
 
-        // set the timestamp to a constant
-        request.timestamp = 1451333332866;
-
-        assert.deepEqual(request, {
-          "timestamp": 1451333332866,
-          "level": 'error',
-          '_step-type': 'myStep',
-          '_step-name': 'myStep2',
-          "short_message": 'Gumbo'
-        });
-        done();
-      }
-    });
-
-    aStep.endpoints.log.connect(inEp);
+    aStep.endpoints.log.connected = inEp;
     aStep.error("Gumbo");
-
   });
-
 
   it('Error as object', function (done) {
 
@@ -187,34 +163,25 @@ describe('logger', function () {
     });
 
     // consumes the log events
-    const inEp = endpointImplementation.createEndpoint("in", {
-      "in": true,
-      "passive": true
-    });
+    const inEp = new endpoint.ReceiveEndpoint("in");
 
-    // the log request
-    let request;
 
-    inEp.setPassiveGenerator(function* () {
-      while (true) {
-        request = yield;
+    inEp.receive = request => {
+      // set the timestamp to a constant
+      request.timestamp = 1451333332866;
 
-        // set the timestamp to a constant
-        request.timestamp = 1451333332866;
+      assert.deepEqual(request, {
+        "timestamp": 1451333332866,
+        "level": 'error',
+        '_step-type': 'myStep',
+        '_step-name': 'myStep2',
+        "short_message": 'Gumbo',
+        "_Other": "What ever"
+      });
+      done();
+    };
 
-        assert.deepEqual(request, {
-          "timestamp": 1451333332866,
-          "level": 'error',
-          '_step-type': 'myStep',
-          '_step-name': 'myStep2',
-          "short_message": 'Gumbo',
-          "_Other": "What ever"
-        });
-        done();
-      }
-    });
-
-    aStep.endpoints.log.connect(inEp);
+    aStep.endpoints.log.connected = inEp;
     aStep.error({
       "short_message": "Gumbo",
       "Other": "What ever"
