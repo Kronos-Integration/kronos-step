@@ -11,7 +11,7 @@ const chai = require('chai'),
   scopeDefinitions = require('../lib/scopeDefinitions'),
   testStep = require('kronos-test-step'),
   index = require('../index'),
-  endpointImplementation = index,
+  endpoint = require('../lib/endpoint'),
   BaseStep = index.Step;
 
 // get a mock manager
@@ -24,15 +24,13 @@ const outStep = {
   "description": "test step only",
   "endpoints": {
     "in": {
-      "in": true,
-      "passive": true
+      "in": true
     },
     "out": {
-      "out": true,
-      "active": true
+      "out": true
     }
   },
-  initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+  initialize(manager, scopeReporter, name, stepConfiguration, props) {
     let sequence = 0;
     let interval;
 
@@ -47,8 +45,7 @@ const outStep = {
       value: function () {
         setInterval(() => {
           sequence = sequence + 1;
-          //console.log(`SEND: ${sequence}`);
-          endpoints.out.send({
+          this.endpoints.out.send({
             info: {
               name: "request" + sequence
             },
@@ -60,8 +57,6 @@ const outStep = {
           (resolve, reject) => {
             setTimeout(() => resolve(this), 200);
           });
-
-        //return Promise.resolve(this);
       }
     };
 
@@ -87,8 +82,7 @@ const stepWithoutInitialize = {
   "description": "test step without initialize only",
   "endpoints": {
     "in": {
-      "in": true,
-      "passive": true
+      "in": true
     }
   }
 };
@@ -105,7 +99,6 @@ const A_Step = {
   description: "my out-step description"
 };
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
-
 
 
 const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
@@ -146,11 +139,9 @@ describe('steps', function () {
               "description": "my out-step description",
               "endpoints": {
                 "in": {
-                  "in": true,
-                  "passive": true
+                  "in": true
                 },
                 "out": {
-                  "active": true,
                   "out": true
                 }
               }
@@ -194,8 +185,7 @@ describe('steps', function () {
               "description": "This step is the base class for step implementations",
               "endpoints": {
                 "in": {
-                  "in": true,
-                  "passive": true
+                  "in": true
                 }
               }
             });
@@ -209,19 +199,14 @@ describe('steps', function () {
     describe('single step', function () {
       const aStep = OutStepFactory.createInstance(manager, manager.scopeReporter, {});
 
-      const inEp = endpointImplementation.createEndpoint("in", {
-        "in": true,
-        "passive": true
-      });
+      const inEp = new endpoint.ReceiveEndpoint("in");
 
       let request;
+      inEp.receive = r => {
+        request = r;
+      };
 
-      inEp.setPassiveGenerator(function* () {
-        while (true) {
-          request = yield;
-        }
-      });
-      aStep.endpoints.out.connect(inEp);
+      aStep.endpoints.out.connected = inEp;
 
       testStep.checkStepLivecycle(manager, aStep, function (step, state, livecycle, done) {
         assert.equal(step.initializeDone, true);
