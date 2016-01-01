@@ -151,13 +151,11 @@ describe('steps', function () {
       });
     });
     describe('single step without initialize', function () {
-
-      const A_Step = {
+      const A_StepFactory2 = Object.assign({}, BaseStep, stepWithoutInitialize, {
         name: "myStep",
         type: "step-without-initialize"
-      };
+      });
 
-      const A_StepFactory2 = Object.assign({}, BaseStep, stepWithoutInitialize, A_Step);
       const aStep = A_StepFactory2.createInstance(manager, manager.scopeReporter, {
         "name": "myNewName",
         "description": "This step is the base class for step implementations"
@@ -197,7 +195,13 @@ describe('steps', function () {
 
   describe('livecycle', function () {
     describe('single step', function () {
-      const aStep = OutStepFactory.createInstance(manager, manager.scopeReporter, {});
+      const aStep = OutStepFactory.createInstance(manager, manager.scopeReporter, {
+        "endpoints": {
+          "out": {
+            "out": true
+          }
+        }
+      });
 
       const inEp = new endpoint.ReceiveEndpoint("in");
 

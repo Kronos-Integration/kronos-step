@@ -9,7 +9,6 @@ const chai = require('chai'),
   should = chai.should(),
   scopeReporter = require('scope-reporter'),
   events = require('events'),
-
   endpoint = require('../lib/endpoint'),
   BaseStep = require('../index').Step,
   testStep = require('kronos-test-step'),
