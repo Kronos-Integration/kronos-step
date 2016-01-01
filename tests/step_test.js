@@ -106,8 +106,6 @@ const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
   "description": "my out-step description"
 });
 
-console.log(aStep.endpoints.prototype);
-
 describe('steps', function () {
 
   describe('static', function () {
