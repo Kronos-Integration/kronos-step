@@ -155,7 +155,7 @@ describe('registration and inheritance', function () {
       it('present', function () {
         assert.deepEqual(aStep.toJSON(), {
           "type": "step-without-initialize",
-          //"description": "test step without initialize only",
+          "description": "test step without initialize only",
           "endpoints": {
             "in": {
               "in": true
