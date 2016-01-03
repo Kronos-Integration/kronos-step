@@ -20,7 +20,7 @@
   "dependencies": {
     "loglevel-mixin": "^1.0.0",
     "scope-reporter": "2.3.0",
-    "statetransition-mixin": "^1.4.3"
+    "statetransition-mixin": "^1.4.4"
   },
   "devDependencies": {
     "chai": "3.4.1",
