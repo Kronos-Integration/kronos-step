@@ -12,6 +12,7 @@ const chai = require('chai'),
   testStep = require('kronos-test-step'),
   index = require('../index'),
   endpoint = require('../lib/endpoint'),
+  interceptor = require('../lib/interceptor'),
   BaseStep = index.Step;
 
 // get a mock manager
@@ -24,7 +25,11 @@ const outStep = {
   "description": "test step only",
   "endpoints": {
     "in": {
-      "in": true
+      "in": true,
+      "interceptors": [{
+        "type": "timeout",
+        "timeout": 1000
+      }]
     },
     "out": {
       "out": true
@@ -63,6 +68,8 @@ const outStep = {
     };
   }
 };
+
+manager.registerInterceptor(interceptor.TimeoutInterceptor);
 
 // Create a factory which could be registered at the manager.
 // In this case the outStep will inherit from the base step

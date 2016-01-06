@@ -19,8 +19,12 @@ function nameIt(name) {
 }
 
 describe('interceptor', function () {
+  const ep = new endpoint.ReceiveEndpoint('ep', nameIt);
+
   describe('TimoutInterceptor', function () {
-    const i1 = new interceptor.TimeoutInterceptor(10);
+    const i1 = new interceptor.TimeoutInterceptor(ep, {
+      timout: 10
+    });
 
     it('prototype has a type', function () {
       assert.equal(interceptor.TimeoutInterceptor.type, "timeout");
