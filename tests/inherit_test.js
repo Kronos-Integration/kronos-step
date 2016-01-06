@@ -9,9 +9,9 @@ const chai = require('chai'),
   should = chai.should(),
   scopeReporter = require('scope-reporter'),
   events = require('events'),
-  BaseStep = require('../index').Step,
-  testStep = require('kronos-test-step'),
   index = require('../index'),
+  BaseStep = index.Step,
+  testStep = require('kronos-test-step'),
   scopeDefinitions = require('../lib/scopeDefinitions');
 
 const sr = scopeReporter.createReporter(scopeDefinitions);

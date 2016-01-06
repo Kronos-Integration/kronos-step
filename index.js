@@ -2,15 +2,13 @@
 "use strict";
 
 const step = require('./lib/step'),
-	endpoint = require('./lib/endpoint'),
-	ConnectorMixin = require('./lib/connector-mixin');
+	endpoint = require('./lib/endpoint');
 
 exports.endpoint = endpoint;
 
 exports.Step = step.BaseStep;
 exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 
-exports.ConnectorMixin = ConnectorMixin;
 
 exports.createEndpoint = function (name, definition, step) {
 	if (definition.in) {

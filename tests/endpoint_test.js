@@ -8,7 +8,7 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should(),
   endpoint = require('../lib/endpoint'),
-  interceptor = require('../lib/interceptor');
+  Interceptor = require('kronos-interceptor').Interceptor;
 
 /* simple owner with name */
 function nameIt(name) {
@@ -42,7 +42,7 @@ describe('endpoint', function () {
       });
 
       describe('with interceptor', function () {
-        const in1 = new interceptor.Interceptor();
+        const in1 = new Interceptor(ep1);
         ep1.injectNext(in1);
 
         it('still isConnected', function () {

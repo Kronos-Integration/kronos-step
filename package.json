@@ -21,7 +21,8 @@
   "dependencies": {
     "loglevel-mixin": "^1.0.0",
     "scope-reporter": "2.3.0",
-    "statetransition-mixin": "^1.4.4"
+    "statetransition-mixin": "^1.4.4",
+    "kronos-interceptor": "1.0.0"
   },
   "devDependencies": {
     "chai": "3.4.1",
