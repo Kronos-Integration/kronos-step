@@ -2,13 +2,15 @@
 "use strict";
 
 const step = require('./lib/step'),
-	endpoint = require('./lib/endpoint');
+	endpoint = require('./lib/endpoint'),
+	ConnectorMixin = require('./lib/connector-mixin');
 
 exports.endpoint = endpoint;
-exports.interceptor = require('./lib/interceptor');
 
 exports.Step = step.BaseStep;
 exports.ScopeDefinitions = require('./lib/scopeDefinitions');
+
+exports.ConnectorMixin = ConnectorMixin;
 
 exports.createEndpoint = function (name, definition, step) {
 	if (definition.in) {
@@ -16,9 +18,4 @@ exports.createEndpoint = function (name, definition, step) {
 	} else {
 		return new endpoint.SendEndpoint(name, step);
 	}
-};
-
-exports.registerWithManager = function (manager) {
-	manager.registerInterceptor(exports.interceptor.RequestLimitingInterceptor);
-	manager.registerInterceptor(exports.interceptor.TimeoutInterceptor);
 };
