@@ -5,7 +5,7 @@ const step = require('./lib/step'),
 	endpoint = require('./lib/endpoint');
 
 exports.endpoint = endpoint;
-exports.interceptor = require('./lib/interceptor');;
+exports.interceptor = require('./lib/interceptor');
 
 exports.Step = step.BaseStep;
 exports.ScopeDefinitions = require('./lib/scopeDefinitions');
@@ -21,4 +21,4 @@ exports.createEndpoint = function (name, definition, step) {
 exports.registerWithManager = function (manager) {
 	manager.registerInterceptor(exports.interceptor.RequestLimitingInterceptor);
 	manager.registerInterceptor(exports.interceptor.TimeoutInterceptor);
-}
+};
