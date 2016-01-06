@@ -1,10 +1,11 @@
 /* jslint node: true, esnext: true */
 "use strict";
 
-const step = require('./lib/step');
-const endpoint = require('./lib/endpoint');
+const step = require('./lib/step'),
+	endpoint = require('./lib/endpoint');
 
 exports.endpoint = endpoint;
+exports.interceptor = require('./lib/interceptor');;
 
 exports.Step = step.BaseStep;
 exports.ScopeDefinitions = require('./lib/scopeDefinitions');
