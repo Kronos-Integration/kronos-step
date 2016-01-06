@@ -17,3 +17,8 @@ exports.createEndpoint = function (name, definition, step) {
 		return new endpoint.SendEndpoint(name, step);
 	}
 };
+
+exports.registerWithManager = function (manager) {
+	manager.registerInterceptor(exports.interceptor.RequestLimitingInterceptor);
+	manager.registerInterceptor(exports.interceptor.TimeoutInterceptor);
+}

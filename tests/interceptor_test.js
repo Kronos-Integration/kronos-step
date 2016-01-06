@@ -22,6 +22,13 @@ describe('interceptor', function () {
   describe('TimoutInterceptor', function () {
     const i1 = new interceptor.TimeoutInterceptor(10);
 
+    it('prototype has a type', function () {
+      assert.equal(interceptor.TimeoutInterceptor.type, "timeout");
+    });
+    it('has a type', function () {
+      assert.equal(i1.type, "timeout");
+    });
+
     i1.connected = new endpoint.ReceiveEndpoint('r1', nameIt('o1'));
     i1.connected.receive = request => {
       return new Promise((fullfilled, rejected) => {
