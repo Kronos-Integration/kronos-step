@@ -12,7 +12,7 @@ const chai = require('chai'),
   testStep = require('kronos-test-step'),
   index = require('../index'),
   endpoint = require('../lib/endpoint'),
-  RequestTimeOutInterceptor = require('kronos-interceptor').RequestTimeOut,
+  RequestTimeOutInterceptor = require('kronos-interceptor').TimeoutInterceptor,
   BaseStep = index.Step;
 
 // get a mock manager
