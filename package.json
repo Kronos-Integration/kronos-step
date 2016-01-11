@@ -19,10 +19,10 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
-    "loglevel-mixin": "^1.0.0",
+    "kronos-interceptor": "^1.0.1",
+    "loglevel-mixin": "^1.2.0",
     "scope-reporter": "2.3.0",
-    "statetransition-mixin": "^1.4.4",
-    "kronos-interceptor": "1.0.0"
+    "statetransition-mixin": "^1.4.4"
   },
   "devDependencies": {
     "chai": "3.4.1",
@@ -31,13 +31,16 @@
     "mocha": "^2.3.4",
     "semantic-release": "6.0.3"
   },
-  "contributors": [{
-    "name": "Torsten Link",
-    "email": "torstenlink@gmx.de"
-  }, {
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Torsten Link",
+      "email": "torstenlink@gmx.de"
+    },
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "license": "BSD-2-Clause",
   "engines": {
     "node": ">=4.2.1"
