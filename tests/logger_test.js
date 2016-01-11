@@ -112,8 +112,8 @@ describe('logger', function () {
       assert.deepEqual(request, {
         "timestamp": 1451333332866,
         "level": 'error',
-        '_step-type': 'myStep',
-        '_step-name': 'myStep2',
+        'step-type': 'myStep',
+        'step-name': 'myStep2',
         "line": 152,
         //      "_file_name": '/Users/torstenlink/Documents/entwicklung/kronos/kronos-step/test/logger_test.js',
         "_error_name": 'Error',
@@ -143,9 +143,9 @@ describe('logger', function () {
       assert.deepEqual(request, {
         "timestamp": 1451333332866,
         "level": 'error',
-        '_step-type': 'myStep',
-        '_step-name': 'myStep2',
-        "short_message": 'Gumbo'
+        'step-type': 'myStep',
+        'step-name': 'myStep2',
+        "message": 'Gumbo'
       });
       done();
     };
@@ -172,10 +172,10 @@ describe('logger', function () {
       assert.deepEqual(request, {
         "timestamp": 1451333332866,
         "level": 'error',
-        '_step-type': 'myStep',
-        '_step-name': 'myStep2',
+        'step-type': 'myStep',
+        'step-name': 'myStep2',
         "short_message": 'Gumbo',
-        "_Other": "What ever"
+        "Other": "What ever"
       });
       done();
     };
