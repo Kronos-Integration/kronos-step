@@ -27,6 +27,13 @@ manager.registerStepImplementation = function (si) {
   stepImplementations[si.name] = si;
 };
 
+manager.getStepInstance = function (configuration) {
+  const stepImpl = stepImplementations[configuration.type];
+  if (stepImpl) {
+    return stepImpl.createInstance(this, this.scopeReporter, configuration);
+  }
+};
+
 const OutStepDefinition = {
   "name": "out-step",
   "description": "test step only",
@@ -178,6 +185,34 @@ describe('registration and inheritance', function () {
       it('step-without-initialize finalized', function () {
         assert.equal(aStep.finalizeHasBeenCalled2, true);
       });
+    });
+
+    describe('get instance and overwrite endpoint definition', function () {
+
+      // the out and in endpoint directions are swaped
+      const myNewStep = manager.getStepInstance({
+        "type": "out-step",
+        "name": "my inherit step",
+        "endpoints": {
+          "in": {
+            "in": false,
+            "out": true
+          },
+          "out": {
+            "out": false,
+            "in": true
+          }
+        }
+      });
+
+      it('inherit out-step swaped endpoints', function () {
+        assert.equal(myNewStep.endpoints.in.isIn, false);
+        assert.equal(myNewStep.endpoints.in.isOut, true);
+
+        assert.equal(myNewStep.endpoints.out.isIn, true);
+        assert.equal(myNewStep.endpoints.out.isOut, false);
+      });
+
     });
   });
 });
