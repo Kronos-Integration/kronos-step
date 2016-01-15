@@ -50,7 +50,7 @@ const outStep = {
       value: function () {
         setInterval(() => {
           sequence = sequence + 1;
-          this.endpoints.out.send({
+          this.endpoints.out.receive({
             info: {
               name: "request" + sequence
             },
