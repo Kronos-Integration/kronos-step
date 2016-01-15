@@ -2,18 +2,20 @@
 "use strict";
 
 const step = require('./lib/step'),
-	endpoint = require('./lib/endpoint');
+	guardedEndpoint = require('./lib/endpoint');
 
-exports.endpoint = endpoint;
+exports.endpoint = require('./lib/endpoint');
+exports.guardedEndpoint = guardedEndpoint;
 
 exports.Step = step.BaseStep;
 exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 
 
 exports.createEndpoint = function (name, definition, step) {
+	console.log("deprecated use new directly");
 	if (definition.in) {
-		return new endpoint.ReceiveEndpoint(name, step);
+		return new guardedEndpoint.GuardedReceiveEndpoint(name, step);
 	} else {
-		return new endpoint.SendEndpoint(name, step);
+		return new guardedEndpoint.GuardedSendEndpoint(name, step);
 	}
 };
