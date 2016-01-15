@@ -7,6 +7,7 @@ const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
   should = chai.should(),
+  kti = require('kronos-test-interceptor'),
   endpoint = require('../lib/endpoint'),
   Interceptor = require('kronos-interceptor').Interceptor;
 
@@ -16,13 +17,6 @@ function nameIt(name) {
       return name;
     }
   };
-}
-
-class MyInterceptor extends Interceptor {
-  receive(request) {
-    console.log(`MyInterceptor: ${request}`);
-    return super.receive(request + 1);
-  }
 }
 
 describe('endpoint', () => {
@@ -46,65 +40,77 @@ describe('endpoint', () => {
         const ep1 = new endpoint.SendEndpoint('ep1', nameIt('o1'));
         const ep2 = new endpoint.ReceiveEndpoint('ep2', nameIt('o1'));
 
-        ep2.receive = request => {
-          return Promise.resolve(request);
-        }
+        ep2.receive = kti.testResponseHandler;
 
         ep1.connected = ep2;
 
-        describe('passes though with interceptor', () => {
-          it('xxx', (done) => {
-            ep1.receive(11).then(response => {
-              assert.equal(response, 11);
+        describe('passes though', () => {
+          it('without interceptor', done => {
+            ep1.receive({
+              value: 1
+            }).then(response => {
+              assert.equal(response.value, 1);
               done();
             }).catch(done);
           });
         });
 
-        const ic1 = new Interceptor(ep1);
-        ep1.interceptors = [ic1];
+        const ic1 = new kti.TestInterceptor(ep1, {
+          name: 'ic1'
+        });
+        const ic2 = new kti.TestInterceptor(ep1, {
+          name: 'ic2'
+        });
+
+        ep1.interceptors = [ic1, ic2];
 
         describe('connected chain', () => {
           it('ep1->ic1', () => assert.equal(ep1.connected, ic1));
-          it('ic1->ep2', () => assert.equal(ic1.connected, ep2));
+          it('ic1->ic2', () => assert.equal(ic1.connected, ic2));
+          it('ic1->ep2', () => assert.equal(ic2.connected, ep2));
         });
 
         it('is firstInterceptor', () => assert.equal(ic1, ep1.firstInterceptor));
-        it('is lastInterceptor', () => assert.equal(ic1, ep1.lastInterceptor));
+        it('is lastInterceptor', () => assert.equal(ic2, ep1.lastInterceptor));
 
-        describe('passes though with interceptor', () => {
-          it('xxx', (done) => {
-            ep1.receive(4711).then(response => {
-              assert.equal(response, 4712);
-              console.log(`AA response: ${response}`);
+        describe('passes with interceptor', () => {
+          it('interceptor hop visible', done => {
+            ep1.receive({
+              value: 2
+            }).then(response => {
+              assert.deepEqual(response, {
+                value: 2,
+                hops: ['ic1', 'ic2']
+              });
               done();
             }).catch(done);
           });
         });
 
-        /*
-                const itcs = ep1.interceptors;
-                it('is array', () => assert.isArray(itcs));
-                it('one interceptor', () => assert.equal(itcs[0], ic1));
+        const itcs = ep1.interceptors;
+        it('is array', () => assert.isArray(itcs));
+        it('one interceptor', () => assert.equal(itcs[0], ic1));
 
-                        describe('can be removed again', () => {
-                          const ep1 = new endpoint.SendEndpoint('ep1', nameIt('o1'));
-                          const ep2 = new endpoint.ReceiveEndpoint('ep2', nameIt('o1'));
+        describe('can be removed again', () => {
+          const ep1 = new endpoint.SendEndpoint('ep1', nameIt('o1'));
+          const ep2 = new endpoint.ReceiveEndpoint('ep2', nameIt('o1'));
 
-                          ep1.connected = ep2;
-                          const ic1 = new MyInterceptor(ep1);
-                          ep1.interceptors = [ic1];
+          ep1.connected = ep2;
+          const ic1 = new kti.TestInterceptor(ep1, {
+            name: 'ic1'
+          });
+          ep1.interceptors = [ic1];
 
-                          ep1.interceptors = [];
-                          it('empty interceptors', () => assert.deepEqual(ep1.interceptors, []));
-                          it('no firstInterceptor', () => assert.isUndefined(ep1.firstInterceptor));
-                          it('no lastInterceptor', () => assert.isUndefined(ep1.lastInterceptor));
+          ep1.interceptors = [];
+          it('empty interceptors', () => assert.deepEqual(ep1.interceptors, []));
+          it('no firstInterceptor', () => assert.isUndefined(ep1.firstInterceptor));
+          it('no lastInterceptor', () => assert.isUndefined(ep1.lastInterceptor));
 
-                          describe('connected chain', () => {
-                            it('ep1->ic1', () => assert.equal(ep1.connected, ep2));
-                          });
-                        });
-                    */
+          describe('connected chain', () => {
+            it('ep1->ic1', () => assert.equal(ep1.connected, ep2));
+          });
+        });
+
       });
     });
 
@@ -113,19 +119,25 @@ describe('endpoint', () => {
       const ep2 = new endpoint.ReceiveEndpoint('ep2', nameIt('o1'));
 
       ep1.connected = ep2;
-      ep2.receive = request => {
-        return Promise.resolve(request);
-      }
+      ep2.receive = kti.testResponseHandler;
 
-      describe('passes though', (done) => {
-        ep1.receive("hallo").then(response => {
-          assert.equal(response, "hallo");
-          console.log(`response: ${response}`);
-          done();
+      describe('passes though', () => {
+        it('interceptor hop visible', done => {
+          ep1.receive({
+            value: 3
+          }).then(response => {
+            assert.deepEqual(response, {
+              value: 3,
+              hops: ["ic1"]
+            });
+            done();
+          }).catch(done);
         });
       });
 
-      const ic1 = new MyInterceptor(ep1);
+      const ic1 = new kti.TestInterceptor(ep1, {
+        name: 'ic1'
+      });
 
       ep2.interceptors = [ic1];
 
@@ -134,12 +146,18 @@ describe('endpoint', () => {
         it('ic1->ep2*', () => assert.equal(ic1.connected.name, ep2.name));
       });
 
-      describe('passes though with interceptor', (done) => {
-        ep1.receive("hallo").then(response => {
-          assert.equal(response, "hallo");
-          console.log(`AA response: ${response}`);
-          done();
-        }).catch(done);
+      describe('passes though with interceptor', () => {
+        it('interceptor hop visible', done => {
+          ep1.receive({
+            value: 4
+          }).then(response => {
+            assert.deepEqual(response, {
+              value: 4,
+              hops: ['ic1']
+            });
+            done();
+          }).catch(done);
+        });
       });
 
     });
