@@ -168,6 +168,15 @@ describe('endpoint', () => {
       });
     });
 
+    describe('connecting Receiver conveniance', () => {
+      const se = new endpoint.SendEndpoint('se', nameIt('ss'));
+      const re = new endpoint.ReceiveEndpoint('re', nameIt('rs'));
+
+      re.connected = se;
+      it('isConnected', () => assert.isTrue(se.isConnected));
+      it('has otherEnd', () => assert.equal(se.otherEnd, re));
+    });
+
     describe('connecting', () => {
       const ep1 = new endpoint.SendEndpoint('ep1', nameIt('o1'));
       const ep2 = new endpoint.ReceiveEndpoint('ep2', nameIt('o2'));
