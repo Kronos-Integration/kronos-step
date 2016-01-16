@@ -4,7 +4,7 @@
 const step = require('./lib/step'),
 	guardedEndpoint = require('./lib/guardedendpoint');
 exports.guardedEndpoint = guardedEndpoint;
-exports.endpoint = require('./lib/endpoint');
+exports.endpoint = require('kronos-endpoint');
 exports.Step = step.BaseStep;
 exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 

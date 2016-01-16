@@ -11,7 +11,7 @@ const chai = require('chai'),
   scopeDefinitions = require('../lib/scopeDefinitions'),
   testStep = require('kronos-test-step'),
   index = require('../index'),
-  endpoint = require('../lib/endpoint'),
+  endpoint = require('kronos-endpoint'),
   RequestTimeOutInterceptor = require('kronos-interceptor').TimeoutInterceptor,
   BaseStep = index.Step;
 

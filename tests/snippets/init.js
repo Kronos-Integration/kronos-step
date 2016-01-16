@@ -5,7 +5,7 @@
 
 const scopeReporter = require('scope-reporter'),
   events = require('events'),
-  endpointImplementation = require('../../lib/endpoint'),
+  endpointImplementation = require('kronos-endpoint'),
   testStep = require('kronos-test-step'),
   index = require('../../index'),
   scopeDefinitions = require('../../lib/scopeDefinitions');
