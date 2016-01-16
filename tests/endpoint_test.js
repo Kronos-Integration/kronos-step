@@ -19,6 +19,31 @@ function nameIt(name) {
   };
 }
 
+/*
+ * send receive request and check if we whent though some interceptors
+ */
+function testReceive(name, ep, value, hops, cb) {
+  describe(name, () => {
+    it(`interceptors ${hops ? hops : 'none'} passed`, done => {
+      ep.receive({
+        value: value
+      }).then(response => {
+        const exp = {
+          value: value
+        }
+        if (hops) {
+          exp.hops = hops;
+        }
+        assert.deepEqual(response, exp);
+        done();
+        if (cb) {
+          cb();
+        }
+      }).catch(done);
+    });
+  });
+}
+
 describe('endpoint', () => {
   describe('connecting', () => {
 
@@ -73,19 +98,8 @@ describe('endpoint', () => {
         it('is firstInterceptor', () => assert.equal(ic1, ep1.firstInterceptor));
         it('is lastInterceptor', () => assert.equal(ic2, ep1.lastInterceptor));
 
-        describe('passes with interceptor', () => {
-          it('interceptor hop visible', done => {
-            ep1.receive({
-              value: 2
-            }).then(response => {
-              assert.deepEqual(response, {
-                value: 2,
-                hops: ['ic1', 'ic2']
-              });
-              done();
-            }).catch(done);
-          });
-        });
+
+        testReceive('passes with interceptor', ep1, 2, ['ic1', 'ic2'])
 
         const itcs = ep1.interceptors;
         it('is array', () => assert.isArray(itcs));
@@ -110,56 +124,40 @@ describe('endpoint', () => {
             it('ep1->ic1', () => assert.equal(ep1.connected, ep2));
           });
         });
-
       });
     });
 
-    describe('interceptors receive', () => {
-      const ep1 = new endpoint.SendEndpoint('ep1', nameIt('o1'));
-      const ep2 = new endpoint.ReceiveEndpoint('ep2', nameIt('o1'));
+    describe('interceptors on the receive side', () => {
+      const se = new endpoint.SendEndpoint('se', nameIt('st'));
+      const re = new endpoint.ReceiveEndpoint('re', nameIt('rt'));
 
-      ep1.connected = ep2;
-      ep2.receive = kti.testResponseHandler;
+      se.connected = re;
+      re.receive = kti.testResponseHandler;
 
-      describe('passes though', () => {
-        it('interceptor hop visible', done => {
-          ep1.receive({
-            value: 3
-          }).then(response => {
-            assert.deepEqual(response, {
-              value: 3,
-              hops: ["ic1"]
-            });
-            done();
-          }).catch(done);
+      testReceive('passes without', se, 3, undefined, () => {
+        const ic1 = new kti.TestInterceptor(re, {
+          name: 'ic1'
+        });
+        const ic2 = new kti.TestInterceptor(re, {
+          name: 'ic2'
+        });
+
+        re.interceptors = [ic1, ic2];
+
+        testReceive('passes', se, 4, ["ic1", "ic2"], () => {
+          const ic3 = new kti.TestInterceptor(re, {
+            name: 'ic3'
+          });
+
+          // ep2.receive now at the internalEndpoint
+          re.receive = kti.testResponseHandler;
+          re.interceptors = [ic3];
+
+          testReceive('passes internal endpoint', se, 5, ["ic3"], () => {
+            console.log('done');
+          });
         });
       });
-
-      const ic1 = new kti.TestInterceptor(ep1, {
-        name: 'ic1'
-      });
-
-      ep2.interceptors = [ic1];
-
-      describe('connected chain', () => {
-        it('ep1->ep2', () => assert.equal(ep1.connected, ep2));
-        it('ic1->ep2*', () => assert.equal(ic1.connected.name, ep2.name));
-      });
-
-      describe('passes though with interceptor', () => {
-        it('interceptor hop visible', done => {
-          ep1.receive({
-            value: 4
-          }).then(response => {
-            assert.deepEqual(response, {
-              value: 4,
-              hops: ['ic1']
-            });
-            done();
-          }).catch(done);
-        });
-      });
-
     });
 
     describe('connecting', () => {
