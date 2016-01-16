@@ -10,6 +10,9 @@
 [![docs](http://inch-ci.org/github/Kronos-Integration/kronos-step.svg?branch=master)](http://inch-ci.org/github/Kronos-Integration/kronos-step)
 [![downloads](http://img.shields.io/npm/dm/kronos-step.svg?style=flat-square)](https://npmjs.org/package/kronos-step)
 
+
+![request forwarding](doc/images/requestForwarding.png "Requests Forwading")
+
 install
 =======
 
