@@ -35,9 +35,11 @@ function testReceive(name, ep, value, hops, cb) {
           exp.hops = hops;
         }
         assert.deepEqual(response, exp);
-        done();
+
         if (cb) {
-          cb();
+          cb(done);
+        } else {
+          done();
         }
       }).catch(done);
     });
@@ -99,7 +101,7 @@ describe('endpoint', () => {
         it('is lastInterceptor', () => assert.equal(ic2, ep1.lastInterceptor));
 
 
-        testReceive('passes with interceptor', ep1, 2, ['ic1', 'ic2'])
+        testReceive('passes with interceptor', ep1, 2, ['ic1', 'ic2']);
 
         const itcs = ep1.interceptors;
         it('is array', () => assert.isArray(itcs));
@@ -134,7 +136,7 @@ describe('endpoint', () => {
       se.connected = re;
       re.receive = kti.testResponseHandler;
 
-      testReceive('passes without', se, 3, undefined, () => {
+      testReceive('passes without', se, 3, undefined, done => {
         const ic1 = new kti.TestInterceptor(re, {
           name: 'ic1'
         });
@@ -144,7 +146,7 @@ describe('endpoint', () => {
 
         re.interceptors = [ic1, ic2];
 
-        testReceive('passes', se, 4, ["ic1", "ic2"], () => {
+        testReceive('receiving endpoint', se, 4, ["ic1", "ic2"], done => {
           const ic3 = new kti.TestInterceptor(re, {
             name: 'ic3'
           });
@@ -153,10 +155,16 @@ describe('endpoint', () => {
           re.receive = kti.testResponseHandler;
           re.interceptors = [ic3];
 
-          testReceive('passes internal endpoint', se, 5, ["ic3"], () => {
-            console.log('done');
+          testReceive('receiving endpoint internal endpoint', se, 5, ["ic3"], done => {
+            re.interceptors = undefined;
+            testReceive('receiving endpoint removed interceptos', se, 6, undefined, done => {
+              done();
+            });
+            done();
           });
+          done();
         });
+        done();
       });
     });
 
