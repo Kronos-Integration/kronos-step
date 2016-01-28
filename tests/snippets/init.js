@@ -3,14 +3,12 @@
 
 "use strict";
 
-const scopeReporter = require('scope-reporter'),
-  events = require('events'),
+const events = require('events'),
   endpointImplementation = require('kronos-endpoint'),
   testStep = require('kronos-test-step'),
   index = require('../../index'),
   scopeDefinitions = require('../../lib/scopeDefinitions');
 
-const sr = scopeReporter.createReporter(scopeDefinitions);
 const manager = Object.create(new events.EventEmitter(), {});
 
 const outStep = {
@@ -29,14 +27,14 @@ const outStep = {
 
   property2: "property2",
 
-  initialize(manager, scopeReporter, name, stepConfiguration, endpoints, props) {
+  initialize(manager, name, stepConfiguration, endpoints, props) {
     props.property1 = {
       value: "property1"
     };
   },
 
-  finalize(manager, scopeReporter, stepDefinition) {
-    Object.getPrototypeOf(this).finalize.call(this, manager, scopeReporter, stepDefinition);
+  finalize(manager, stepDefinition) {
+    Object.getPrototypeOf(this).finalize.call(this, manager, stepDefinition);
     this.finalizeHasBeenCalled1 = true;
   }
 };

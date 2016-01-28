@@ -7,8 +7,6 @@ const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
   should = chai.should(),
-  scopeReporter = require('scope-reporter'),
-  scopeDefinitions = require('../lib/scopeDefinitions'),
   testStep = require('kronos-test-step'),
   index = require('../index'),
   endpoint = require('kronos-endpoint'),
@@ -35,7 +33,7 @@ const outStep = {
       "out": true
     }
   },
-  initialize(manager, scopeReporter, name, stepConfiguration, props) {
+  initialize(manager, name, stepConfiguration, props) {
     let sequence = 0;
     let interval;
 
@@ -105,7 +103,7 @@ const A_Step = {
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
 
 
-const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+const aStep = A_StepFactory.createInstance(manager, {
   "name": "myStep2",
   "description": "my out-step description"
 });
@@ -159,7 +157,7 @@ describe('steps', function () {
         type: "step-without-initialize"
       });
 
-      const aStep = A_StepFactory2.createInstance(manager, manager.scopeReporter, {
+      const aStep = A_StepFactory2.createInstance(manager, {
         "name": "myNewName",
         "description": "This step is the base class for step implementations"
       });
@@ -198,7 +196,7 @@ describe('steps', function () {
 
   describe('livecycle', function () {
     describe('single step', function () {
-      const aStep = OutStepFactory.createInstance(manager, manager.scopeReporter, {
+      const aStep = OutStepFactory.createInstance(manager, {
         "endpoints": {
           "out": {
             "out": true
@@ -234,7 +232,7 @@ describe('steps', function () {
         }
       });
 
-      const aStep = NoneStartableStep.createInstance(manager, manager.scopeReporter, {});
+      const aStep = NoneStartableStep.createInstance(manager, {});
 
       it('always fails to start', function (done) {
         try {

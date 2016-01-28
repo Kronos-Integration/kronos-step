@@ -22,7 +22,6 @@
     "kronos-endpoint": "^1.0.2",
     "loglevel-mixin": "^1.2.0",
     "merge-deep": "^2.0.2",
-    "scope-reporter": "2.3.0",
     "statetransition-mixin": "^2.0.0"
   },
   "devDependencies": {

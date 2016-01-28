@@ -7,14 +7,10 @@ const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
   should = chai.should(),
-  scopeReporter = require('scope-reporter'),
   events = require('events'),
   index = require('../index'),
   BaseStep = index.Step,
-  testStep = require('kronos-test-step'),
-  scopeDefinitions = require('../lib/scopeDefinitions');
-
-const sr = scopeReporter.createReporter(scopeDefinitions);
+  testStep = require('kronos-test-step');
 
 var stepImplementations = {};
 const manager = Object.create(new events.EventEmitter(), {
@@ -30,7 +26,7 @@ manager.registerStepImplementation = function (si) {
 manager.getStepInstance = function (configuration) {
   const stepImpl = stepImplementations[configuration.type];
   if (stepImpl) {
-    return stepImpl.createInstance(this, this.scopeReporter, configuration);
+    return stepImpl.createInstance(this, configuration);
   }
 };
 
@@ -48,14 +44,14 @@ const OutStepDefinition = {
 
   property2: "property2",
 
-  initialize(manager, scopeReporter, name, stepConfiguration, props) {
+  initialize(manager, name, stepConfiguration, props) {
     props.property1 = {
       value: "property1"
     };
   },
 
-  finalize(manager, scopeReporter, stepDefinition) {
-    //Object.getPrototypeOf(this).finalize.call(this, manager, scopeReporter, stepDefinition);
+  finalize(manager, stepDefinition) {
+    //Object.getPrototypeOf(this).finalize.call(this, manager, stepDefinition);
     this.finalizeHasBeenCalled1 = true;
   }
 };
@@ -71,7 +67,7 @@ const StepWithoutInitializeDefinition = {
   },
   property3: "property3",
 
-  finalize(scopeReporter, stepDefinition) {
+  finalize(stepDefinition) {
     this.finalizeHasBeenCalled2 = true;
   }
 };
@@ -86,7 +82,7 @@ manager.registerStepImplementation(StepWithoutInitializeFactory);
 
 describe('registration and inheritance', function () {
   describe('out-step', function () {
-    const aStep = OutStepFactory.createInstance(manager, sr, {
+    const aStep = OutStepFactory.createInstance(manager, {
       "description": "test step only"
     });
 
@@ -119,7 +115,7 @@ describe('registration and inheritance', function () {
     describe('createStep', function () {
       it('compare', function () {
 
-        const aStep = OutStepFactory.createInstance(manager, sr, {
+        const aStep = OutStepFactory.createInstance(manager, {
           "name": "myStep"
         });
 
@@ -142,7 +138,7 @@ describe('registration and inheritance', function () {
 
   describe('step-without-initialize', function () {
     const StepFactory = manager.steps['step-without-initialize'];
-    const aStep = StepFactory.createInstance(manager, sr, {
+    const aStep = StepFactory.createInstance(manager, {
       "name": "myStep"
     });
 
@@ -173,7 +169,7 @@ describe('registration and inheritance', function () {
     });
 
     describe('get instance', function () {
-      const instance = StepFactory.createInstance(manager, sr, {
+      const instance = StepFactory.createInstance(manager, {
         name: "inst1"
       });
       it('out-step finalized', function () {

@@ -6,7 +6,6 @@ const step = require('./lib/step'),
 exports.guardedEndpoint = guardedEndpoint;
 exports.endpoint = require('kronos-endpoint');
 exports.Step = step.BaseStep;
-exports.ScopeDefinitions = require('./lib/scopeDefinitions');
 
 exports.createEndpoint = function (name, definition, step) {
 	console.log("deprecated use new directly");

@@ -7,13 +7,11 @@ const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
   should = chai.should(),
-  scopeReporter = require('scope-reporter'),
   events = require('events'),
   endpoint = require('kronos-endpoint'),
   index = require('../index'),
   BaseStep = index.Step,
-  testStep = require('kronos-test-step'),
-  scopeDefinitions = require('../lib/scopeDefinitions');
+  testStep = require('kronos-test-step');
 
 
 // get a mock manager
@@ -31,7 +29,7 @@ const outStep = {
       "out": true
     }
   },
-  initialize(manager, scopeReporter, name, stepConfiguration, props) {
+  initialize(manager, name, stepConfiguration, props) {
     let sequence = 0;
     let interval;
 
@@ -85,7 +83,7 @@ const A_Step = {
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
 
 
-const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+const aStep = A_StepFactory.createInstance(manager, {
   "name": "myStep2",
   "description": "my out-step description"
 });
@@ -93,7 +91,7 @@ const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
 describe('logger', function () {
   it('Error as Error Object', function (done) {
 
-    const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+    const aStep = A_StepFactory.createInstance(manager, {
       "name": "myStep2",
       "description": "my out-step description"
     });
@@ -128,7 +126,7 @@ describe('logger', function () {
 
   it('Error as String', function (done) {
 
-    const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+    const aStep = A_StepFactory.createInstance(manager, {
       "name": "myStep2",
       "description": "my out-step description"
     });
@@ -156,14 +154,13 @@ describe('logger', function () {
 
   it('Error as object', function (done) {
 
-    const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+    const aStep = A_StepFactory.createInstance(manager, {
       "name": "myStep2",
       "description": "my out-step description"
     });
 
     // consumes the log events
     const inEp = new endpoint.ReceiveEndpoint("in");
-
 
     inEp.receive = request => {
       // set the timestamp to a constant
