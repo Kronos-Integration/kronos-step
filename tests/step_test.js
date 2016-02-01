@@ -87,12 +87,25 @@ const A_StepFactory = Object.assign({}, OutStepFactory, {
   description: "my out-step description"
 });
 
-const mp = ksm.manager().then(manager =>
+const mp = ksm.manager().then(manager => {
+  console.log("--- 1");
   Promise.all([
     manager.registerInterceptor(RequestTimeOutInterceptor),
     manager.registerStep(OutStepFactory),
     manager.registerStep(Object.assign({}, BaseStep, stepWithoutInitialize))
-  ]).then(Promise.resolve(manager)));
+  ]).then((val, err) => {
+    console.log("---- 1,5 start ");
+    console.log(manager);
+    console.log("---- 1,5 end ");
+    return Promise.resolve(manager);
+  });
+  console.log("--- 2");
+});
+
+console.log("##### - #####");
+console.log(mp);
+console.log("##### - #####");
+
 
 describe('steps', () => {
   describe('static', () => {
@@ -101,21 +114,28 @@ describe('steps', () => {
       mp.then(manager => {
         console.log(`B`);
 
+        console.log("##### - #####");
+        console.log(manager);
+        console.log("##### - #####");
+
         try {
           const aStep = A_StepFactory.createInstance(manager, {
             "name": "myStep2",
             "description": "my out-step description"
           });
+
+          console.log(`C`);
+
+          assert.equal(aStep.type, 'myStep');
+          console.log(`D`);
+
+          done();
+          console.log(`E`);
+
+
         } catch (e) {
           done(e);
         }
-        console.log(`C`);
-
-        assert.equal(aStep.type, 'myStep');
-        console.log(`D`);
-
-        done();
-        console.log(`E`);
 
       });
     });
