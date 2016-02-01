@@ -25,11 +25,11 @@
     "statetransition-mixin": "^2.0.0"
   },
   "devDependencies": {
-    "chai": "3.4.1",
+    "chai": "3.5.0",
     "istanbul": "^0.4.2",
     "kronos-test-step": "^2.10.0",
-    "mocha": "^2.3.4",
-    "semantic-release": "6.0.3"
+    "mocha": "^2.3.5",
+    "semantic-release": "6.2.0"
   },
   "contributors": [{
     "name": "Torsten Link",
