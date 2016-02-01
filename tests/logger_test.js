@@ -88,8 +88,8 @@ const aStep = A_StepFactory.createInstance(manager, {
   "description": "my out-step description"
 });
 
-describe('logger', function () {
-  it('Error as Error Object', function (done) {
+describe('logger', () => {
+  it('Error as Error Object', done => {
 
     const aStep = A_StepFactory.createInstance(manager, {
       "name": "myStep2",
@@ -124,7 +124,7 @@ describe('logger', function () {
     aStep.error(new Error("Gumbo"));
   });
 
-  it('Error as String', function (done) {
+  it('Error as String', done => {
 
     const aStep = A_StepFactory.createInstance(manager, {
       "name": "myStep2",
@@ -152,7 +152,7 @@ describe('logger', function () {
     aStep.error("Gumbo");
   });
 
-  it('Error as object', function (done) {
+  it('Error as object', done => {
 
     const aStep = A_StepFactory.createInstance(manager, {
       "name": "myStep2",

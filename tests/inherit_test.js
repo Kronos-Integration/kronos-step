@@ -80,23 +80,19 @@ manager.registerStepImplementation(OutStepFactory);
 manager.registerStepImplementation(StepWithoutInitializeFactory);
 
 
-describe('registration and inheritance', function () {
-  describe('out-step', function () {
+describe('registration and inheritance', () => {
+  describe('out-step', () => {
     const aStep = OutStepFactory.createInstance(manager, {
       "description": "test step only"
     });
 
-    describe('user defined attributes', function () {
-      it('property1', function () {
-        assert.equal(aStep.property1, 'property1');
-      });
-      it('property2', function () {
-        assert.equal(aStep.property2, 'property2');
-      });
+    describe('user defined attributes', () => {
+      it('property1', () => assert.equal(aStep.property1, 'property1'));
+      it('property2', () => assert.equal(aStep.property2, 'property2'));
     });
 
-    describe('basic attributes', function () {
-      it('present', function () {
+    describe('basic attributes', () => {
+      it('present', () => {
         assert.deepEqual(aStep.toJSON(), {
           "type": "out-step",
           "description": "test step only",
@@ -112,8 +108,8 @@ describe('registration and inheritance', function () {
       });
     });
 
-    describe('createStep', function () {
-      it('compare', function () {
+    describe('createStep', () => {
+      it('compare', () => {
 
         const aStep = OutStepFactory.createInstance(manager, {
           "name": "myStep"
@@ -131,31 +127,24 @@ describe('registration and inheritance', function () {
             }
           }
         });
-
       });
     });
   });
 
-  describe('step-without-initialize', function () {
+  describe('step-without-initialize', () => {
     const StepFactory = manager.steps['step-without-initialize'];
     const aStep = StepFactory.createInstance(manager, {
       "name": "myStep"
     });
 
-    describe('user defined attributes', function () {
-      it('property1', function () {
-        assert.equal(aStep.property1, 'property1');
-      });
-      it('property2', function () {
-        assert.equal(aStep.property2, 'property2');
-      });
-      it('property3', function () {
-        assert.equal(aStep.property3, 'property3');
-      });
+    describe('user defined attributes', () => {
+      it('property1', () => assert.equal(aStep.property1, 'property1'));
+      it('property2', () => assert.equal(aStep.property2, 'property2'));
+      it('property3', () => assert.equal(aStep.property3, 'property3'));
     });
 
-    describe('basic attributes', function () {
-      it('present', function () {
+    describe('basic attributes', () => {
+      it('present', () => {
         assert.deepEqual(aStep.toJSON(), {
           "type": "step-without-initialize",
           "description": "test step without initialize only",
@@ -168,22 +157,22 @@ describe('registration and inheritance', function () {
       });
     });
 
-    describe('get instance', function () {
+    describe('get instance', () => {
       const instance = StepFactory.createInstance(manager, {
         name: "inst1"
       });
-      it('out-step finalized', function () {
+      it('out-step finalized', () => {
         assert.equal(aStep.hasOwnProperty('finalizeHasBeenCalled1'), false);
         // as we have overwritten the function it must not be called
         //assert.equal(aStep.finalizeHasBeenCalled1, true);
       });
 
-      it('step-without-initialize finalized', function () {
+      it('step-without-initialize finalized', () => {
         assert.equal(aStep.finalizeHasBeenCalled2, true);
       });
     });
 
-    describe('get instance and overwrite endpoint definition', function () {
+    describe('get instance and overwrite endpoint definition', () => {
 
       // the out and in endpoint directions are swaped
       const myNewStep = manager.getStepInstance({
@@ -201,14 +190,13 @@ describe('registration and inheritance', function () {
         }
       });
 
-      it('inherit out-step swaped endpoints', function () {
+      it('inherit out-step swaped endpoints', () => {
         assert.equal(myNewStep.endpoints.in.isIn, false);
         assert.equal(myNewStep.endpoints.in.isOut, true);
 
         assert.equal(myNewStep.endpoints.out.isIn, true);
         assert.equal(myNewStep.endpoints.out.isOut, false);
       });
-
     });
   });
 });
