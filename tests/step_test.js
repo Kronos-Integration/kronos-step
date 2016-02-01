@@ -108,33 +108,26 @@ const aStep = A_StepFactory.createInstance(manager, {
   "description": "my out-step description"
 });
 
-describe('steps', function () {
-
-  describe('static', function () {
-    describe('single step with initialize', function () {
-      testStep.checkStepStatic(manager, aStep, function () {
-        describe('type', function () {
-          it('present', function () {
+describe('steps', () => {
+  describe('static', () => {
+    describe('single step with initialize', () => {
+      testStep.checkStepStatic(manager, aStep, () => {
+        describe('type', () => {
+          it('present', () => {
             // name will become the type
             assert.equal(aStep.type, 'myStep');
           });
         });
-        describe('name', function () {
-          it('given name present', function () {
-            assert.equal(aStep.name, 'myStep2');
-          });
-          it('toString() is name', function () {
-            assert.equal(aStep.toString(), 'myStep2');
-          });
+        describe('name', () => {
+          it('given name present', () => assert.equal(aStep.name, 'myStep2'));
+          it('toString() is name', () => assert.equal(aStep.toString(), 'myStep2'));
         });
-        describe('description', function () {
-          it('present', function () {
-            assert.equal(aStep.description, 'my out-step description');
-          });
+        describe('description', () => {
+          it('present', () => assert.equal(aStep.description, 'my out-step description'));
         });
 
-        describe('json', function () {
-          it('toJSON()', function () {
+        describe('json', () => {
+          it('toJSON()', () => {
             assert.deepEqual(aStep.toJSON(), {
               "type": "myStep",
               "description": "my out-step description",
@@ -151,7 +144,7 @@ describe('steps', function () {
         });
       });
     });
-    describe('single step without initialize', function () {
+    describe('single step without initialize', () => {
       const A_StepFactory2 = Object.assign({}, BaseStep, stepWithoutInitialize, {
         name: "myStep",
         type: "step-without-initialize"
@@ -162,23 +155,23 @@ describe('steps', function () {
         "description": "This step is the base class for step implementations"
       });
 
-      testStep.checkStepStatic(manager, aStep, function () {
-        describe('type', function () {
-          it('present', function () {
+      testStep.checkStepStatic(manager, aStep, () => {
+        describe('type', () => {
+          it('present', () => {
             // The name will become the type
             assert.equal(aStep.type, 'myStep');
           });
         });
-        describe('name', function () {
-          it('given name present', function () {
+        describe('name', () => {
+          it('given name present', () => {
             assert.equal(aStep.name, 'myNewName');
           });
-          it('toString() is name', function () {
+          it('toString() is name', () => {
             assert.equal(aStep.toString(), 'myNewName');
           });
         });
-        describe('json', function () {
-          it('toJSON()', function () {
+        describe('json', () => {
+          it('toJSON()', () => {
             assert.deepEqual(aStep.toJSON(), {
               "type": "myStep",
               "description": "This step is the base class for step implementations",
@@ -194,8 +187,8 @@ describe('steps', function () {
     });
   });
 
-  describe('livecycle', function () {
-    describe('single step', function () {
+  describe('livecycle', () => {
+    describe('single step', () => {
       const aStep = OutStepFactory.createInstance(manager, {
         "endpoints": {
           "out": {
@@ -213,7 +206,7 @@ describe('steps', function () {
 
       aStep.endpoints.out.connected = inEp;
 
-      testStep.checkStepLivecycle(manager, aStep, function (step, state, livecycle, done) {
+      testStep.checkStepLivecycle(manager, aStep, (step, state, livecycle, done) => {
         assert.equal(step.initializeDone, true);
 
         if (state === 'running' && request) {
@@ -224,7 +217,7 @@ describe('steps', function () {
       });
     });
 
-    describe('none startable step', function () {
+    describe('none startable step', () => {
       const NoneStartableStep = Object.assign({}, BaseStep, {
         type: "none-startable-step",
         _start() {
@@ -234,7 +227,7 @@ describe('steps', function () {
 
       const aStep = NoneStartableStep.createInstance(manager, {});
 
-      it('always fails to start', function (done) {
+      it('always fails to start', done => {
         try {
           aStep.start().then(resolve => {
             console.log(`*** ${aStep.state}`);
