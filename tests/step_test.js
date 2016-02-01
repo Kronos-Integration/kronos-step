@@ -9,13 +9,10 @@ const chai = require('chai'),
   should = chai.should(),
   testStep = require('kronos-test-step'),
   index = require('../index'),
+  ksm = require('kronos-service-manager'),
   endpoint = require('kronos-endpoint'),
   RequestTimeOutInterceptor = require('kronos-interceptor').TimeoutInterceptor,
   BaseStep = index.Step;
-
-// get a mock manager
-const manager = testStep.managerMock;
-
 
 // defines a new step which will inherit from the base step implementation
 const outStep = {
@@ -67,15 +64,9 @@ const outStep = {
   }
 };
 
-manager.registerInterceptor(RequestTimeOutInterceptor);
-
 // Create a factory which could be registered at the manager.
 // In this case the outStep will inherit from the base step
 const OutStepFactory = Object.assign({}, BaseStep, outStep);
-
-// register the step at the manager
-manager.registerStepImplementation(OutStepFactory);
-
 
 // also a step implementation which will inherit from the Base Step
 const stepWithoutInitialize = {
@@ -89,104 +80,120 @@ const stepWithoutInitialize = {
   }
 };
 
-
-// register the step at the manager
-manager.registerStepImplementation(Object.assign({}, BaseStep, stepWithoutInitialize));
-
-
 // defines another step
-const A_Step = {
+const A_StepFactory = Object.assign({}, OutStepFactory, {
   name: "myStep",
   type: "out-step",
   description: "my out-step description"
-};
-const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
-
-
-const aStep = A_StepFactory.createInstance(manager, {
-  "name": "myStep2",
-  "description": "my out-step description"
 });
+
+const mp = ksm.manager().then(manager =>
+  Promise.all([
+    manager.registerInterceptor(RequestTimeOutInterceptor),
+    manager.registerStep(OutStepFactory),
+    manager.registerStep(Object.assign({}, BaseStep, stepWithoutInitialize))
+  ]).then(Promise.resolve(manager)));
 
 describe('steps', () => {
   describe('static', () => {
-    describe('single step with initialize', () => {
-      testStep.checkStepStatic(manager, aStep, () => {
-        describe('type', () => {
-          it('present', () => {
-            // name will become the type
-            assert.equal(aStep.type, 'myStep');
-          });
-        });
-        describe('name', () => {
-          it('given name present', () => assert.equal(aStep.name, 'myStep2'));
-          it('toString() is name', () => assert.equal(aStep.toString(), 'myStep2'));
-        });
-        describe('description', () => {
-          it('present', () => assert.equal(aStep.description, 'my out-step description'));
-        });
+    it('present', done => {
+      console.log(`A`);
+      mp.then(manager => {
+        console.log(`B`);
 
-        describe('json', () => {
-          it('toJSON()', () => {
-            assert.deepEqual(aStep.toJSON(), {
-              "type": "myStep",
-              "description": "my out-step description",
-              "endpoints": {
-                "in": {
-                  "in": true
-                },
-                "out": {
-                  "out": true
+        try {
+          const aStep = A_StepFactory.createInstance(manager, {
+            "name": "myStep2",
+            "description": "my out-step description"
+          });
+        } catch (e) {
+          done(e);
+        }
+        console.log(`C`);
+
+        assert.equal(aStep.type, 'myStep');
+        console.log(`D`);
+
+        done();
+        console.log(`E`);
+
+      });
+    });
+  });
+});
+
+/*
+  mp.then(() => {
+    console.log(`manager: ${manager}`);
+
+
+      describe('single step with initialize', () => {
+        testStep.checkStepStatic(manager, aStep, () => {
+          describe('type', () => {
+            it('present', () => assert.equal(aStep.type, 'myStep'));
+          });
+          describe('name', () => {
+            it('given name present', () => assert.equal(aStep.name, 'myStep2'));
+            it('toString() is name', () => assert.equal(aStep.toString(), 'myStep2'));
+          });
+          describe('description', () => {
+            it('present', () => assert.equal(aStep.description, 'my out-step description'));
+          });
+
+          describe('json', () => {
+            it('toJSON()', () => {
+              assert.deepEqual(aStep.toJSON(), {
+                "type": "myStep",
+                "description": "my out-step description",
+                "endpoints": {
+                  "in": {
+                    "in": true
+                  },
+                  "out": {
+                    "out": true
+                  }
                 }
-              }
+              });
             });
           });
         });
       });
-    });
-    describe('single step without initialize', () => {
-      const A_StepFactory2 = Object.assign({}, BaseStep, stepWithoutInitialize, {
-        name: "myStep",
-        type: "step-without-initialize"
-      });
-
-      const aStep = A_StepFactory2.createInstance(manager, {
-        "name": "myNewName",
-        "description": "This step is the base class for step implementations"
-      });
-
-      testStep.checkStepStatic(manager, aStep, () => {
-        describe('type', () => {
-          it('present', () => {
-            // The name will become the type
-            assert.equal(aStep.type, 'myStep');
-          });
+      describe('single step without initialize', () => {
+        const A_StepFactory2 = Object.assign({}, BaseStep, stepWithoutInitialize, {
+          name: "myStep",
+          type: "step-without-initialize"
         });
-        describe('name', () => {
-          it('given name present', () => {
-            assert.equal(aStep.name, 'myNewName');
-          });
-          it('toString() is name', () => {
-            assert.equal(aStep.toString(), 'myNewName');
-          });
+
+        const aStep = A_StepFactory2.createInstance(manager, {
+          "name": "myNewName",
+          "description": "This step is the base class for step implementations"
         });
-        describe('json', () => {
-          it('toJSON()', () => {
-            assert.deepEqual(aStep.toJSON(), {
-              "type": "myStep",
-              "description": "This step is the base class for step implementations",
-              "endpoints": {
-                "in": {
-                  "in": true
+
+        testStep.checkStepStatic(manager, aStep, () => {
+          describe('type', () => {
+            it('present', () => assert.equal(aStep.type, 'myStep'));
+          });
+          describe('name', () => {
+            it('given name present', () => assert.equal(aStep.name, 'myNewName'));
+            it('toString() is name', () => assert.equal(aStep.toString(), 'myNewName'));
+          });
+          describe('json', () => {
+            it('toJSON()', () => {
+              assert.deepEqual(aStep.toJSON(), {
+                "type": "myStep",
+                "description": "This step is the base class for step implementations",
+                "endpoints": {
+                  "in": {
+                    "in": true
+                  }
                 }
-              }
+              });
             });
           });
         });
       });
     });
   });
-
   describe('livecycle', () => {
     describe('single step', () => {
       const aStep = OutStepFactory.createInstance(manager, {
@@ -243,3 +250,4 @@ describe('steps', () => {
     });
   });
 });
+*/
