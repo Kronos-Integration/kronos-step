@@ -97,7 +97,6 @@ const mp = ksm.manager().then(manager =>
     Promise.resolve(manager)
   ));
 
-
 let aStep;
 
 

@@ -13,10 +13,6 @@ const chai = require('chai'),
   BaseStep = index.Step,
   testStep = require('kronos-test-step');
 
-
-// get a mock manager
-const manager = testStep.managerMock;
-
 // defines a new step which will inherit from the base step implementation
 const outStep = {
   "name": "out-step",
@@ -66,12 +62,14 @@ const outStep = {
   }
 };
 
+const manager = {};
+
 // Create a factory which could be registered at the manager.
 // In this case the outStep will inherit from the base step
 const OutStepFactory = Object.assign({}, BaseStep, outStep);
 
 // register the step at the manager
-manager.registerStepImplementation(OutStepFactory);
+//manager.registerStepImplementation(OutStepFactory);
 
 
 // defines another step
@@ -83,18 +81,17 @@ const A_Step = {
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
 
 
-const aStep = A_StepFactory.createInstance(manager, {
+const aStep = A_StepFactory.createInstance({
   "name": "myStep2",
   "description": "my out-step description"
-});
+}, manager);
 
 describe('logger', () => {
   it('Error as Error Object', done => {
-
-    const aStep = A_StepFactory.createInstance(manager, {
+    const aStep = A_StepFactory.createInstance({
       "name": "myStep2",
       "description": "my out-step description"
-    });
+    }, manager);
 
     // consumes the log events
     const inEp = new endpoint.ReceiveEndpoint("in");
@@ -126,10 +123,10 @@ describe('logger', () => {
 
   it('Error as String', done => {
 
-    const aStep = A_StepFactory.createInstance(manager, {
+    const aStep = A_StepFactory.createInstance({
       "name": "myStep2",
       "description": "my out-step description"
-    });
+    }, manager);
 
     // consumes the log events
     const inEp = new endpoint.ReceiveEndpoint("in");
@@ -154,10 +151,10 @@ describe('logger', () => {
 
   it('Error as object', done => {
 
-    const aStep = A_StepFactory.createInstance(manager, {
+    const aStep = A_StepFactory.createInstance({
       "name": "myStep2",
       "description": "my out-step description"
-    });
+    }, manager);
 
     // consumes the log events
     const inEp = new endpoint.ReceiveEndpoint("in");

@@ -26,7 +26,7 @@ manager.registerStepImplementation = function (si) {
 manager.getStepInstance = function (configuration) {
   const stepImpl = stepImplementations[configuration.type];
   if (stepImpl) {
-    return stepImpl.createInstance(this, configuration);
+    return stepImpl.createInstance(configuration, this);
   }
 };
 
@@ -82,9 +82,9 @@ manager.registerStepImplementation(StepWithoutInitializeFactory);
 
 describe('registration and inheritance', () => {
   describe('out-step', () => {
-    const aStep = OutStepFactory.createInstance(manager, {
+    const aStep = OutStepFactory.createInstance({
       "description": "test step only"
-    });
+    }, manager);
 
     describe('user defined attributes', () => {
       it('property1', () => assert.equal(aStep.property1, 'property1'));
@@ -110,10 +110,9 @@ describe('registration and inheritance', () => {
 
     describe('createStep', () => {
       it('compare', () => {
-
-        const aStep = OutStepFactory.createInstance(manager, {
+        const aStep = OutStepFactory.createInstance({
           "name": "myStep"
-        });
+        }, manager);
 
         assert.deepEqual(aStep.toJSON(), {
           "type": "out-step",
@@ -133,9 +132,9 @@ describe('registration and inheritance', () => {
 
   describe('step-without-initialize', () => {
     const StepFactory = manager.steps['step-without-initialize'];
-    const aStep = StepFactory.createInstance(manager, {
+    const aStep = StepFactory.createInstance({
       "name": "myStep"
-    });
+    }, manager);
 
     describe('user defined attributes', () => {
       it('property1', () => assert.equal(aStep.property1, 'property1'));
@@ -158,9 +157,9 @@ describe('registration and inheritance', () => {
     });
 
     describe('get instance', () => {
-      const instance = StepFactory.createInstance(manager, {
+      const instance = StepFactory.createInstance({
         name: "inst1"
-      });
+      }, manager);
       it('out-step finalized', () => {
         assert.equal(aStep.hasOwnProperty('finalizeHasBeenCalled1'), false);
         // as we have overwritten the function it must not be called
