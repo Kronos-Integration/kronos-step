@@ -28,7 +28,7 @@
     "chai": "3.5.0",
     "istanbul": "^0.4.2",
     "kronos-service-manager": "git+https://github.com/Kronos-Integration/kronos-service-manager.git#api_rework",
-    "kronos-test-step": "^2.10.0",
+    "kronos-test-step": "3.0.0",
     "mocha": "^2.3.5",
     "semantic-release": "6.2.0"
   },
@@ -41,6 +41,6 @@
   }],
   "license": "BSD-2-Clause",
   "engines": {
-    "node": ">=4.2.1"
+    "node": ">=5"
   }
 }
