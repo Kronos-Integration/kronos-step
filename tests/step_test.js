@@ -22,7 +22,7 @@ const outStep = {
     "in": {
       "in": true,
       "interceptors": [{
-        "type": "TimeoutInterceptor",
+        "type": "timeout",
         "timeout": 1000
       }]
     },

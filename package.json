@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
-    "kronos-endpoint": "^1.0.2",
+    "kronos-endpoint": "^2.0.1",
     "loglevel-mixin": "^1.2.0",
     "merge-deep": "^2.0.2",
     "statetransition-mixin": "^2.0.0"
@@ -27,18 +27,21 @@
   "devDependencies": {
     "chai": "3.5.0",
     "istanbul": "^0.4.2",
-    "kronos-service-manager": "git+https://github.com/Kronos-Integration/kronos-service-manager.git#api_rework",
+    "kronos-service-manager": "^3.0.0",
     "kronos-test-step": "3.0.0",
     "mocha": "^2.3.5",
     "semantic-release": "6.2.0"
   },
-  "contributors": [{
-    "name": "Torsten Link",
-    "email": "torstenlink@gmx.de"
-  }, {
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Torsten Link",
+      "email": "torstenlink@gmx.de"
+    },
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "license": "BSD-2-Clause",
   "engines": {
     "node": ">=5"
