@@ -7,17 +7,11 @@ const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
   should = chai.should(),
-  scopeReporter = require('scope-reporter'),
   events = require('events'),
   endpoint = require('kronos-endpoint'),
   index = require('../index'),
   BaseStep = index.Step,
-  testStep = require('kronos-test-step'),
-  scopeDefinitions = require('../lib/scopeDefinitions');
-
-
-// get a mock manager
-const manager = testStep.managerMock;
+  testStep = require('kronos-test-step');
 
 // defines a new step which will inherit from the base step implementation
 const outStep = {
@@ -31,7 +25,7 @@ const outStep = {
       "out": true
     }
   },
-  initialize(manager, scopeReporter, name, stepConfiguration, props) {
+  initialize(manager, name, stepConfiguration, props) {
     let sequence = 0;
     let interval;
 
@@ -68,12 +62,14 @@ const outStep = {
   }
 };
 
+const manager = {};
+
 // Create a factory which could be registered at the manager.
 // In this case the outStep will inherit from the base step
 const OutStepFactory = Object.assign({}, BaseStep, outStep);
 
 // register the step at the manager
-manager.registerStepImplementation(OutStepFactory);
+//manager.registerStepImplementation(OutStepFactory);
 
 
 // defines another step
@@ -85,18 +81,17 @@ const A_Step = {
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
 
 
-const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+const aStep = A_StepFactory.createInstance({
   "name": "myStep2",
   "description": "my out-step description"
-});
+}, manager);
 
-describe('logger', function () {
-  it('Error as Error Object', function (done) {
-
-    const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+describe('logger', () => {
+  it('Error as Error Object', done => {
+    const aStep = A_StepFactory.createInstance({
       "name": "myStep2",
       "description": "my out-step description"
-    });
+    }, manager);
 
     // consumes the log events
     const inEp = new endpoint.ReceiveEndpoint("in");
@@ -126,12 +121,12 @@ describe('logger', function () {
     aStep.error(new Error("Gumbo"));
   });
 
-  it('Error as String', function (done) {
+  it('Error as String', done => {
 
-    const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+    const aStep = A_StepFactory.createInstance({
       "name": "myStep2",
       "description": "my out-step description"
-    });
+    }, manager);
 
     // consumes the log events
     const inEp = new endpoint.ReceiveEndpoint("in");
@@ -154,16 +149,15 @@ describe('logger', function () {
     aStep.error("Gumbo");
   });
 
-  it('Error as object', function (done) {
+  it('Error as object', done => {
 
-    const aStep = A_StepFactory.createInstance(manager, manager.scopeReporter, {
+    const aStep = A_StepFactory.createInstance({
       "name": "myStep2",
       "description": "my out-step description"
-    });
+    }, manager);
 
     // consumes the log events
     const inEp = new endpoint.ReceiveEndpoint("in");
-
 
     inEp.receive = request => {
       // set the timestamp to a constant

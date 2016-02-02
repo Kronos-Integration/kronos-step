@@ -22,15 +22,15 @@
     "kronos-endpoint": "^1.0.2",
     "loglevel-mixin": "^1.2.0",
     "merge-deep": "^2.0.2",
-    "scope-reporter": "2.3.0",
     "statetransition-mixin": "^2.0.0"
   },
   "devDependencies": {
-    "chai": "3.4.1",
+    "chai": "3.5.0",
     "istanbul": "^0.4.2",
-    "kronos-test-step": "^2.10.0",
-    "mocha": "^2.3.4",
-    "semantic-release": "6.0.3"
+    "kronos-service-manager": "git+https://github.com/Kronos-Integration/kronos-service-manager.git#api_rework",
+    "kronos-test-step": "3.0.0",
+    "mocha": "^2.3.5",
+    "semantic-release": "6.2.0"
   },
   "contributors": [{
     "name": "Torsten Link",
@@ -41,6 +41,6 @@
   }],
   "license": "BSD-2-Clause",
   "engines": {
-    "node": ">=4.2.1"
+    "node": ">=5"
   }
 }
