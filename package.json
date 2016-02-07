@@ -27,11 +27,11 @@
   "devDependencies": {
     "chai": "3.5.0",
     "istanbul": "0.4.2",
+    "jsdoc": "3.4.0",
     "kronos-service-manager": "^3.0.0",
-    "kronos-test-step": "3.0.0",
+    "kronos-test-step": "^3.0.1",
     "mocha": "2.4.5",
-    "semantic-release": "6.2.0",
-    "jsdoc": "3.4.0"
+    "semantic-release": "6.2.0"
   },
   "contributors": [
     {
