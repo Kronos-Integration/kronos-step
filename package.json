@@ -19,20 +19,20 @@
   },
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
-    "kronos-endpoint": "^2.0.3",
+    "kronos-endpoint": "^2.0.4",
     "loglevel-mixin": "^1.2.0",
     "merge-deep": "^2.0.2",
-    "statetransition-mixin": "^2.1.0"
+    "statetransition-mixin": "2.2.1"
   },
   "devDependencies": {
     "chai": "3.5.0",
+    "cz-conventional-changelog": "1.1.5",
     "istanbul": "0.4.2",
     "jsdoc": "3.4.0",
-    "kronos-service-manager": "^3.2.10",
-    "kronos-test-step": "^3.0.1",
+    "kronos-service-manager": "^3.2.12",
+    "kronos-test-step": "3.0.3",
     "mocha": "2.4.5",
-    "semantic-release": "6.2.0",
-    "cz-conventional-changelog": "1.1.5"
+    "semantic-release": "6.2.1"
   },
   "contributors": [
     {
