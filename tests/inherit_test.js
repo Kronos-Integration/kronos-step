@@ -1,7 +1,7 @@
 /* global describe, it, xit */
 /* jslint node: true, esnext: true */
 
-"use strict";
+'use strict';
 
 const chai = require('chai'),
   assert = chai.assert,
@@ -31,22 +31,20 @@ manager.getStepInstance = function (configuration) {
 };
 
 const OutStepDefinition = {
-  "name": "out-step",
-  "description": "test step only",
-  "endpoints": {
-    "in": {
-      "in": true
+  name: 'out-step',
+  description: 'test step only',
+  endpoints: { in : { in : true
     },
-    "out": {
-      "out": true
+    out: {
+      out: true
     }
   },
 
-  property2: "property2",
+  property2: 'property2',
 
   initialize(manager, name, stepConfiguration, props) {
     props.property1 = {
-      value: "property1"
+      value: 'property1'
     };
   },
 
@@ -57,15 +55,13 @@ const OutStepDefinition = {
 };
 
 const StepWithoutInitializeDefinition = {
-  "extends": "out-step",
-  "name": "step-without-initialize",
-  "description": "test step without initialize only",
-  "endpoints": {
-    "in": {
-      "in": true
+  extends: 'out-step',
+  name: 'step-without-initialize',
+  description: 'test step without initialize only',
+  endpoints: { in : { in : true
     }
   },
-  property3: "property3",
+  property3: 'property3',
 
   finalize(stepDefinition) {
     this.finalizeHasBeenCalled2 = true;
@@ -94,14 +90,12 @@ describe('registration and inheritance', () => {
     describe('basic attributes', () => {
       it('present', () => {
         assert.deepEqual(aStep.toJSON(), {
-          "type": "out-step",
-          "description": "test step only",
-          "endpoints": {
-            "in": {
-              "in": true
+          type: 'out-step',
+          description: 'test step only',
+          endpoints: { in : { in : true
             },
-            "out": {
-              "out": true
+            out: {
+              out: true
             }
           }
         });
@@ -111,18 +105,16 @@ describe('registration and inheritance', () => {
     describe('createStep', () => {
       it('compare', () => {
         const aStep = OutStepFactory.createInstance({
-          "name": "myStep"
+          name: 'myStep'
         }, manager);
 
         assert.deepEqual(aStep.toJSON(), {
-          "type": "out-step",
-          "description": "test step only",
-          "endpoints": {
-            "in": {
-              "in": true
+          type: 'out-step',
+          description: 'test step only',
+          endpoints: { in : { in : true
             },
-            "out": {
-              "out": true
+            out: {
+              out: true
             }
           }
         });
@@ -133,7 +125,7 @@ describe('registration and inheritance', () => {
   describe('step-without-initialize', () => {
     const StepFactory = manager.steps['step-without-initialize'];
     const aStep = StepFactory.createInstance({
-      "name": "myStep"
+      name: 'myStep'
     }, manager);
 
     describe('user defined attributes', () => {
@@ -145,11 +137,9 @@ describe('registration and inheritance', () => {
     describe('basic attributes', () => {
       it('present', () => {
         assert.deepEqual(aStep.toJSON(), {
-          "type": "step-without-initialize",
-          "description": "test step without initialize only",
-          "endpoints": {
-            "in": {
-              "in": true
+          type: 'step-without-initialize',
+          description: 'test step without initialize only',
+          endpoints: { in : { in : true
             }
           }
         });
@@ -175,16 +165,14 @@ describe('registration and inheritance', () => {
 
       // the out and in endpoint directions are swaped
       const myNewStep = manager.getStepInstance({
-        "type": "out-step",
-        "name": "my inherit step",
-        "endpoints": {
-          "in": {
-            "in": false,
-            "out": true
+        type: 'out-step',
+        name: 'my inherit step',
+        endpoints: { in : { in : false,
+            out: true
           },
-          "out": {
-            "out": false,
-            "in": true
+          out: {
+            out: false,
+            in : true
           }
         }
       });

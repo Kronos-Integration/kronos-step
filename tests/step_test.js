@@ -1,7 +1,7 @@
 /* global describe, it, xit */
 /* jslint node: true, esnext: true */
 
-"use strict";
+'use strict';
 
 const chai = require('chai'),
   assert = chai.assert,
@@ -16,18 +16,16 @@ const chai = require('chai'),
 
 // defines a new step which will inherit from the base step implementation
 const outStep = {
-  "name": "out-step",
-  "description": "test step only",
-  "endpoints": {
-    "in": {
-      "in": true,
-      "interceptors": [{
-        "type": "timeout",
-        "timeout": 1000
+  name: 'out-step',
+  description: 'test step only',
+  endpoints: { in : { in : true,
+      interceptors: [{
+        type: 'timeout',
+        timeout: 1000
       }]
     },
-    "out": {
-      "out": true
+    out: {
+      out: true
     }
   },
   initialize(manager, name, stepConfiguration, props) {
@@ -47,7 +45,7 @@ const outStep = {
           sequence = sequence + 1;
           this.endpoints.out.receive({
             info: {
-              name: "request" + sequence
+              name: 'request' + sequence
             },
             stream: sequence
           });
@@ -70,21 +68,19 @@ const OutStepFactory = Object.assign({}, BaseStep, outStep);
 
 // also a step implementation which will inherit from the Base Step
 const stepWithoutInitialize = {
-  "extends": "out-step",
-  "name": "step-without-initialize",
-  "description": "test step without initialize only",
-  "endpoints": {
-    "in": {
-      "in": true
+  extends: 'out-step',
+  name: 'step-without-initialize',
+  description: 'test step without initialize only',
+  endpoints: { in : { in : true
     }
   }
 };
 
 // defines another step
 const A_StepFactory = Object.assign({}, OutStepFactory, {
-  name: "myStep",
-  type: "out-step",
-  description: "my out-step description"
+  name: 'myStep',
+  type: 'out-step',
+  description: 'my out-step description'
 });
 
 
@@ -106,8 +102,8 @@ describe('steps', () => {
       mp.then(manager => {
         try {
           aStep = A_StepFactory.createInstance({
-            "name": "myStep2",
-            "description": "my out-step description"
+            name: 'myStep2',
+            description: 'my out-step description'
           }, manager);
 
           assert.equal(aStep.type, 'myStep');
@@ -115,7 +111,6 @@ describe('steps', () => {
         } catch (e) {
           done(e);
         }
-
       });
     });
   });
