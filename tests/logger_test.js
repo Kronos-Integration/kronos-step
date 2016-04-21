@@ -15,14 +15,12 @@ const chai = require('chai'),
 
 // defines a new step which will inherit from the base step implementation
 const outStep = {
-  "name": "out-step",
-  "description": "test step only",
-  "endpoints": {
-    "in": {
-      "in": true
+  name: 'out-step',
+  description: 'test step only',
+  endpoints: { in : { in : true
     },
-    "out": {
-      "out": true
+    out: {
+      out: true
     }
   },
   initialize(manager, name, stepConfiguration, props) {
@@ -42,7 +40,7 @@ const outStep = {
           sequence = sequence + 1;
           this.endpoints.out.receive({
             info: {
-              name: "request" + sequence
+              name: 'request' + sequence
             },
             stream: sequence
           });
@@ -74,27 +72,27 @@ const OutStepFactory = Object.assign({}, BaseStep, outStep);
 
 // defines another step
 const A_Step = {
-  name: "myStep",
-  type: "out-step",
-  description: "my out-step description"
+  name: 'myStep',
+  type: 'out-step',
+  description: 'my out-step description'
 };
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
 
 
 const aStep = A_StepFactory.createInstance({
-  "name": "myStep2",
-  "description": "my out-step description"
+  name: 'myStep2',
+  description: 'my out-step description'
 }, manager);
 
 describe('logger', () => {
   it('Error as Error Object', done => {
     const aStep = A_StepFactory.createInstance({
-      "name": "myStep2",
-      "description": "my out-step description"
+      name: 'myStep2',
+      description: 'my out-step description'
     }, manager);
 
     // consumes the log events
-    const inEp = new endpoint.ReceiveEndpoint("in");
+    const inEp = new endpoint.ReceiveEndpoint('in');
 
     // the log request
     let request;
@@ -104,80 +102,81 @@ describe('logger', () => {
       request.timestamp = 1451333332866;
       request.line = 152;
 
+      delete request.stack;
       assert.deepEqual(request, {
-        "timestamp": 1451333332866,
-        "level": 'error',
+        timestamp: 1451333332866,
+        level: 'error',
         'step-type': 'myStep',
         'step-name': 'myStep2',
-        "line": 152,
-        //      "_file_name": '/Users/torstenlink/Documents/entwicklung/kronos/kronos-step/test/logger_test.js',
-        "_error_name": 'Error',
-        "short_message": 'Gumbo'
+        line: 152,
+        //      '_file_name': '/Users/torstenlink/Documents/entwicklung/kronos/kronos-step/test/logger_test.js',
+        '_error_name': 'Error',
+        short_message: 'Gumbo'
       });
       done();
     };
 
     aStep.endpoints.log.connected = inEp;
-    aStep.error(new Error("Gumbo"));
+    aStep.error(new Error('Gumbo'));
   });
 
   it('Error as String', done => {
 
     const aStep = A_StepFactory.createInstance({
-      "name": "myStep2",
-      "description": "my out-step description"
+      name: 'myStep2',
+      description: 'my out-step description'
     }, manager);
 
     // consumes the log events
-    const inEp = new endpoint.ReceiveEndpoint("in");
+    const inEp = new endpoint.ReceiveEndpoint('in');
 
     inEp.receive = request => {
       // set the timestamp to a constant
       request.timestamp = 1451333332866;
 
       assert.deepEqual(request, {
-        "timestamp": 1451333332866,
-        "level": 'error',
+        timestamp: 1451333332866,
+        level: 'error',
         'step-type': 'myStep',
         'step-name': 'myStep2',
-        "message": 'Gumbo'
+        message: 'Gumbo'
       });
       done();
     };
 
     aStep.endpoints.log.connected = inEp;
-    aStep.error("Gumbo");
+    aStep.error('Gumbo');
   });
 
   it('Error as object', done => {
 
     const aStep = A_StepFactory.createInstance({
-      "name": "myStep2",
-      "description": "my out-step description"
+      name: 'myStep2',
+      description: 'my out-step description'
     }, manager);
 
     // consumes the log events
-    const inEp = new endpoint.ReceiveEndpoint("in");
+    const inEp = new endpoint.ReceiveEndpoint('in');
 
     inEp.receive = request => {
       // set the timestamp to a constant
       request.timestamp = 1451333332866;
 
       assert.deepEqual(request, {
-        "timestamp": 1451333332866,
-        "level": 'error',
+        timestamp: 1451333332866,
+        level: 'error',
         'step-type': 'myStep',
         'step-name': 'myStep2',
-        "short_message": 'Gumbo',
-        "Other": "What ever"
+        short_message: 'Gumbo',
+        Other: 'What ever'
       });
       done();
     };
 
     aStep.endpoints.log.connected = inEp;
     aStep.error({
-      "short_message": "Gumbo",
-      "Other": "What ever"
+      short_message: 'Gumbo',
+      Other: 'What ever'
     });
   });
 });
