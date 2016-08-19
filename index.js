@@ -1,5 +1,5 @@
 /* jslint node: true, esnext: true */
-"use strict";
+'use strict';
 
 exports.guardedEndpoint = require('./lib/guardedendpoint');
 exports.Step = require('./lib/step').BaseStep;
