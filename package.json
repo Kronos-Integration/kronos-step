@@ -22,7 +22,7 @@
     "kronos-endpoint": "^2.13.4",
     "loglevel-mixin": "^1.6.2",
     "merge-deep": "^3.0.0",
-    "statetransition-mixin": "^3.1.2"
+    "statetransition-mixin": "^3.1.3"
   },
   "devDependencies": {
     "chai": "3.5.0",
