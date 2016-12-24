@@ -20,7 +20,7 @@
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
     "kronos-endpoint": "^2.14.4",
-    "loglevel-mixin": "^1.6.7",
+    "loglevel-mixin": "^1.6.9",
     "merge-deep": "^3.0.0",
     "statetransition-mixin": "^3.1.10"
   },
