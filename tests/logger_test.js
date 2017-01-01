@@ -8,9 +8,8 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should(),
   events = require('events'),
-  endpoint = require('kronos-endpoint'),
-  index = require('../index'),
-  BaseStep = index.Step,
+  { ReceiveEndpoint } = require('kronos-endpoint'),
+  { Step } = require('../dist/module'),
   testStep = require('kronos-test-step');
 
 // defines a new step which will inherit from the base step implementation
@@ -64,10 +63,7 @@ const manager = {};
 
 // Create a factory which could be registered at the manager.
 // In this case the outStep will inherit from the base step
-const OutStepFactory = Object.assign({}, BaseStep, outStep);
-
-// register the step at the manager
-//manager.registerStepImplementation(OutStepFactory);
+const OutStepFactory = Object.assign({}, Step, outStep);
 
 
 // defines another step
@@ -126,7 +122,7 @@ describe('logger', () => {
     }, manager);
 
     // consumes the log events
-    const inEp = new endpoint.ReceiveEndpoint('in');
+    const inEp = new ReceiveEndpoint('in');
 
     inEp.receive = request => {
       // set the timestamp to a constant
@@ -154,7 +150,7 @@ describe('logger', () => {
     }, manager);
 
     // consumes the log events
-    const inEp = new endpoint.ReceiveEndpoint('in');
+    const inEp = new ReceiveEndpoint('in');
 
     inEp.receive = request => {
       // set the timestamp to a constant

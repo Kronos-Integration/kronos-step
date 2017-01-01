@@ -6,7 +6,7 @@
 const events = require('events'),
   endpointImplementation = require('kronos-endpoint'),
   testStep = require('kronos-test-step'),
-  index = require('../../index'),
+  { Step } = require('../../dist/module'),
   scopeDefinitions = require('../../lib/scopeDefinitions');
 
 const manager = Object.create(new events.EventEmitter(), {});
@@ -39,7 +39,7 @@ const outStep = {
   }
 };
 
-//index.registerWithManager(manager);
+
 const s = index.prepareStepForRegistration(manager, sr, outStep);
 
 console.log(`${JSON.stringify(s)} ${s.property1} ${s.property2}`);

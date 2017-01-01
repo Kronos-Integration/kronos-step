@@ -8,8 +8,7 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should(),
   events = require('events'),
-  index = require('../index'),
-  BaseStep = index.Step,
+  { Step } = require('../dist/module'),
   testStep = require('kronos-test-step');
 
 var stepImplementations = {};
@@ -69,7 +68,7 @@ const StepWithoutInitializeDefinition = {
 };
 
 
-const OutStepFactory = Object.assign({}, BaseStep, OutStepDefinition);
+const OutStepFactory = Object.assign({}, Step, OutStepDefinition);
 const StepWithoutInitializeFactory = Object.assign({}, OutStepFactory, StepWithoutInitializeDefinition);
 
 manager.registerStepImplementation(OutStepFactory);
