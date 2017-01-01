@@ -2,14 +2,15 @@
   "name": "kronos-step",
   "version": "0.0.0-semantic-release",
   "description": "Base step implementation",
-  "main": "index.js",
+  "main": "dist/module.js",
+  "module": "src/Step.js",
   "keywords": [],
   "scripts": {
     "cover": "npm run prepublish && istanbul cover node_modules/.bin/_mocha -- -u exports tests/*_test.js",
     "doc": "./node_modules/.bin/jsdoc lib/*.js",
     "test": "mocha tests/*_test.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "prepublish": "rollup --output=index.js -c -- {{module}}",
+    "prepublish": "rollup --output=dist/module.js -c -- src/Step.js",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "pretest": "npm run prepublish",
     "posttest": "markdown-doctest"
@@ -24,7 +25,7 @@
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
     "kronos-endpoint": "^2.14.7",
-    "kronos-service": "^4.3.2",
+    "kronos-service": "^4.4.0",
     "merge-deep": "^3.0.0"
   },
   "devDependencies": {
