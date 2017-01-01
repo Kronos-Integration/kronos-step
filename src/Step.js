@@ -12,7 +12,7 @@ const merge = require('merge-deep');
 // may be extended by some properties like writable,...
 const ATTRIBUTES = ['description'];
 
-class Step {
+class Step extends Service {
     constructor(config, owner) {
     	super(config, owner);
     	}
