@@ -3,50 +3,19 @@
 'use strict';
 
 import { SendEndpoint, ReceiveEndpoint } from 'kronos-endpoint';
-import { makeLogEvent } from 'loglevel-mixin';
-import { prepareActions } from 'statetransition-mixin';
+import { Service } from 'kronos-service';
 
 const merge = require('merge-deep');
 
-const actions = prepareActions({
-	start: {
-		stopped: {
-			target: 'running',
-			during: 'starting',
-			timeout: 5000
-		}
-	},
-	stop: {
-		running: {
-			target: 'stopped',
-			during: 'stopping',
-			timeout: 5000
-		},
-		starting: {
-			target: 'stopped',
-			during: 'stopping',
-			timeout: 5000
-		},
-		failed: {
-			target: 'stopped',
-			during: 'stopping',
-			timeout: 1000
-		}
-	},
-	remove: {
-		stopped: {
-			target: 'removed'
-		}
-	}
-});
 
 // Steps plain attributes without special handling
 // may be extended by some properties like writable,...
 const ATTRIBUTES = ['description'];
 
 class Step {
-    constructor() {
-    }
+    constructor(config, owner) {
+    	super(config, owner);
+    	}
     
 	/name: 'kronos-step',
 	
@@ -73,9 +42,6 @@ class Step {
 			},
 			type: {
 				value: type
-			},
-			endpoints: {
-				value: endpoints
 			},
 			manager: {
 				value: manager
@@ -208,21 +174,6 @@ class Step {
 	}
 
 	/**
-	 * @param {Endpoint} ep
-	 */
-	addEndpoint(ep) {
-		this.endpoints[ep.name] = ep;
-	}
-
-	/**
-	 * removes a endpoint
-	 * @param {string} name
-	 */
-	removeEndpoint(name) {
-		delete this.endpoints[name];
-	}
-
-	/**
 	 * Sends a 'stepStateChanged' event to the manager.
 	 * arguments are:
 	 *  step,oldState,newState
@@ -245,14 +196,6 @@ class Step {
 	}
 
 	/**
-	 * Returns the string representation of this step
-	 * @return {String} human readable name
-	 */
-	toString() {
-		return this.name;
-	}
-
-	/**
 	 * Deliver json representation
 	 * @param {Object} options
 	 *  with the following flags:
@@ -262,52 +205,13 @@ class Step {
 	 * @return {Object) json representation
 	 */
 	toJSONWithOptions(options = {}) {
-		const json = {
-			type: this.type,
-			endpoints: {}
-		};
-
-		if (options.includeName) {
-			json.name = this.name;
-		}
-
-		if (options.includeRuntimeInfo) {
-			json.state = this.state;
-			json.logLevel = this.logLevel;
-		}
-
-		for (const endpointName in this.endpoints) {
-			const ep = this.endpoints[endpointName];
-			if (ep.isDefault) {
-				if (options.includeDefaults) {
-					json.endpoints[endpointName] = ep.toJSON();
-				}
-			} else {
-				json.endpoints[endpointName] = ep.toJSON();
-			}
-		}
+	    const json = super.toJSONWithOptions();
 
 		ATTRIBUTES.forEach(a => {
 			json[a] = this[a];
 		});
 
 		return json;
-	}
-
-	toJSON() {
-		return this.toJSONWithOptions({
-			includeRuntimeInfo: false,
-			includeDefaults: false,
-			includeName: false
-		});
-	}
-
-	/**
-	 * Deliver an identifier suitable as target name.
-	 * return {String} endpoint identifier
-	 */
-	endpointIdentifier(ep) {
-		return `${this.name}${this.endpointParentSeparator}${ep.name}`;
 	}
 
 	/**
@@ -328,11 +232,6 @@ class Step {
 		const props = this.prepareProperties(manager, stepDefinition.name, stepDefinition);
 		this.initialize(manager, stepDefinition.name, stepDefinition, props);
 		const newInstance = Object.create(this, props);
-
-		stm.defineStateTransitionProperties(newInstance, actions, 'stopped');
-
-		// create the properties to store the loglevel
-		llm.defineLogLevelProperties(newInstance, llm.defaultLogLevels, llm.defaultLogLevels[stepDefinition.logLevel]);
 
 		// mix the endpoints from the prototype with the new definition
 		stepDefinition = newInstance.inheritEndpoints(stepDefinition);
@@ -357,11 +256,6 @@ class Step {
 		}
 	}
 }
-
-// define the logger methods
-llm.defineLoggerMethods(BaseStep);
-
-stm.defineActionMethods(BaseStep, actions, true);
 
 export {
   Step

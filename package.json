@@ -24,9 +24,8 @@
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
     "kronos-endpoint": "^2.14.7",
-    "loglevel-mixin": "^1.6.13",
-    "merge-deep": "^3.0.0",
-    "statetransition-mixin": "^3.1.13"
+    "kronos-service": "^4.3.2",
+    "merge-deep": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
