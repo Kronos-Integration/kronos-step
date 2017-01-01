@@ -17,7 +17,7 @@ class Step {
     	super(config, owner);
     	}
     
-	/name: 'kronos-step',
+	//name: 'kronos-step',
 	
 	get description() {
 	 return 'This step is the base class for step implementations';
