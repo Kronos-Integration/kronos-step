@@ -8,14 +8,54 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should(),
   testStep = require('kronos-test-step'),
-  { Step } = require('../dist/module'),
-  ksm = require('kronos-service-manager'),
-  RequestTimeOutInterceptor = require('kronos-interceptor').TimeoutInterceptor;
+  {
+    Step
+  } = require('../dist/module'),
+  {
+    manager
+  } = require('kronos-service-manager'),
+  {
+    TimeoutInterceptor
+  } = require('kronos-interceptor');
 
-// defines a new step which will inherit from the base step implementation
-const outStep = {
-  name: 'out-step',
-  description: 'test step only',
+class OutStep extends Step {
+
+  static get name() {
+    return 'out-step';
+  }
+
+  static get description() {
+    return 'test step only';
+  }
+
+  constructor(...args) {
+    super(...args);
+
+    this.sequence = 0;
+    this.interval = undefined;
+  }
+
+  _start() {
+    setInterval(() => {
+      this.sequence = this.sequence + 1;
+      this.endpoints.out.receive({
+        info: {
+          name: 'request' + this.sequence
+        },
+        stream: this.sequence
+      });
+    }, 5);
+
+    return new Promise((resolve, reject) => setTimeout(() => resolve(this), 200));
+  }
+
+  _stop() {
+    clearInterval(this.interval);
+    return Promise.resolve(this);
+  }
+}
+
+/*
   endpoints: { in : { in : true,
       interceptors: [{
         type: 'timeout',
@@ -25,44 +65,9 @@ const outStep = {
     out: {
       out: true
     }
-  },
-  initialize(manager, name, stepConfiguration, props) {
-    let sequence = 0;
-    let interval;
-
-    props._stop = {
-      value: function () {
-        clearInterval(interval);
-        return Promise.resolve(this);
-      }
-    };
-
-    props._start = {
-      value: function () {
-        setInterval(() => {
-          sequence = sequence + 1;
-          this.endpoints.out.receive({
-            info: {
-              name: 'request' + sequence
-            },
-            stream: sequence
-          });
-        }, 5);
-
-        return new Promise((resolve, reject) => setTimeout(() => resolve(this), 200));
-      }
-    };
-
-    // TODO never reached ?
-    props.initializeDone = {
-      value: true
-    };
   }
-};
+*/
 
-// Create a factory which could be registered at the manager.
-// In this case the outStep will inherit from the base step
-const OutStepFactory = Object.assign({}, Step, outStep);
 
 // also a step implementation which will inherit from the Base Step
 const stepWithoutInitialize = {
@@ -82,17 +87,16 @@ const A_StepFactory = Object.assign({}, OutStepFactory, {
 });
 
 
-const mp = ksm.manager().then(manager =>
+const mp = manager().then(manager =>
   Promise.all([
-    manager.registerInterceptor(RequestTimeOutInterceptor),
-    manager.registerStep(OutStepFactory),
+    manager.registerInterceptor(TimeoutInterceptor),
+    manager.registerStep(OutStep),
     manager.registerStep(Object.assign({}, Step, stepWithoutInitialize))
   ]).then(() =>
     Promise.resolve(manager)
   ));
 
 let aStep;
-
 
 describe('steps', () => {
   describe('static', () => {
