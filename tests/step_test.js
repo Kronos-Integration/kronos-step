@@ -55,43 +55,11 @@ class OutStep extends Step {
   }
 }
 
-/*
-  endpoints: { in : { in : true,
-      interceptors: [{
-        type: 'timeout',
-        timeout: 1000
-      }]
-    },
-    out: {
-      out: true
-    }
-  }
-*/
-
-
-// also a step implementation which will inherit from the Base Step
-const stepWithoutInitialize = {
-  extends: 'out-step',
-  name: 'step-without-initialize',
-  description: 'test step without initialize only',
-  endpoints: { in : { in : true
-    }
-  }
-};
-
-// defines another step
-const A_StepFactory = Object.assign({}, OutStepFactory, {
-  name: 'myStep',
-  type: 'out-step',
-  description: 'my out-step description'
-});
-
 
 const mp = manager().then(manager =>
   Promise.all([
     manager.registerInterceptor(TimeoutInterceptor),
-    manager.registerStep(OutStep),
-    manager.registerStep(Object.assign({}, Step, stepWithoutInitialize))
+    manager.registerStep(OutStep)
   ]).then(() =>
     Promise.resolve(manager)
   ));
@@ -103,10 +71,10 @@ describe('steps', () => {
     it('present', done => {
       mp.then(manager => {
         try {
-          aStep = A_StepFactory.createInstance({
+          aStep = new OutStep({
             name: 'myStep2',
             description: 'my out-step description'
-          }, manager);
+          });
 
           assert.equal(aStep.type, 'myStep');
           done();

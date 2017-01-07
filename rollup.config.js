@@ -4,5 +4,5 @@
 export default {
   format: 'cjs',
   plugins: [],
-  external: ['kronos-endpoint', 'kronos-service']
+  external: ['kronos-endpoint', 'kronos-service', 'loglevel-mixin']
 };

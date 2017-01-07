@@ -26,6 +26,7 @@
   "dependencies": {
     "kronos-endpoint": "^2.14.8",
     "kronos-service": "^4.5.1",
+    "loglevel-mixin": "^1.6.15",
     "merge-deep": "^3.0.0"
   },
   "devDependencies": {

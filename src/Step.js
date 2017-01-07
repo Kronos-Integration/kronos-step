@@ -3,13 +3,17 @@
 'use strict';
 
 import {
-  SendEndpoint, ReceiveEndpoint
+  SendEndpoint, ReceiveEndpoint, SendEndpointDefault
 }
 from 'kronos-endpoint';
 import {
   Service
 }
 from 'kronos-service';
+import {
+  makeLogEvent
+}
+from 'loglevel-mixin';
 
 const merge = require('merge-deep');
 
@@ -103,7 +107,7 @@ class Step extends Service {
   createPredefinedEndpoints(stepConfiguration) {
     if (this.endpoints.log) return;
 
-    const logEndpoint = new endpoint.SendEndpointDefault('log', this);
+    const logEndpoint = new SendEndpointDefault('log', this);
     if (this.manager.services && this.manager.services.logger) {
       logEndpoint.connected = this.manager.services.logger.endpoints.log;
     }
@@ -201,12 +205,6 @@ class Step extends Service {
       new: newState
     }));
     this.manager.emit('stepStateChanged', this, oldState, newState);
-  }
-
-  stateTransitionRejection(rejected, newState) {
-    const p = stm.BaseMethods.stateTransitionRejection.call(this, rejected, newState);
-    this.error(`transition rejected ${rejected}`);
-    return p;
   }
 
   /**
