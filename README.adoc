@@ -10,4 +10,6 @@ image:https://img.shields.io/github/issues/Kronos-Integration/kronos-step.svg?st
 include::./doc/index.adoc[]
 
 === License
+
+image:https://badges.greenkeeper.io/Kronos-Integration/kronos-step.svg[link="https://greenkeeper.io/"]
 BSD-2-Clause
