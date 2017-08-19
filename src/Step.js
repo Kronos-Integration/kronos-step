@@ -1,28 +1,18 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 import {
-  SendEndpoint, ReceiveEndpoint, SendEndpointDefault
-}
-from 'kronos-endpoint';
-import {
-  Service
-}
-from 'kronos-service';
-import {
-  makeLogEvent
-}
-from 'loglevel-mixin';
+  SendEndpoint,
+  ReceiveEndpoint,
+  SendEndpointDefault
+} from 'kronos-endpoint';
+import { Service } from 'kronos-service';
+import { makeLogEvent } from 'loglevel-mixin';
 
 const merge = require('merge-deep');
-
 
 // Steps plain attributes without special handling
 // may be extended by some properties like writable,...
 const ATTRIBUTES = ['description'];
 
-class Step extends Service {
+export class Step extends Service {
   static get name() {
     return 'kronos-step';
   }
@@ -68,7 +58,7 @@ class Step extends Service {
        * @return {Boolean} if step is in a running state
        */
       isRunning: {
-        get: function () {
+        get: function() {
           return this.state === 'running' || this.state === 'starting';
         }
       }
@@ -132,7 +122,7 @@ class Step extends Service {
           const endpointDefinition = def.endpoints[endpointName];
           if (typeof endpointDefinition === 'string') {
             def.endpoints[endpointName] = {
-              'target': endpointDefinition
+              target: endpointDefinition
             };
           }
         }
@@ -150,7 +140,6 @@ class Step extends Service {
     return def;
   }
 
-
   /**
    * Creates the endpoint objects defined as a combination from
    * implementation and definition
@@ -160,7 +149,8 @@ class Step extends Service {
   createEndpoints(def) {
     if (def && def.endpoints) {
       Object.keys(def.endpoints).forEach(name =>
-        this.createEndpoint(name, def.endpoints[name]));
+        this.createEndpoint(name, def.endpoints[name])
+      );
     }
   }
 
@@ -181,13 +171,17 @@ class Step extends Service {
   createEndpoint(name, def) {
     let ep;
 
-    if (def.in) ep = new ReceiveEndpoint(name, this, this.endpointOptions(name, def));
-    if (def.out) ep = new SendEndpoint(name, this, this.endpointOptions(name, def));
+    if (def.in)
+      ep = new ReceiveEndpoint(name, this, this.endpointOptions(name, def));
+    if (def.out)
+      ep = new SendEndpoint(name, this, this.endpointOptions(name, def));
 
     this.addEndpoint(ep);
 
     if (def.interceptors) {
-      ep.interceptors = def.interceptors.map(icDef => this.manager.createInterceptorInstanceFromConfig(icDef, ep));
+      ep.interceptors = def.interceptors.map(icDef =>
+        this.manager.createInterceptorInstanceFromConfig(icDef, ep)
+      );
     }
   }
 
@@ -238,10 +232,16 @@ class Step extends Service {
    */
   createInstance(stepDefinition, manager) {
     if (!manager) {
-      throw new Error(`No Manager given in 'createInstance' for step '${stepDefinition.name}'`);
+      throw new Error(
+        `No Manager given in 'createInstance' for step '${stepDefinition.name}'`
+      );
     }
 
-    const props = this.prepareProperties(manager, stepDefinition.name, stepDefinition);
+    const props = this.prepareProperties(
+      manager,
+      stepDefinition.name,
+      stepDefinition
+    );
     this.initialize(manager, stepDefinition.name, stepDefinition, props);
     const newInstance = Object.create(this, props);
 
@@ -268,7 +268,3 @@ class Step extends Service {
     }
   }
 }
-
-export {
-  Step
-};

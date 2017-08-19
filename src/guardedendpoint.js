@@ -1,11 +1,6 @@
-/* jslint node: true, esnext: true */
+import { ReceiveEndpoint, SendEndpoint } from 'kronos-endpoint';
 
-'use strict';
-
-import {ReceiveEndpoint,SendEndpoint} from 'kronos-endpoint';
-
-class GuardedReceiveEndpoint extends ReceiveEndpoint {
-
+export class GuardedReceiveEndpoint extends ReceiveEndpoint {
   /**
    * connect two endpoints
    */
@@ -17,15 +12,20 @@ class GuardedReceiveEndpoint extends ReceiveEndpoint {
   }
 }
 
-class GuardedSendEndpoint extends SendEndpoint {
+export class GuardedSendEndpoint extends SendEndpoint {
   receive(request, formerRequest) {
     if (!this.isConnected) {
-      throw new Error(`The endpoint '${this.name}' in the Step '${this.owner.name}' has no connected endpoint`);
+      throw new Error(
+        `The endpoint '${this.name}' in the Step '${this.owner
+          .name}' has no connected endpoint`
+      );
     }
 
     if (!this.connected.receive) {
       throw new Error(
-        `The endpoint '${this.connected}' in the Step '${this.connected.owner.name}' has no receive function`);
+        `The endpoint '${this.connected}' in the Step '${this.connected.owner
+          .name}' has no receive function`
+      );
     }
     return this.connected.receive(request, formerRequest);
   }
@@ -40,8 +40,3 @@ class GuardedSendEndpoint extends SendEndpoint {
     this.connected = otherEndpoint;
   }
 }
-
-export {
- GuardedReceiveEndpoint,
- GuardedSendEndpoint
-};
