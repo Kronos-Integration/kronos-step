@@ -1,8 +1,4 @@
-import {
-  SendEndpoint,
-  ReceiveEndpoint,
-  SendEndpointDefault
-} from 'kronos-endpoint';
+import { SendEndpoint, ReceiveEndpoint } from 'kronos-endpoint';
 import { Service } from 'kronos-service';
 import { makeLogEvent } from 'loglevel-mixin';
 import { mergeAttributes, createAttributes } from 'model-attributes';
