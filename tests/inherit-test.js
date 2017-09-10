@@ -1,8 +1,3 @@
-/* global describe, it, xit */
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
@@ -18,11 +13,11 @@ const manager = Object.create(new events.EventEmitter(), {
   }
 });
 
-manager.registerStepImplementation = function (si) {
+manager.registerStepImplementation = function(si) {
   stepImplementations[si.name] = si;
 };
 
-manager.getStepInstance = function (configuration) {
+manager.getStepInstance = function(configuration) {
   const stepImpl = stepImplementations[configuration.type];
   if (stepImpl) {
     return stepImpl.createInstance(configuration, this);
@@ -32,7 +27,9 @@ manager.getStepInstance = function (configuration) {
 const OutStepDefinition = {
   name: 'out-step',
   description: 'test step only',
-  endpoints: { in : { in : true
+  endpoints: {
+    in: {
+      in: true
     },
     out: {
       out: true
@@ -57,7 +54,9 @@ const StepWithoutInitializeDefinition = {
   extends: 'out-step',
   name: 'step-without-initialize',
   description: 'test step without initialize only',
-  endpoints: { in : { in : true
+  endpoints: {
+    in: {
+      in: true
     }
   },
   property3: 'property3',
@@ -67,19 +66,24 @@ const StepWithoutInitializeDefinition = {
   }
 };
 
-
 const OutStepFactory = Object.assign({}, Step, OutStepDefinition);
-const StepWithoutInitializeFactory = Object.assign({}, OutStepFactory, StepWithoutInitializeDefinition);
+const StepWithoutInitializeFactory = Object.assign(
+  {},
+  OutStepFactory,
+  StepWithoutInitializeDefinition
+);
 
 manager.registerStepImplementation(OutStepFactory);
 manager.registerStepImplementation(StepWithoutInitializeFactory);
 
-
 describe('registration and inheritance', () => {
   describe('out-step', () => {
-    const aStep = OutStepFactory.createInstance({
-      "description": "test step only"
-    }, manager);
+    const aStep = OutStepFactory.createInstance(
+      {
+        description: 'test step only'
+      },
+      manager
+    );
 
     describe('user defined attributes', () => {
       it('property1', () => assert.equal(aStep.property1, 'property1'));
@@ -91,7 +95,9 @@ describe('registration and inheritance', () => {
         assert.deepEqual(aStep.toJSON(), {
           type: 'out-step',
           description: 'test step only',
-          endpoints: { in : { in : true
+          endpoints: {
+            in: {
+              in: true
             },
             out: {
               out: true
@@ -103,14 +109,19 @@ describe('registration and inheritance', () => {
 
     describe('createStep', () => {
       it('compare', () => {
-        const aStep = OutStepFactory.createInstance({
-          name: 'myStep'
-        }, manager);
+        const aStep = OutStepFactory.createInstance(
+          {
+            name: 'myStep'
+          },
+          manager
+        );
 
         assert.deepEqual(aStep.toJSON(), {
           type: 'out-step',
           description: 'test step only',
-          endpoints: { in : { in : true
+          endpoints: {
+            in: {
+              in: true
             },
             out: {
               out: true
@@ -123,9 +134,12 @@ describe('registration and inheritance', () => {
 
   describe('step-without-initialize', () => {
     const StepFactory = manager.steps['step-without-initialize'];
-    const aStep = StepFactory.createInstance({
-      name: 'myStep'
-    }, manager);
+    const aStep = StepFactory.createInstance(
+      {
+        name: 'myStep'
+      },
+      manager
+    );
 
     describe('user defined attributes', () => {
       it('property1', () => assert.equal(aStep.property1, 'property1'));
@@ -138,7 +152,9 @@ describe('registration and inheritance', () => {
         assert.deepEqual(aStep.toJSON(), {
           type: 'step-without-initialize',
           description: 'test step without initialize only',
-          endpoints: { in : { in : true
+          endpoints: {
+            in: {
+              in: true
             }
           }
         });
@@ -146,9 +162,12 @@ describe('registration and inheritance', () => {
     });
 
     describe('get instance', () => {
-      const instance = StepFactory.createInstance({
-        name: "inst1"
-      }, manager);
+      const instance = StepFactory.createInstance(
+        {
+          name: 'inst1'
+        },
+        manager
+      );
       it('out-step finalized', () => {
         assert.equal(aStep.hasOwnProperty('finalizeHasBeenCalled1'), false);
         // as we have overwritten the function it must not be called
@@ -161,17 +180,18 @@ describe('registration and inheritance', () => {
     });
 
     describe('get instance and overwrite endpoint definition', () => {
-
       // the out and in endpoint directions are swaped
       const myNewStep = manager.getStepInstance({
         type: 'out-step',
         name: 'my inherit step',
-        endpoints: { in : { in : false,
+        endpoints: {
+          in: {
+            in: false,
             out: true
           },
           out: {
             out: false,
-            in : true
+            in: true
           }
         }
       });

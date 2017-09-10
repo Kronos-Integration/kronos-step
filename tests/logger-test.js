@@ -1,8 +1,3 @@
-/* global describe, it, xit */
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
@@ -16,7 +11,9 @@ const chai = require('chai'),
 const outStep = {
   name: 'out-step',
   description: 'test step only',
-  endpoints: { in : { in : true
+  endpoints: {
+    in: {
+      in: true
     },
     out: {
       out: true
@@ -27,14 +24,14 @@ const outStep = {
     let interval;
 
     props._stop = {
-      value: function () {
+      value: function() {
         clearInterval(interval);
         return Promise.resolve(this);
       }
     };
 
     props._start = {
-      value: function () {
+      value: function() {
         setInterval(() => {
           sequence = sequence + 1;
           this.endpoints.out.receive({
@@ -45,10 +42,9 @@ const outStep = {
           });
         }, 5);
 
-        return new Promise(
-          (resolve, reject) => {
-            setTimeout(() => resolve(this), 200);
-          });
+        return new Promise((resolve, reject) => {
+          setTimeout(() => resolve(this), 200);
+        });
       }
     };
 
@@ -65,7 +61,6 @@ const manager = {};
 // In this case the outStep will inherit from the base step
 const OutStepFactory = Object.assign({}, Step, outStep);
 
-
 // defines another step
 const A_Step = {
   name: 'myStep',
@@ -74,18 +69,23 @@ const A_Step = {
 };
 const A_StepFactory = Object.assign({}, OutStepFactory, A_Step);
 
-
-const aStep = A_StepFactory.createInstance({
-  name: 'myStep2',
-  description: 'my out-step description'
-}, manager);
+const aStep = A_StepFactory.createInstance(
+  {
+    name: 'myStep2',
+    description: 'my out-step description'
+  },
+  manager
+);
 
 describe('logger', () => {
   it('Error as Error Object', done => {
-    const aStep = A_StepFactory.createInstance({
-      name: 'myStep2',
-      description: 'my out-step description'
-    }, manager);
+    const aStep = A_StepFactory.createInstance(
+      {
+        name: 'myStep2',
+        description: 'my out-step description'
+      },
+      manager
+    );
 
     // consumes the log events
     const inEp = new endpoint.ReceiveEndpoint('in');
@@ -115,11 +115,13 @@ describe('logger', () => {
   });
 
   it('Error as String', done => {
-
-    const aStep = A_StepFactory.createInstance({
-      name: 'myStep2',
-      description: 'my out-step description'
-    }, manager);
+    const aStep = A_StepFactory.createInstance(
+      {
+        name: 'myStep2',
+        description: 'my out-step description'
+      },
+      manager
+    );
 
     // consumes the log events
     const inEp = new ReceiveEndpoint('in');
@@ -143,11 +145,13 @@ describe('logger', () => {
   });
 
   it('Error as object', done => {
-
-    const aStep = A_StepFactory.createInstance({
-      name: 'myStep2',
-      description: 'my out-step description'
-    }, manager);
+    const aStep = A_StepFactory.createInstance(
+      {
+        name: 'myStep2',
+        description: 'my out-step description'
+      },
+      manager
+    );
 
     // consumes the log events
     const inEp = new ReceiveEndpoint('in');

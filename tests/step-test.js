@@ -1,25 +1,13 @@
-/* global describe, it, xit */
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 const chai = require('chai'),
   assert = chai.assert,
   expect = chai.expect,
   should = chai.should(),
   testStep = require('kronos-test-step'),
-  {
-    Step
-  } = require('../dist/module'),
-  {
-    manager
-  } = require('kronos-service-manager'),
-  {
-    TimeoutInterceptor
-  } = require('kronos-interceptor');
+  { Step } = require('../dist/module'),
+  { manager } = require('kronos-service-manager'),
+  { TimeoutInterceptor } = require('kronos-interceptor');
 
 class OutStep extends Step {
-
   static get name() {
     return 'out-step';
   }
@@ -46,7 +34,9 @@ class OutStep extends Step {
       });
     }, 5);
 
-    return new Promise((resolve, reject) => setTimeout(() => resolve(this), 200));
+    return new Promise((resolve, reject) =>
+      setTimeout(() => resolve(this), 200)
+    );
   }
 
   _stop() {
@@ -55,14 +45,12 @@ class OutStep extends Step {
   }
 }
 
-
 const mp = manager().then(manager =>
   Promise.all([
     manager.registerInterceptor(TimeoutInterceptor),
     manager.registerStep(OutStep)
-  ]).then(() =>
-    Promise.resolve(manager)
-  ));
+  ]).then(() => Promise.resolve(manager))
+);
 
 let aStep;
 
