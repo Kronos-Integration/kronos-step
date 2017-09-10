@@ -1,5 +1,6 @@
 import test from 'ava';
 import { Step } from '../src/step';
+import { SendEndpoint, ReceiveEndpoint } from 'kronos-endpoint';
 
 //  testStep = require('kronos-test-step'),
 //  { manager } = require('kronos-service-manager'),
@@ -24,18 +25,14 @@ class OutStep extends Step {
   constructor(...args) {
     super(...args);
 
+    this.addEndpoint(new ReceiveEndpoint('out', this));
     this.sequence = 0;
   }
 
   _start() {
     setInterval(() => {
       this.sequence = this.sequence + 1;
-      this.endpoints.out.receive({
-        info: {
-          name: 'request' + this.sequence
-        },
-        stream: this.sequence
-      });
+      this.endpoints.out.receive(this.sequence);
     }, 5);
 
     return new Promise((resolve, reject) =>
@@ -51,12 +48,17 @@ class OutStep extends Step {
 
 test('steps', async t => {
   const step = new OutStep({}, owner);
+
+  step.endpoints.out.receive = message => {};
+
   await step.start();
   t.is(step.state, 'running');
 
   await step.stop();
 
   t.is(step.state, 'stopped');
+
+  t.true(step.sequence != 0);
 });
 
 /*

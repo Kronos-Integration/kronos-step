@@ -7,7 +7,7 @@ export default {
     format: 'cjs',
     sourcemap: true
   },
-  external: ['ava'],
+  external: ['ava', 'kronos-endpoint', 'kronos-service'],
   plugins: [
     babel({
       babelrc: false,

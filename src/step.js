@@ -6,63 +6,9 @@ import {
 import { Service } from 'kronos-service';
 import { makeLogEvent } from 'loglevel-mixin';
 
-const merge = require('merge-deep');
-
-// Steps plain attributes without special handling
-// may be extended by some properties like writable,...
-const ATTRIBUTES = ['description'];
-
 export class Step extends Service {
   static get name() {
     return 'kronos-step';
-  }
-
-  constructor(config, owner) {
-    super(config, owner);
-  }
-
-  /**
-   * Creates the properties for a given object
-   * @param {Object} manager The kronos service manager
-   * @param {String} (mandatory) name The Name of the step
-   * @param {Object} (optional) stepDefinition The step definition
-   *
-   */
-  prepareProperties(manager, name, stepConfiguration) {
-    let endpoints = {};
-
-    // TODO there is no better way ?
-    const type = stepConfiguration.type ? stepConfiguration.type : this.name;
-
-    const props = {
-      name: {
-        value: name
-      },
-      type: {
-        value: type
-      },
-      manager: {
-        value: manager
-      },
-      /**
-       * @return {Boolean} if step is in a running state
-       */
-      isRunning: {
-        get: function() {
-          return this.state === 'running' || this.state === 'starting';
-        }
-      }
-    };
-
-    ATTRIBUTES.forEach(a => {
-      if (stepConfiguration[a] !== undefined) {
-        props[a] = {
-          value: stepConfiguration[a]
-        };
-      }
-    });
-
-    return props;
   }
 
   /**
@@ -80,42 +26,6 @@ export class Step extends Service {
       logEndpoint.connected = this.manager.services.logger.endpoints.log;
     }
     this.addEndpoint(logEndpoint);
-  }
-
-  /**
-   * This function mixes the endpoint definitions of a step.
-   * So that extensions comming from the flow will be mixed into
-   * the definition from the step (The definition from the prototype).
-   * Only the 'endpoints' part will be extended
-   *
-   * @param def The step definition from the flow or step itslef.
-   * @return definition The new extended step definition
-   */
-  inheritEndpoints(def) {
-    const prototype = Object.getPrototypeOf(this);
-    if (prototype && prototype.endpoints) {
-      if (def && def.endpoints) {
-        // before we can merge endpoints of type string needs to be converted
-        for (const endpointName in def.endpoints) {
-          const endpointDefinition = def.endpoints[endpointName];
-          if (typeof endpointDefinition === 'string') {
-            def.endpoints[endpointName] = {
-              target: endpointDefinition
-            };
-          }
-        }
-
-        // need to mix the definition
-        def.endpoints = merge({}, prototype.endpoints, def.endpoints);
-      } else {
-        if (!def) {
-          def = {};
-        }
-        // just take the prototype definition
-        def.endpoints = prototype.endpoints;
-      }
-    }
-    return def;
   }
 
   /**
@@ -164,57 +74,10 @@ export class Step extends Service {
   }
 
   /**
-   * Deliver json representation
-   * @param {Object} options
-   *  with the following flags:
-   *    includeRuntimeInfo - include runtime informtion like state
-   *    includeName - name of the step
-   *    includeDefaults - include all properties also the inherited and not overwittern ones
-   * @return {Object) json representation
-   */
-  toJSONWithOptions(options = {}) {
-    const json = super.toJSONWithOptions();
-
-    ATTRIBUTES.forEach(a => {
-      json[a] = this[a];
-    });
-
-    return json;
-  }
-
-  /**
    * @return {String} separator between step name and endpoint name
    **/
   get endpointParentSeparator() {
     return '/';
-  }
-
-  /**
-   * @return {Step} newly created step
-   */
-  createInstance(stepDefinition, manager) {
-    if (!manager) {
-      throw new Error(
-        `No Manager given in 'createInstance' for step '${stepDefinition.name}'`
-      );
-    }
-
-    const props = this.prepareProperties(
-      manager,
-      stepDefinition.name,
-      stepDefinition
-    );
-    this.initialize(manager, stepDefinition.name, stepDefinition, props);
-    const newInstance = Object.create(this, props);
-
-    // mix the endpoints from the prototype with the new definition
-    stepDefinition = newInstance.inheritEndpoints(stepDefinition);
-
-    newInstance.createEndpoints(stepDefinition);
-    newInstance.createPredefinedEndpoints(stepDefinition);
-    newInstance.finalize(stepDefinition);
-
-    return newInstance;
   }
 
   log(level, arg) {
