@@ -1,11 +1,9 @@
-const chai = require('chai'),
-  assert = chai.assert,
-  expect = chai.expect,
-  should = chai.should(),
-  testStep = require('kronos-test-step'),
-  { Step } = require('../dist/module'),
-  { manager } = require('kronos-service-manager'),
-  { TimeoutInterceptor } = require('kronos-interceptor');
+import test from 'ava';
+import { Step } from '../src/step';
+
+//  testStep = require('kronos-test-step'),
+//  { manager } = require('kronos-service-manager'),
+//  { TimeoutInterceptor } = require('kronos-interceptor');
 
 class OutStep extends Step {
   static get name() {
@@ -20,7 +18,6 @@ class OutStep extends Step {
     super(...args);
 
     this.sequence = 0;
-    this.interval = undefined;
   }
 
   _start() {
@@ -44,6 +41,18 @@ class OutStep extends Step {
     return Promise.resolve(this);
   }
 }
+
+test('steps', async t => {
+  const step = new OutStep({}, undefined);
+  await step.start();
+  t.is(step.state, 'running');
+
+  await step.stop();
+
+  t.is(step.state, 'stopped');
+});
+
+/*
 
 const mp = manager().then(manager =>
   Promise.all([
@@ -73,3 +82,4 @@ describe('steps', () => {
     });
   });
 });
+*/
