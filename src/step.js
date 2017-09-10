@@ -5,8 +5,21 @@ import {
 } from 'kronos-endpoint';
 import { Service } from 'kronos-service';
 import { makeLogEvent } from 'loglevel-mixin';
+import { mergeAttributes, createAttributes } from 'model-attributes';
 
 export class Step extends Service {
+  static get configurationAttributes() {
+    return mergeAttributes(
+      createAttributes({
+        // TODO move into service
+        description: {
+          type: 'string'
+        }
+      }),
+      Service.configurationAttributes
+    );
+  }
+
   static get name() {
     return 'kronos-step';
   }

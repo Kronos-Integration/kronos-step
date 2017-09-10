@@ -2,8 +2,6 @@ import test from 'ava';
 import { Step } from '../src/step';
 import { SendEndpoint, ReceiveEndpoint } from 'kronos-endpoint';
 
-//  testStep = require('kronos-test-step'),
-//  { manager } = require('kronos-service-manager'),
 //  { TimeoutInterceptor } = require('kronos-interceptor');
 
 const owner = {
@@ -46,7 +44,21 @@ class OutStep extends Step {
   }
 }
 
-test('steps', async t => {
+test('step static', t => {
+  const step = new OutStep(
+    {
+      name: 'myStep2',
+      description: 'my out-step description'
+    },
+    owner
+  );
+
+  t.is(step.name, 'myStep2');
+  t.is(step.type, 'out-step');
+  t.is(step.description, 'my out-step description');
+});
+
+test('step start/stop', async t => {
   const step = new OutStep({}, owner);
 
   step.endpoints.out.receive = message => {};
@@ -60,35 +72,3 @@ test('steps', async t => {
 
   t.true(step.sequence != 0);
 });
-
-/*
-
-const mp = manager().then(manager =>
-  Promise.all([
-    manager.registerInterceptor(TimeoutInterceptor),
-    manager.registerStep(OutStep)
-  ]).then(() => Promise.resolve(manager))
-);
-
-let aStep;
-
-describe('steps', () => {
-  describe('static', () => {
-    it('present', done => {
-      mp.then(manager => {
-        try {
-          aStep = new OutStep({
-            name: 'myStep2',
-            description: 'my out-step description'
-          });
-
-          assert.equal(aStep.type, 'myStep');
-          done();
-        } catch (e) {
-          done(e);
-        }
-      });
-    });
-  });
-});
-*/
