@@ -25,23 +25,6 @@ export class Step extends Service {
   }
 
   /**
-   * This method could be overwritten by a derived object to setup default endpoints.
-   * This method may be overwritten by derived classes.
-   * This will be called by the initialize method
-   * @param {Object} stepConfiguration The default step configuration
-   * @api protected
-   */
-  createPredefinedEndpoints(stepConfiguration) {
-    if (this.endpoints.log) return;
-
-    const logEndpoint = new SendEndpointDefault('log', this);
-    if (this.manager.services && this.manager.services.logger) {
-      logEndpoint.connected = this.manager.services.logger.endpoints.log;
-    }
-    this.addEndpoint(logEndpoint);
-  }
-
-  /**
    * Creates the endpoint objects defined as a combination from
    * implementation and definition
    * @param {Object} def The step configuration
@@ -94,15 +77,11 @@ export class Step extends Service {
   }
 
   log(level, arg) {
-    const logevent = makeLogEvent(level, arg, {
-      'step-type': this.type,
-      'step-name': this.name
-    });
-
-    if (this.endpoints.log && this.endpoints.log.isConnected) {
-      this.endpoints.log.receive(logevent);
-    } else {
-      console.log(logevent);
-    }
+    this.endpoints.log.receive(
+      makeLogEvent(level, arg, {
+        'step-type': this.type,
+        'step-name': this.name
+      })
+    );
   }
 }
