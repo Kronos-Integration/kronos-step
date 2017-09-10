@@ -17,16 +17,8 @@ export class Step extends Service {
     return 'kronos-step';
   }
 
-  static get description() {
-    return 'This step is the base class for step implementations';
-  }
-
   constructor(config, owner) {
     super(config, owner);
-  }
-
-  get description() {
-    return this.constructor.description;
   }
 
   /**
@@ -72,18 +64,6 @@ export class Step extends Service {
 
     return props;
   }
-
-  /**
-   * Called to initialize step
-   * Please note 'this' is not jet present
-   */
-  initialize(manager, name, stepConfiguration, props) {}
-
-  /**
-   * Called when step instance properties are present.
-   *
-   */
-  finalize(manager, stepConfiguration) {}
 
   /**
    * This method could be overwritten by a derived object to setup default endpoints.
@@ -181,22 +161,6 @@ export class Step extends Service {
         this.manager.createInterceptorInstanceFromConfig(icDef, ep)
       );
     }
-  }
-
-  /**
-   * Sends a 'stepStateChanged' event to the manager.
-   * arguments are:
-   *  step,oldState,newState
-   * @param {String} oldState
-   * @param {String} newState
-   */
-  stateChanged(oldState, newState) {
-    this.trace(level => ({
-      message: 'transitioned',
-      old: oldState,
-      new: newState
-    }));
-    this.manager.emit('stepStateChanged', this, oldState, newState);
   }
 
   /**

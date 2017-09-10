@@ -5,6 +5,13 @@ import { Step } from '../src/step';
 //  { manager } = require('kronos-service-manager'),
 //  { TimeoutInterceptor } = require('kronos-interceptor');
 
+const owner = {
+  emit(name, arg1, arg2) {}, // dummy event emitter
+  endpointIdentifier(e) {
+    return `name:${e.name}`;
+  }
+};
+
 class OutStep extends Step {
   static get name() {
     return 'out-step';
@@ -43,7 +50,7 @@ class OutStep extends Step {
 }
 
 test('steps', async t => {
-  const step = new OutStep({}, undefined);
+  const step = new OutStep({}, owner);
   await step.start();
   t.is(step.state, 'running');
 
