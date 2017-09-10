@@ -21,11 +21,9 @@ export class Step extends Service {
     return 'This step is the base class for step implementations';
   }
 
-  /*
-    constructor(config, owner) {
-      super(config, owner);
-    }
-  */
+  constructor(config, owner) {
+    super(config, owner);
+  }
 
   get description() {
     return this.constructor.description;
