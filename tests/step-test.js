@@ -72,3 +72,27 @@ test('step start/stop', async t => {
 
   t.true(step.sequence != 0);
 });
+
+test.cb('step logging', t => {
+  t.plan(1);
+
+  const step = new OutStep({}, owner);
+
+  const inEp = new ReceiveEndpoint('in');
+
+  inEp.receive = request => {
+    delete request.stack;
+    delete request.timestamp;
+
+    t.deepEqual(request, {
+      level: 'error',
+      'step-type': 'out-step',
+      'step-name': 'out-step',
+      message: 'Gumbo'
+    });
+    t.end();
+  };
+  step.endpoints.log.connected = inEp;
+
+  step.error(new Error('Gumbo'));
+});
