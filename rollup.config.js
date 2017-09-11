@@ -7,7 +7,12 @@ export default {
     file: pkg.main,
     format: 'cjs'
   },
-  external: ['kronos-endpoint', 'kronos-service', 'loglevel-mixin'],
+  external: [
+    'kronos-endpoint',
+    'kronos-service',
+    'loglevel-mixin',
+    'model-attributes'
+  ],
   plugins: [
     babel({
       babelrc: false,

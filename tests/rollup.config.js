@@ -7,7 +7,13 @@ export default {
     format: 'cjs',
     sourcemap: true
   },
-  external: ['ava', 'kronos-endpoint', 'kronos-service'],
+  external: [
+    'ava',
+    'kronos-endpoint',
+    'kronos-service',
+    'loglevel-mixin',
+    'model-attributes'
+  ],
   plugins: [
     babel({
       babelrc: false,
