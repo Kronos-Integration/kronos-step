@@ -9,7 +9,8 @@ export class Step extends Service {
       createAttributes({
         // TODO move into service
         description: {
-          type: 'string'
+          type: 'string',
+          description: 'human readable description of the step'
         }
       }),
       Service.configurationAttributes
