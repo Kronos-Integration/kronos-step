@@ -1,9 +1,7 @@
-import babel from 'rollup-plugin-babel';
-
 export default {
   input: 'tests/step-test.js',
   output: {
-    file: 'build/test-bundle.js',
+    file: 'build/step-test.js',
     format: 'cjs',
     sourcemap: true
   },
@@ -14,11 +12,5 @@ export default {
     'loglevel-mixin',
     'model-attributes'
   ],
-  plugins: [
-    babel({
-      babelrc: false,
-      presets: ['stage-3'],
-      exclude: 'node_modules/**'
-    })
-  ]
+  plugins: []
 };

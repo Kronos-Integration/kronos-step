@@ -1,4 +1,3 @@
-import babel from 'rollup-plugin-babel';
 import pkg from './package.json';
 
 export default {
@@ -13,11 +12,5 @@ export default {
     'loglevel-mixin',
     'model-attributes'
   ],
-  plugins: [
-    babel({
-      babelrc: false,
-      presets: ['stage-3'],
-      exclude: 'node_modules/**'
-    })
-  ]
+  plugins: []
 };
