@@ -27,7 +27,7 @@
   "dependencies": {
     "kronos-endpoint": "^2.14.11",
     "kronos-service": "^4.5.6",
-    "loglevel-mixin": "^1.6.22"
+    "loglevel-mixin": "^2.0.1"
   },
   "devDependencies": {
     "kronos-service-manager": "^3.5.10",
@@ -63,7 +63,7 @@
   },
   "ava": {
     "files": [
-      "build/test-bundle.js"
+      "build/*-test.js"
     ],
     "presets": [
       "stage-3"
@@ -74,7 +74,7 @@
   },
   "nyc": {
     "include": [
-      "build/test-bundle.js"
+      "build/*-test.js"
     ],
     "reporter": [
       "lcov"
