@@ -1,6 +1,6 @@
 import test from 'ava';
 import { Step } from '../src/step';
-import { SendEndpoint, ReceiveEndpoint } from 'kronos-endpoint';
+import { ReceiveEndpoint } from 'kronos-endpoint';
 
 //  { TimeoutInterceptor } = require('kronos-interceptor');
 
