@@ -1,2 +1,0 @@
-== Step
-The step is the central element. All is a step. 

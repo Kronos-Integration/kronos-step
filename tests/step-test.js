@@ -48,10 +48,16 @@ test('step static', t => {
   const step = new OutStep(
     {
       name: 'myStep2',
-      description: 'my out-step description'
+      description: 'my out-step description',
+      endpoints: {
+        other: { in: true }
+      }
     },
     owner
   );
+
+  t.is(step.endpoints.other.isIn, true);
+  t.is(step.endpoints.other.isOut, false);
 
   t.is(step.name, 'myStep2');
   t.is(step.type, 'out-step');

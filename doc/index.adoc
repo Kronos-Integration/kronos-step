@@ -1,8 +1,0 @@
-
-include::./step.adoc[]
-
-include::./step-interface.adoc[]
-
-include::./endpoint.adoc[]
-
-include::./endpoint-interface.adoc[]
