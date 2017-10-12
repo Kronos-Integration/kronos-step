@@ -11,6 +11,5 @@ export default {
     'kronos-service',
     'loglevel-mixin',
     'model-attributes'
-  ],
-  plugins: []
+  ]
 };

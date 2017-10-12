@@ -26,12 +26,11 @@
   "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
     "kronos-endpoint": "^2.14.11",
-    "kronos-service": "^4.8.1",
+    "kronos-service": "^4.8.2",
     "loglevel-mixin": "^2.0.1"
   },
   "devDependencies": {
     "ava": "^0.22.0",
-    "babel-preset-stage-3": "^6.24.1",
     "jsdoc-babel": "^0.3.0",
     "jsdoc-to-markdown": "^3.0.0",
     "kronos-service-manager": "^3.5.10",
@@ -39,9 +38,7 @@
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.2.1",
     "rollup": "^0.50.0",
-    "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-multi-entry": "^2.0.1",
-    "semantic-release": "^8.0.0",
+    "semantic-release": "^8.1.2",
     "xo": "^0.19.0"
   },
   "contributors": [
@@ -64,9 +61,6 @@
   "ava": {
     "files": [
       "build/*-test.js"
-    ],
-    "presets": [
-      "stage-3"
     ],
     "require": [
       "babel-register"
