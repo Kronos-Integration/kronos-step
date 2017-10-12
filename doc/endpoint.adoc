@@ -1,4 +1,0 @@
-== Endpoint
-An endpoint is the docking interface for the step. Steps will be connected via there endpoints.
-A connection between two steps is called a channel. The channel is only a logical synonym for
-the connection between two steps.
