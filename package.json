@@ -38,7 +38,7 @@
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.2.1",
     "rollup": "^0.50.0",
-    "semantic-release": "^8.1.2",
+    "semantic-release": "^8.2.0",
     "xo": "^0.19.0"
   },
   "contributors": [
@@ -53,14 +53,14 @@
   ],
   "license": "BSD-2-Clause",
   "engines": {
-    "node": ">=8.6.0"
+    "node": ">=8.7.0"
   },
   "xo": {
     "space": true
   },
   "template": {
     "repository": {
-      "url": "https://github.com/Kronos-Tools/npm-package-template-minimal.git"
+      "url": "https://github.com/arlac77/npm-package-template.git"
     }
   },
   "ava": {
