@@ -30,7 +30,7 @@
     "loglevel-mixin": "^2.0.1"
   },
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^0.23.0",
     "jsdoc-babel": "^0.3.0",
     "jsdoc-to-markdown": "^3.0.0",
     "kronos-service-manager": "^3.5.10",
