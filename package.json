@@ -9,7 +9,7 @@
     "cover": "nyc ava",
     "doc": "./node_modules/.bin/jsdoc lib/*.js",
     "test": "ava",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release": "semantic-release",
     "precover": "rollup -c tests/rollup.config.js",
     "pretest": "rollup -c tests/rollup.config.js",
     "posttest": "npm run prepare && markdown-doctest",
@@ -38,7 +38,7 @@
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.3.0",
     "rollup": "^0.50.0",
-    "semantic-release": "^8.2.3",
+    "semantic-release": "^9.1.0",
     "xo": "^0.19.0"
   },
   "contributors": [
