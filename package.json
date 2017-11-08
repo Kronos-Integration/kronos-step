@@ -37,7 +37,7 @@
     "kronos-test-step": "3.1.4",
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.3.0",
-    "rollup": "^0.50.0",
+    "rollup": "^0.51.0",
     "semantic-release": "^9.1.0",
     "xo": "^0.19.0"
   },
