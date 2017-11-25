@@ -2,8 +2,6 @@ import test from 'ava';
 import { Step } from '../src/step';
 import { ReceiveEndpoint } from 'kronos-endpoint';
 
-//  { TimeoutInterceptor } = require('kronos-interceptor');
-
 const owner = {
   emit(name, arg1, arg2) {}, // dummy event emitter
   endpointIdentifier(e) {
