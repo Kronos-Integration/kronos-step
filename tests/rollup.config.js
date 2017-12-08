@@ -1,5 +1,7 @@
+import multiEntry from 'rollup-plugin-multi-entry';
+
 export default {
-  input: 'tests/step-test.js',
+  input: 'tests/**/*-test.js',
   output: {
     file: 'build/step-test.js',
     format: 'cjs',
@@ -12,5 +14,5 @@ export default {
     'loglevel-mixin',
     'model-attributes'
   ],
-  plugins: []
+  plugins: [multiEntry()]
 };
