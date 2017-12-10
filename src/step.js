@@ -1,5 +1,8 @@
 import { Service } from 'kronos-service';
 import { makeLogEvent } from 'loglevel-mixin';
+import { StepProviderMixin } from './step-provider-mixin';
+
+export { StepProviderMixin };
 
 export class Step extends Service {
   static get name() {
