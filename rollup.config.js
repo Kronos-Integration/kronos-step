@@ -6,10 +6,5 @@ export default {
     file: pkg.main,
     format: 'cjs'
   },
-  external: [
-    'kronos-endpoint',
-    'kronos-service',
-    'loglevel-mixin',
-    'model-attributes'
-  ]
+  external: ['kronos-endpoint', 'kronos-service', 'loglevel-mixin']
 };

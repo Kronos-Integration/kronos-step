@@ -8,8 +8,10 @@ class AStep extends Step {
   }
 }
 
+class Provider extends StepProviderMixin(class {}) {}
+
 test('provider', async t => {
-  const provider = new StepProviderMixin(class {});
+  const provider = new Provider();
 
   provider.registerStep(AStep);
 

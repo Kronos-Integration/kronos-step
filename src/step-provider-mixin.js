@@ -1,27 +1,21 @@
-import { defineRegistryProperties } from 'registry-mixin';
-
 /**
  * Provide steps.
  */
 export function StepProviderMixin(superclass) {
-  return class extends superclass {
-    /**
-     * if config is an array entry 0 then entry 0 will be passed to super and all other entries
-     * are handed over as initial config to the config services
-     */
+  return class StepProviderMixin extends superclass {
     constructor(...args) {
       super(...args);
 
-      defineRegistryProperties(this, 'stepFactory', {
-        pluralName: 'stepFactories',
-        withCreateInstance: true,
-        withEvents: true,
-        factoryType: 'new'
-      });
+      Object.defineProperty(this, 'registeredSteps', { value: new Map() });
     }
 
-    declareStep(config, owner) {
-      return this.createStepFactoryInstanceFromConfig(config, owner);
+    registerStep(step) {
+      this.registeredSteps.set(step.name, step);
+    }
+
+    declareStep(config, ...args) {
+      const factory = this.registeredSteps.get(config.type);
+      return new factory(config, ...args);
     }
   };
 }
