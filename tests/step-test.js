@@ -60,6 +60,7 @@ test('step static', t => {
   t.is(step.name, 'myStep2');
   t.is(step.type, 'out-step');
   t.is(step.description, 'my out-step description');
+  t.is(step.startupOrder, 1.0);
 });
 
 test('step start/stop', async t => {
