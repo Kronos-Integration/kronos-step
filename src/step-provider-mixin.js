@@ -15,6 +15,10 @@ export function StepProviderMixin(superclass) {
 
     declareStep(config, ...args) {
       const factory = this.registeredSteps.get(config.type);
+      if (factory === undefined) {
+        throw new Error(`Undefined type ${config.type}`);
+      }
+
       return new factory(config, ...args);
     }
   };

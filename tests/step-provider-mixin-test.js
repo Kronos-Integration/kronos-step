@@ -26,3 +26,19 @@ test('provider', async t => {
   t.is(step.name, 's1');
   t.is(step.type, 'a-step');
 });
+
+test('provider unknown type', async t => {
+  const provider = new Provider();
+
+  try {
+    const step = await provider.declareStep(
+      {
+        name: 's2',
+        type: 'unknown-step'
+      },
+      {}
+    );
+  } catch (e) {
+    t.is(e.message, 'Undefined type unknown-step');
+  }
+});
