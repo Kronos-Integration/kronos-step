@@ -18,10 +18,12 @@ class OutStep extends Step {
     return 'test step only';
   }
 
+  static get endpoints() {
+    return Object.assign({ out: { out: true } }, Step.endpoints);
+  }
+
   constructor(...args) {
     super(...args);
-
-    this.addEndpoint(new ReceiveEndpoint('out', this));
     this.sequence = 0;
   }
 
