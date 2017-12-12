@@ -1,5 +1,6 @@
 /**
  * Provide steps.
+ * Register and lookup step types
  */
 export function StepProviderMixin(superclass) {
   return class StepProviderMixin extends superclass {
