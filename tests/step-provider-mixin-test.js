@@ -39,6 +39,6 @@ test('provider unknown type', async t => {
       {}
     );
   } catch (e) {
-    t.is(e.message, 'Undefined type unknown-step');
+    t.is(e.message, 'Undefined step unknown-step');
   }
 });
