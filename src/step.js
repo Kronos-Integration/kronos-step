@@ -4,7 +4,13 @@ import { StepProviderMixin } from './step-provider-mixin';
 
 export { StepProviderMixin };
 
+/**
+ * Steps are building blocks for flows
+ */
 export class Step extends Service {
+  /**
+   * @return {string} 'kronos-step'
+   */
   static get name() {
     return 'kronos-step';
   }
@@ -28,12 +34,15 @@ export class Step extends Service {
   }
 
   /**
-   * @return {String} separator between step name and endpoint name
+   * @return {string} separator between step name and endpoint name
    **/
   get endpointParentSeparator() {
     return '/';
   }
 
+  /**
+   * adds 'step-type' and 'step-name'
+   **/
   log(level, arg) {
     this.endpoints.log.receive(
       makeLogEvent(level, arg, {
