@@ -49,16 +49,20 @@ Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ### endpointParentSeparator
 
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** separator between step name and endpoint name
+separator between step name and endpoint name
+
+Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** '/'
 
 ### log
 
-adds 'step-type' and 'step-name'
+adds 'step-type' and 'step-name' to the log event
 
 **Parameters**
 
 -   `level`  
 -   `arg`  
+
+Returns **[undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)** 
 
 ### name
 

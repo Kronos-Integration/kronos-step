@@ -34,14 +34,16 @@ export class Step extends Service {
   }
 
   /**
-   * @return {string} separator between step name and endpoint name
+   * separator between step name and endpoint name
+   * @return {string} '/'
    **/
   get endpointParentSeparator() {
     return '/';
   }
 
   /**
-   * adds 'step-type' and 'step-name'
+   * adds 'step-type' and 'step-name' to the log event
+   * @return {undefined}
    **/
   log(level, arg) {
     this.endpoints.log.receive(
