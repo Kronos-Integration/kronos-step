@@ -1,10 +1,21 @@
 {
   "name": "kronos-step",
   "version": "0.0.0-semantic-release",
-  "description": "basic step implementation",
   "main": "dist/step.js",
   "module": "src/step.js",
+  "description": "basic step implementation",
   "keywords": [],
+  "contributors": [
+    {
+      "name": "Torsten Link",
+      "email": "torstenlink@gmx.de"
+    },
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
+  "license": "BSD-2-Clause",
   "scripts": {
     "cover": "nyc --temp-directory build/nyc ava",
     "doc": "./node_modules/.bin/jsdoc lib/*.js",
@@ -17,14 +28,6 @@
     "docs": "documentation readme src/step.js --section=API",
     "lint": "documentation lint src/step.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Kronos-Integration/kronos-step.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Kronos-Integration/kronos-step/issues"
-  },
-  "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "dependencies": {
     "kronos-service": "^4.13.3",
     "loglevel-mixin": "^2.0.1"
@@ -39,28 +42,17 @@
     "xo": "^0.19.0",
     "documentation": "^5.3.5"
   },
-  "contributors": [
-    {
-      "name": "Torsten Link",
-      "email": "torstenlink@gmx.de"
-    },
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ],
-  "license": "BSD-2-Clause",
   "engines": {
     "node": ">=8.9.3"
   },
-  "xo": {
-    "space": true
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kronos-Integration/kronos-step.git"
   },
-  "template": {
-    "repository": {
-      "url": "https://github.com/arlac77/npm-package-template.git"
-    }
+  "bugs": {
+    "url": "https://github.com/Kronos-Integration/kronos-step/issues"
   },
+  "homepage": "https://github.com/Kronos-Integration/kronos-step#readme",
   "ava": {
     "files": [
       "build/*-test.js"
@@ -77,5 +69,13 @@
       "lcov"
     ],
     "report-dir": "./build/coverage"
+  },
+  "xo": {
+    "space": true
+  },
+  "template": {
+    "repository": {
+      "url": "https://github.com/arlac77/npm-package-template.git"
+    }
   }
 }
