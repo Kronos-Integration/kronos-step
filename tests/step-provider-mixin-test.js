@@ -15,7 +15,7 @@ test('provider', async t => {
 
   provider.registerStep(AStep);
 
-  const step = await provider.declareStep(
+  const step = await provider.createStep(
     {
       name: 's1',
       type: 'a-step'
@@ -31,7 +31,7 @@ test('provider unknown type', async t => {
   const provider = new Provider();
 
   try {
-    const step = await provider.declareStep(
+    const step = await provider.createStep(
       {
         name: 's2',
         type: 'unknown-step'

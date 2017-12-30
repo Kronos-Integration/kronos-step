@@ -33,6 +33,7 @@ basic step implementation
     -   [name](#name)
     -   [startupOrder](#startuporder-1)
 -   [StepProviderMixin](#stepprovidermixin)
+-   [StepProviderMixin](#stepprovidermixin-1)
 
 ## Step
 
@@ -77,12 +78,24 @@ Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/G
 
 ## StepProviderMixin
 
-Provide steps.
+Extends a class to fullfill step provider functionality
+
+**Parameters**
+
+-   `superclass` **Class** class to extend
+
+Returns **Class** extended class
+
+## StepProviderMixin
+
+Extends a class to fullfill step provider functionality
 Register and lookup step types
 
 **Parameters**
 
--   `superclass`  
+-   `superclass` **Class** class to extend
+
+Returns **Class** extended class
 
 # install
 
