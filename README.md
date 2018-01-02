@@ -28,7 +28,6 @@ basic step implementation
 
 -   [Step](#step)
     -   [startupOrder](#startuporder)
-    -   [endpointParentSeparator](#endpointparentseparator)
     -   [log](#log)
     -   [name](#name)
     -   [startupOrder](#startuporder-1)
@@ -48,22 +47,16 @@ Higher numbers result in earlier startup
 
 Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** delivered from the constructors startupOrder
 
-### endpointParentSeparator
-
-separator between step name and endpoint name
-
-Returns **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** '/'
-
 ### log
 
-adds 'step-type' and 'step-name' to the log event
+Adds 'step-type' and 'step-name' to the log event
 
 **Parameters**
 
 -   `level`  
 -   `arg`  
 
-Returns **[undefined](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined)** 
+Returns **void** 
 
 ### name
 
