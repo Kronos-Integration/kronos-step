@@ -1,4 +1,8 @@
 import test from 'ava';
+import {
+  stepTestStatic,
+  stepTestLivecycle
+} from '@kronos-integration/test-step';
 import { Step } from '../src/step';
 import { ReceiveEndpoint } from 'kronos-endpoint';
 
@@ -44,8 +48,10 @@ class OutStep extends Step {
   }
 }
 
-test('step static', t => {
-  const step = new OutStep(
+test('step static', async t => {
+  await stepTestStatic(
+    t,
+    OutStep,
     {
       name: 'myStep2',
       description: 'my out-step description',
@@ -53,19 +59,21 @@ test('step static', t => {
         other: { in: true }
       }
     },
-    owner
+    owner,
+    'out-step',
+    (t, step) => {
+      t.is(step.endpoints.other.isIn, true);
+      t.is(step.endpoints.other.isOut, false);
+      t.is(step.name, 'myStep2');
+      t.is(step.description, 'my out-step description');
+      t.is(step.startupOrder, 1.0);
+    }
   );
-
-  t.is(step.endpoints.other.isIn, true);
-  t.is(step.endpoints.other.isOut, false);
-
-  t.is(step.name, 'myStep2');
-  t.is(step.type, 'out-step');
-  t.is(step.description, 'my out-step description');
-  t.is(step.startupOrder, 1.0);
 });
 
 test('step start/stop', async t => {
+  //await stepTestLivecycle(t,OutStep,{},owner);
+
   const step = new OutStep({}, owner);
 
   step.endpoints.out.receive = message => {};
