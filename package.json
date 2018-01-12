@@ -29,7 +29,7 @@
     "lint": "documentation lint src/step.js"
   },
   "dependencies": {
-    "kronos-service": "^4.16.1",
+    "kronos-service": "^4.16.2",
     "loglevel-mixin": "^2.0.2"
   },
   "devDependencies": {
