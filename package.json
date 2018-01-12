@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "kronos-service": "^4.16.1",
-    "loglevel-mixin": "^2.0.1"
+    "loglevel-mixin": "^2.0.2"
   },
   "devDependencies": {
     "@kronos-integration/test-step": "^4.0.3",
