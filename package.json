@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "kronos-service": "^4.16.2",
-    "loglevel-mixin": "^2.0.1"
+    "loglevel-mixin": "^2.0.2"
   },
   "devDependencies": {
     "@kronos-integration/test-step": "^4.0.3",
@@ -38,7 +38,7 @@
     "documentation": "^5.3.5",
     "markdown-doctest": "^0.9.1",
     "nyc": "^11.4.1",
-    "rollup": "^0.53.4",
+    "rollup": "^0.54.0",
     "rollup-plugin-multi-entry": "^2.0.2",
     "semantic-release": "^11.1.0"
   },
