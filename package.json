@@ -26,7 +26,8 @@
     "posttest": "npm run prepare && markdown-doctest",
     "prepare": "rollup -c",
     "docs": "documentation readme src/step.js --section=API",
-    "lint": "documentation lint src/step.js"
+    "lint": "documentation lint src/step.js",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "dependencies": {
     "kronos-service": "^4.16.2",
@@ -40,7 +41,8 @@
     "nyc": "^11.4.1",
     "rollup": "^0.54.0",
     "rollup-plugin-multi-entry": "^2.0.2",
-    "semantic-release": "^11.1.0"
+    "semantic-release": "^12.2.0",
+    "travis-deploy-once": "^4.3.1"
   },
   "engines": {
     "node": ">=8.9.4"
