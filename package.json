@@ -1,6 +1,9 @@
 {
   "name": "kronos-step",
   "version": "0.0.0-semantic-release",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/step.js",
   "module": "src/step.js",
   "description": "basic step implementation",
