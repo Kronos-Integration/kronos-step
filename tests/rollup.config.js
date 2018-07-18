@@ -9,7 +9,8 @@ export default {
   output: {
     file: 'build/step-test.js',
     format: 'cjs',
-    sourcemap: true
+    sourcemap: true,
+    interop: false
   },
   external: ['ava', 'kronos-endpoint', 'kronos-service', 'loglevel-mixin'],
   plugins: [multiEntry(), istanbul({
