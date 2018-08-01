@@ -37,7 +37,7 @@
     "loglevel-mixin": "^2.0.2"
   },
   "devDependencies": {
-    "@kronos-integration/test-step": "^4.0.3",
+    "@kronos-integration/test-step": "^5.0.0",
     "ava": "^0.25.0",
     "documentation": "^8.0.2",
     "markdown-doctest": "^0.9.1",
