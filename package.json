@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@kronos-integration/test-step": "^5.0.0",
-    "ava": "^0.25.0",
+    "ava": "^1.0.0-beta.8",
     "documentation": "^8.1.2",
     "markdown-doctest": "^0.9.1",
     "nyc": "^13.1.0",
