@@ -37,7 +37,7 @@
   "devDependencies": {
     "@kronos-integration/test-step": "^5.0.0",
     "ava": "^1.0.1",
-    "documentation": "^9.1.0",
+    "documentation": "^9.1.1",
     "markdown-doctest": "^0.9.1",
     "rollup": "^0.68.1",
     "semantic-release": "^15.13.1",
