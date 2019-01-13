@@ -29,7 +29,7 @@
     "test": "ava"
   },
   "dependencies": {
-    "kronos-service": "^4.16.2",
+    "kronos-service": "^4.17.1",
     "loglevel-mixin": "^3.0.0"
   },
   "devDependencies": {
