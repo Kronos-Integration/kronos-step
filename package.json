@@ -34,18 +34,18 @@
   },
   "devDependencies": {
     "@kronos-integration/test-step": "^5.0.0",
-    "ava": "^1.4.0",
+    "ava": "^1.4.1",
     "c8": "^3.4.0",
     "documentation": "^9.3.1",
-    "esm": "^3.2.20",
+    "esm": "^3.2.22",
     "markdown-doctest": "^0.9.1",
-    "rollup": "^1.7.3",
+    "rollup": "^1.9.0",
     "rollup-plugin-cleanup": "^3.1.1",
-    "rollup-plugin-commonjs": "^9.2.2",
+    "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-executable": "^1.4.5",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^4.0.1",
-    "semantic-release": "^15.13.3"
+    "rollup-plugin-node-resolve": "^4.2.1",
+    "semantic-release": "^15.13.8"
   },
   "engines": {
     "node": ">=10.15.3"
